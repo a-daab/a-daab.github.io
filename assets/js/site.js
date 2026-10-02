@@ -150,8 +150,14 @@
     motion = { refresh: function () { register(); schedule(); } };
     if (!active) return;
 
-    function update() {
+    /* Scroll events arrive in steps while the page itself scrolls on the compositor, so motifs driven straight from them look choppy.
+       Each motif therefore eases toward its target value a little every frame (critically damped, frame-rate independent). */
+    var lastT = 0;
+    function update(now) {
       queued = false;
+      var dt = lastT ? Math.min(64, now - lastT) : 16;
+      lastT = now;
+      var ease = 1 - Math.exp(-dt / 70), more = false;
       var vh = window.innerHeight, sy = window.pageYOffset;
       for (var k = 0; k < items.length; k++) {
         var m = items[k], o = info.get(m), p;
@@ -169,12 +175,18 @@
           p = clamp(1 - (r.bottom - vh * 0.55) / (vh * 0.6));
         } else p = clamp((vh - r.top) / (vh + r.height));                  /* 0 entering, 1 leaving */
         var centre = r.top + r.height / 2 - vh / 2;
-        m.style.setProperty('--p', p.toFixed(3));
+        var cur = o.cur;
+        if (!cur) cur = o.cur = { p: p, c: centre };                       /* first frame: no easing from nothing */
+        else { cur.p += (p - cur.p) * ease; cur.c += (centre - cur.c) * ease; }
+        if (Math.abs(p - cur.p) > 0.0004 || Math.abs(centre - cur.c) > 0.3) more = true; else { cur.p = p; cur.c = centre; }
+        p = cur.p; centre = cur.c;
+        m.style.setProperty('--p', p.toFixed(4));
         if (o.speed !== 1) m.style.setProperty('--ty', (-(1 - o.speed) * centre).toFixed(1));
         if (o.rot) m.style.setProperty('--rot', (o.rot * (p - 0.5)).toFixed(1));
         if (o.dx) m.style.setProperty('--tx', (o.dx * (p - 0.5)).toFixed(1));
         if (o.scale) m.style.setProperty('--sc', (1 + (p - 0.5) * o.scale).toFixed(3));
       }
+      if (more) schedule();
     }
     window.addEventListener('scroll', schedule, { passive: true });
     window.addEventListener('resize', schedule, { passive: true });
