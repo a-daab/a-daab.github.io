@@ -1003,7 +1003,7 @@ def dividers():
         eye_g = (f'<path d="M{cx - 34} 36Q{cx} 10 {cx + 34} 36Q{cx} 62 {cx - 34} 36Z" stroke-width="2.6"/>'
                  f'<path d="M{cx - 24} 36Q{cx} 18 {cx + 24} 36Q{cx} 54 {cx - 24} 36Z" stroke-width="1.2"/>'
                  f'<circle cx="{cx}" cy="36" r="11" stroke-width="2.2"/><circle cx="{cx}" cy="36" r="5" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=3)
-                 + "".join(f'<line x1="{cx + d * 1.15:.0f}" y1="{26 - abs(d) * .2:.0f}" x2="{cx + d * 1.5:.0f}" y2="{16 - abs(d) * .2:.0f}" stroke-width="1.5"/>' for d in (-22, -11, 0, 11, 22)))
+)
         b.append(st(eye_g, cx - 34))
         mx = cx + 60
         mot = (f'<path d="M{mx} 22l9 14l-9 14l-9 -14z" stroke-width="2"/>' + dotpath([(mx, 36), (mx - 20, 36), (mx + 20, 36)], w=3))
