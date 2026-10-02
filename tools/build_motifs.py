@@ -1390,14 +1390,14 @@ def rain():
         if not pick:
             pick = (22 + (c + .5) * (556 / cols), -h - 4)          # fall back to starting just above the top edge (clipped)
         x, y0 = pick
-        y_end = 330 + (r_ + rng.uniform(.15, .85)) * (340 / rows)
+        y_end = 840 + rng.uniform(0, 160)                         # every drop falls past the divider and out of the section
         dist = max(40, y_end - y0)
         td = teardrop2(x, y0, r)
         inner = teardrop2(x, y0 + r * .08, r * .72)
         g = (f'<path d="{td}" stroke-width="2.2"/><path d="{inner}" stroke-width="1"/>' +
              sspiral(x, y0 + r * .02, r * .56, turns=2.1, dirn=1 if i % 2 else -1, n=44, w=1.5, start=rng.uniform(0, 6)))
         rank = order[i]
-        b.append(f'<g class="raindrop" style="--s:{.14 + .5 * rank / len(cells):.3f};--d:{dist / 560:.3f}">{g}</g>')
+        b.append(f'<g class="raindrop" style="--s:{.05 + .36 * rank / len(cells):.3f};--d:{dist / 560:.3f}">{g}</g>')
     write("rain", (600, 700), "".join(b))
 
 

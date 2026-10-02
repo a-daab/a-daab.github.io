@@ -360,7 +360,7 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 /* spiral clouds and the rain that falls from them */
 /* rain: right half only; clouds: opaque so the drops are fully hidden behind them until they fall */
 .motif.rain-art{right:0;left:auto;top:0;width:50%;opacity:.6}
-.motif .raindrop{transform:translate3d(0,calc(var(--d) * 560px * clamp(0, calc((var(--p,1) - var(--s)) * 5), 1)),0)}
+.motif .raindrop{transform:translate3d(0,calc(var(--d) * 560px * clamp(0, calc((var(--p,1) - var(--s)) * 4.5), 1)),0)}
 /* rain passes behind the text; a half-white veil over each text block fades it to 50% where the two meet */
 #why .wrap p,#why .wrap h2,#why .wrap .eyebrow,#why .wrap .quote,#why .wrap .btn--ghost{background:rgba(255,255,255,.5)}
 #why .wrap .btn--ghost:hover{background:var(--orange-tint)}
@@ -428,3 +428,9 @@ details.how p{margin:.6em 0 0;max-width:58ch}
   #why{min-height:58.5vw}   /* keeps room for the whole rain fall */
   #why .why-left{margin-top:calc(clamp(72px,11vw,150px) - 18.75vw - 30px + var(--why-shift,0px))}
 }
+
+/* rain keeps falling out of the picture box and past the divider; a solid band behind the chain hides it from there down */
+.rain-art svg{overflow:visible}
+#why .stitchdiv{background:#fff;opacity:1}
+#why .stitchdiv::after{content:"";position:absolute;left:0;right:0;top:100%;height:60px;background:#fff}
+#why .stitchdiv{z-index:3}
