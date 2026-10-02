@@ -879,23 +879,15 @@ def dividers():
         while xx < SW - 20:
             b.append(st(f'<line x1="{xx}" y1="{y}" x2="{xx + 10}" y2="{y}" stroke-width="1.6"/>', xx)); xx += 20
     write_div(2, "".join(b))
-    # 3 abstract floral border: rosettes and half-flowers joined by a flowing stitched stem
+    # 3 a simple wave stitch: one sine wave worked as a row of short stitches that follow the curve
     b = []
-    stem = [(x, 36 + 9 * math.sin(x / 38)) for x in range(0, SW + 1, 10)]
-    for k in range(0, len(stem) - 2, 2):
-        seg = stem[k:k + 3]
-        b.append(st(path(seg, w=1.6, a=.2), seg[0][0]))
-    for k in range(10):
-        cx = 60 + k * 120
-        cy = 36 + 9 * math.sin(cx / 38)
-        big = petals(cx, cy, 8, 8, 30, 7.5, rot=0.2) + circle(cx, cy, 6, w=1.8) + dotpath([(cx, cy)], w=3.4)
-        b.append(st(big, cx))
-        mx = cx + 60
-        my = 36 + 9 * math.sin(mx / 38)
-        small = petals(mx, my, 4, 5, 18, 5, rot=math.pi / 4, double=False) + dotpath([(mx, my)], w=3)
-        small += leaf(mx - 20, my + 2, math.radians(200), 20, 5, veins=False) + leaf(mx + 20, my + 2, math.radians(-20), 20, 5, veins=False)
-        small += dotpath([(mx, my - 20), (mx, my + 20)], w=3)
-        b.append(st(small, mx))
+    def wave_y(x):
+        return 36 + 11 * math.sin(x / 60.0 * math.pi)
+    x = 10.0
+    while x < SW - 24:
+        pts = [(x + t * 3.2, wave_y(x + t * 3.2)) for t in range(0, 6)]       # each stitch is ~16 units long and follows the wave
+        b.append(st(f'<path d="{smooth2(pts)}" stroke-width="2.8"/>', x))
+        x += 25
     write_div(3, "".join(b))
     # 4 Mithila teeth: triangles with dots over a zig baseline
     b = []
