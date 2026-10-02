@@ -1199,55 +1199,145 @@ def sspiral(cx, cy, r, turns=2.2, dirn=1, start=0.0, n=48, w=2, inner=.06, rot=0
     return f'<path d="{smooth2(pts)}" stroke-width="{w}"/>'
 
 
-CLOUD_LOBES = [   # (cx, cy, rx, ry): wide, irregular lobes; they start above the top edge so each cloud hangs from it
-    [(44, 26, 44, 46), (108, 34, 56, 56), (170, 22, 38, 42)],
-    [(250, 24, 36, 40), (308, 36, 54, 54), (364, 20, 36, 38), (392, 30, 22, 30)],
-    [(458, 26, 38, 44), (518, 38, 54, 54), (576, 24, 36, 40)],
-]
+# ---------------------------------------------------------------------------------------------------------------
+# Cloud in the style of the supplied reference: a big round swirl at the centre, a mound behind it, and several different
+# ribbons that sweep out and curl into spirals. Parts are painted back to front so they flow into one another.
+# ---------------------------------------------------------------------------------------------------------------
+def poly_pts_band(center, w0, w1):
+    n = len(center)
+    left, right = [], []
+    for i, (x, y) in enumerate(center):
+        a, c = center[max(0, i - 1)], center[min(n - 1, i + 1)]
+        dx, dy = c[0] - a[0], c[1] - a[1]
+        L = math.hypot(dx, dy) or 1
+        nx, ny = -dy / L, dx / L
+        t = i / (n - 1)
+        w = (w0 + (w1 - w0) * t) / 2
+        left.append((x + nx * w, y + ny * w))
+        right.append((x - nx * w, y - ny * w))
+    return left + right[::-1]
 
 
-def cloud_depth(x):
-    """Lowest y that is covered by cloud at this x (None where there is no cloud)."""
-    best = None
-    for cloud in CLOUD_LOBES:
-        for (cx, cy, rx, ry) in cloud:
-            u = (x - cx) / rx
-            if abs(u) < 1:
-                y = cy + ry * math.sqrt(1 - u * u)
-                best = y if best is None else max(best, y)
-    return best
+def curl_center(A, c1, C, R, a0, dirn, turns, r_end, lead=14, n_sp=46, lead_len=34):
+    a0r = math.radians(a0)
+    S0 = (C[0] + R * math.cos(a0r), C[1] + R * math.sin(a0r))
+    tx, ty = -math.sin(a0r) * dirn, math.cos(a0r) * dirn
+    c2 = (S0[0] - tx * lead_len, S0[1] - ty * lead_len)
+    pts = bez(A, c1, c2, S0, n=lead)[:-1]
+    for k in range(n_sp + 1):
+        t = k / n_sp
+        ang = a0r + dirn * turns * 2 * math.pi * t
+        rr = R + (r_end - R) * t
+        pts.append((C[0] + rr * math.cos(ang), C[1] + rr * math.sin(ang)))
+    return pts
 
 
-def curl_outline(cx, cy, rx, ry, dirn):
-    """A comma-shaped lobe: a round body whose lower edge sweeps out into a pointed, flowing tail (dirn = +1 right, -1 left)."""
-    d = dirn
-    p0 = (cx, cy + ry)
-    a30 = math.radians(28)
-    p1 = (cx + d * rx * math.cos(a30), cy + ry * math.sin(a30))
-    tip = (cx + d * rx * 1.62, cy + ry * .9)
-    sweep = 1 if d > 0 else 0
-    return (f"M{f2(p0[0])} {f2(p0[1])}A{f2(rx)} {f2(ry)} 0 1 {sweep} {f2(p1[0])} {f2(p1[1])}"
-            f"C{f2(cx + d * rx * 1.12)} {f2(cy + ry * .62)} {f2(cx + d * rx * 1.5)} {f2(cy + ry * .66)} {f2(tip[0])} {f2(tip[1])}"
-            f"C{f2(cx + d * rx * 1.2)} {f2(cy + ry * 1.12)} {f2(cx + d * rx * .5)} {f2(cy + ry * 1.12)} {f2(p0[0])} {f2(p0[1])}Z")
+CLOUD_SHAPES = []     # per cloud: list of ('ell', cx, cy, rx, ry) and ('poly', pts) in local coords; used to know where drops can hide
 
 
-def swirl_cloud2(lobes, idx):
-    """Layered curled lobes painted back to front: each is a white-filled, outlined comma with nested bands and a spiral, so the front
-    lobe cleanly hides the one behind (as in the reference sheet)."""
+def cloud_parts():
+    """Returns [(kind, data)] back to front, in local coords (cloud ~300 wide, hanging from y=0)."""
+    parts = []
+    parts.append(("ell", (150, 40, 82, 47)))                                            # mound behind
+    cap = curl_center((146, 14), (170, -14), (208, 14), 21, -90, 1, 1.4, 5, lead_len=30)
+    parts.append(("band", (cap, 16, 8)))                                                 # top-right curl
+    low_l = curl_center((140, 70), (112, 104), (86, 82), 14, 90, 1, 1.5, 4, lead_len=40)
+    parts.append(("band", (low_l, 20, 8)))                                               # lower-left curl, swinging down and round
+    low_r = curl_center((160, 72), (190, 108), (232, 86), 13, 90, -1, 1.5, 4, lead_len=40)
+    parts.append(("band", (low_r, 20, 8)))                                               # lower-right curl
+    big_l = curl_center((144, 50), (112, 2), (34, 56), 18, -90, -1, 1.55, 5, lead_len=46)
+    parts.append(("band", (big_l, 28, 9)))                                               # long left wave, rising then curling down
+    rt = curl_center((158, 52), (186, 10), (266, 56), 15, -90, 1, 1.5, 4, lead_len=42)
+    parts.append(("band", (rt, 24, 9)))                                                  # right ribbon
+    parts.append(("circ", (150, 44, 39)))                                                # big round swirl in front
+    return parts
+
+
+def render_cloud_parts():
     out = []
-    order = sorted(range(len(lobes)), key=lambda i: (lobes[i][2] * lobes[i][3], i))
-    for i in order:
-        cx, cy, rx, ry = lobes[i]
-        dirn = 1 if i % 2 == 0 else -1
-        out.append(f'<path d="{curl_outline(cx, cy, rx, ry, dirn)}" fill="#fff" stroke-width="2.8"/>')
-        out.append(f'<path d="{curl_outline(cx, cy, rx * .8, ry * .8, dirn)}" stroke-width="1.2"/>')
-        out.append(sspiral(cx - dirn * rx * .04, cy + ry * .08, min(rx, ry) * .55, turns=1.8, dirn=dirn, start=i * .8, w=2.3))
-    return "".join(out)
+    shapes = []
+    for kind, data in cloud_parts():
+        if kind == "ell":
+            cx, cy, rx, ry = data
+            out.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="#fff" stroke-width="2.8"/>')
+            out.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx - 9}" ry="{ry - 8}" stroke-width="1.2"/>')
+            shapes.append(("ell", data))
+        elif kind == "circ":
+            cx, cy, r = data
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="#fff" stroke-width="2.8"/>')
+            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r - 7}" stroke-width="1.2"/>')
+            out.append(sspiral(cx, cy, r - 12, turns=1.7, dirn=-1, start=2.2, w=2.6, n=70, inner=.1))
+            shapes.append(("ell", (cx, cy, r, r)))
+        else:
+            center, w0, w1 = data
+            poly = poly_pts_band(center, w0, w1)
+            sm = poly[::2] if len(poly) > 60 else poly
+            out.append(f'<path d="{smooth2(sm, closed=True)}" fill="#fff" stroke-width="2.6"/>')
+            k0 = int(len(center) * .55)
+            out.append(f'<path d="{smooth2(center[k0::2])}" stroke-width="1.5"/>')       # the thin swirl line inside the curl
+            shapes.append(("poly", poly))
+    return "".join(out), shapes
+
+
+def point_in_poly(x, y, poly):
+    inside = False
+    n = len(poly)
+    j = n - 1
+    for i in range(n):
+        xi, yi = poly[i]
+        xj, yj = poly[j]
+        if (yi > y) != (yj > y) and x < (xj - xi) * (y - yi) / (yj - yi + 1e-9) + xi:
+            inside = not inside
+        j = i
+    return inside
+
+
+def covered(x, y, shapes):
+    for kind, d in shapes:
+        if kind == "ell":
+            cx, cy, rx, ry = d
+            if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1:
+                return True
+        elif point_in_poly(x, y, d):
+            return True
+    return False
+
+
+CLOUD_PLACE = [(0, 1.0, 1), (306, 0.97, -1)]    # (x offset, scale, mirror) of the two clouds across the right half (600 wide)
+
+
+def to_view(x, y, place):
+    ox, sc, mir = place
+    lx = (x if mir > 0 else 300 - x) * sc
+    return ox + lx, y * sc
+
+
+def view_covered(x, y):
+    ox, sc, mir = None, None, None
+    _, shapes = CLOUD_CACHE
+    for place in CLOUD_PLACE:
+        ox, sc, mir = place
+        lx = (x - ox) / sc
+        if mir < 0:
+            lx = 300 - lx
+        ly = y / sc
+        if covered(lx, ly, shapes):
+            return True
+    return False
+
+
+CLOUD_CACHE = (None, None)
 
 
 def clouds_band():
-    b = "".join(swirl_cloud2(c, i) for i, c in enumerate(CLOUD_LOBES))
-    write("clouds", (600, 112), b)
+    global CLOUD_CACHE
+    inner, shapes = render_cloud_parts()
+    CLOUD_CACHE = (inner, shapes)
+    g = ""
+    for (ox, sc, mir) in CLOUD_PLACE:
+        tr = f"translate({ox + (0 if mir > 0 else 300 * sc)} 0) scale({sc * mir} {sc})"
+        g += f'<g transform="{tr}">{inner}</g>'
+    write("clouds", (600, 112), g)
 
 
 def teardrop2(cx, cy, r):
@@ -1259,30 +1349,31 @@ def teardrop2(cx, cy, r):
 def rain():
     """Teardrops with smooth swirls. Each starts hidden behind a cloud and falls straight down to its own resting height.
     Positions come from a jittered grid (even spread); the order they fall in is shuffled."""
+    if CLOUD_CACHE[0] is None:
+        clouds_band()
     rng = random.Random(8)
     cols, rows = 6, 4
-    cells = []
-    for c in range(cols):
-        for r_ in range(rows):
-            cells.append((c, r_))
+    cells = [(c, r_) for c in range(cols) for r_ in range(rows)]
     rng.shuffle(cells)
     order = list(range(len(cells)))
     rng.shuffle(order)
     b = []
     for i, (c, r_) in enumerate(cells):
-        x = 22 + (c + rng.uniform(.25, .75)) * (556 / cols)
-        cov = cloud_depth(x)
-        tries = 0
-        while cov is None or cov < 62:                           # keep every drop under a thick part of a cloud
-            x = 22 + (c + rng.uniform(.1, .9)) * (556 / cols)
-            cov = cloud_depth(x)
-            tries += 1
-            if tries > 40:
-                x = 92 if c < 2 else 314 if c < 4 else 496
-                cov = cloud_depth(x)
-                break
         r = rng.uniform(10, 14)
-        y0 = cov - r - 9                                         # drop bottom sits 9 units inside the cloud edge
+        h = r * 2.5
+        pick = None
+        for attempt in range(60):                                # find an x, inside this column, where a whole drop can start hidden
+            x = 22 + (c + rng.uniform(.1, .9)) * (556 / cols)
+            for y0 in range(70, 4, -2):
+                pts = [(x, y0 - h), (x - r, y0), (x + r, y0), (x, y0 + r), (x - r * .6, y0 - h * .5), (x + r * .6, y0 - h * .5), (x, y0 - h * .5)]
+                if all(py < 0 or view_covered(px, py) for px, py in pts):
+                    pick = (x, y0)
+                    break
+            if pick:
+                break
+        if not pick:
+            pick = (22 + (c + .5) * (556 / cols), -h - 4)          # fall back to starting just above the top edge (clipped)
+        x, y0 = pick
         y_end = 150 + (r_ + rng.uniform(.15, .85)) * (520 / rows)
         dist = max(40, y_end - y0)
         td = teardrop2(x, y0, r)
