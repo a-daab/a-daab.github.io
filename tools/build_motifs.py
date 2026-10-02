@@ -959,47 +959,42 @@ def dividers():
         b.append(st(dotpath([(xx + 6, 66)], w=3), xx))
     write_div(8, "".join(b))
 
-    # 9 an embroidered metal chain: oval links alternating with edge-on links, each worked in satin stitch (rows of slanted
-    # parallel stitches) with a few stitches left out for the sheen. It runs off both sides of the screen.
+    # 9 an embroidered metal chain. Every link passes through the hole of the next one; where two links cross, one is over at the top
+    # crossing and the other is over at the bottom crossing, so they visibly lock. Links are worked in satin stitch.
     BG = 'style="fill:var(--divbg,#fff)"'
-    srng = random.Random(5)
+    RX, RY, HX, HY = 25, 15, 14.5, 6.5
+    PITCH = 34
 
-    def ellipse_pt(cx, cy, rx, ry, ang):
-        return cx + rx * math.cos(ang), cy + ry * math.sin(ang)
-
-    def link(cx, cy):
-        o = f"M{cx - 22} {cy}a22 15 0 1 0 44 0a22 15 0 1 0 -44 0z"
-        h = f"M{cx - 12} {cy}a12 7.5 0 1 0 24 0a12 7.5 0 1 0 -24 0z"
-        g = [f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/>']
+    def ring(cx, cy, seed):
+        rng = random.Random(seed)
+        o = f"M{cx - RX} {cy}a{RX} {RY} 0 1 0 {2 * RX} 0a{RX} {RY} 0 1 0 {-2 * RX} 0z"
+        h = f"M{cx - HX} {cy}a{HX} {HY} 0 1 0 {2 * HX} 0a{HX} {HY} 0 1 0 {-2 * HX} 0z"
         d = ""
-        n = 34
+        n = 30
         for k in range(n):
             ang = k * 2 * math.pi / n
-            if math.radians(205) < ang < math.radians(255):            # sheen: stitches left out at the upper left
+            if math.radians(205) < ang < math.radians(250):                  # sheen: stitches left out at the upper left
                 continue
-            ax, ay = ellipse_pt(cx, cy, 11.4 + srng.uniform(-.4, .4), 6.9, ang)
-            bx, by = ellipse_pt(cx, cy, 22.4 + srng.uniform(-.5, .5), 15.4, ang + 0.16)   # slanted, like a satin stitch
+            ax, ay = cx + (HX - .5 + rng.uniform(-.4, .4)) * math.cos(ang), cy + (HY - .3) * math.sin(ang)
+            a2 = ang + .17
+            bx, by = cx + (RX + .4 + rng.uniform(-.5, .5)) * math.cos(a2), cy + (RY + .4) * math.sin(a2)
             d += f"M{ax:.1f} {ay:.1f}L{bx:.1f} {by:.1f}"
-        g.append(f'<path d="{d}" stroke-width="1.5"/>')
-        g.append(f'<path d="{o}" stroke-width="1.1"/><path d="{h}" stroke-width="1.1"/>')      # the thin split-stitch edge
-        return "".join(g)
-
-    def side(cx, cy):
-        d = ""
-        x = cx - 27
-        while x < cx + 27:
-            lean = 2.2
-            d += f"M{x:.1f} {cy + 5.6 + srng.uniform(-.3, .3):.1f}L{x + lean:.1f} {cy - 5.6 + srng.uniform(-.3, .3):.1f}"
-            x += 3.4
-        box = f"M{cx - 28} {cy - 6}h56a6 6 0 0 1 0 12h-56a6 6 0 0 1 0 -12z"
-        return f'<path d="{box}" {BG} stroke="none"/><path d="{d}" stroke-width="1.7"/><path d="{box}" stroke-width="1.1"/>'
+        return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/><path d="{d}" stroke-width="1.5"/>'
+                f'<path d="{o}" stroke-width="1.2"/><path d="{h}" stroke-width="1.2"/>')
 
     b = []
     cy = 36
-    x = -4
+    x = -38
+    k = 0
     while x < SW + 40:
-        b.append(st(side(x + 32, cy) + link(x, cy), max(0, x - 24)))
-        x += 64
+        g = ring(x, cy, 100 + k)
+        if k > 0:                                                            # redraw the previous link over this one at the TOP crossing
+            px = x - PITCH
+            g += (f'<clipPath id="lk{k}"><rect x="{px + RX - 20}" y="{cy - RY - 3}" width="22" height="{RY + 3}"/></clipPath>'
+                  f'<g clip-path="url(#lk{k})">{ring(px, cy, 100 + k - 1)}</g>')
+        b.append(st(g, max(0, x - 30)))
+        x += PITCH
+        k += 1
     write_div(9, "".join(b))
     # 10 Nepali textile band with eye imagery between zigzag borders
     b = []
