@@ -935,14 +935,39 @@ def dividers():
         b.append(st(dotpath([(xx + 6, 66)], w=3), xx))
     write_div(8, "".join(b))
 
-    # 9 embroidered chain stitch: two interlinked rows
+    # 9 a linked metal chain: ring links alternate with edge-on links, with ornamental rosette connectors
+    BG = 'style="fill:var(--divbg,#fff)"'
+    def ring(cx, cy, rx, ry, bar):
+        o = f"M{cx - rx} {cy}a{rx} {ry} 0 1 0 {2 * rx} 0a{rx} {ry} 0 1 0 {-2 * rx} 0z"
+        i = f"M{cx - rx + bar} {cy}a{rx - bar} {ry - bar} 0 1 0 {2 * (rx - bar)} 0a{rx - bar} {ry - bar} 0 1 0 {-2 * (rx - bar)} 0z"
+        return f'<path d="{o}{i}" fill-rule="evenodd" {BG} stroke="none"/><path d="{o}" stroke-width="2.6"/><path d="{i}" stroke-width="1.4"/>'
+    def capsule(cx, cy, hl, hw):
+        d = f"M{cx - hl + hw} {cy - hw}h{2 * (hl - hw)}a{hw} {hw} 0 0 1 0 {2 * hw}h{-2 * (hl - hw)}a{hw} {hw} 0 0 1 0 {-2 * hw}z"
+        return f'<path d="{d}" {BG} stroke-width="2.4"/><path d="M{cx - hl + hw + 3} {cy}h{2 * (hl - hw) - 6}" stroke-width="1"/>'
     b = []
-    for row, y in enumerate((24, 50)):
-        x = 14 + row * 10
-        while x < SW - 30:
-            b.append(st(f'<path d="M{x} {y - 8}q14 0 14 8q0 8 -14 8q-14 0 -14 -8q0 -8 14 -8z" stroke-width="2"/><path d="M{x + 14} {y}l7 0" stroke-width="1.6"/>', x)); x += 22
-    for xx in range(24, SW - 20, 44):
-        b.append(st(dotpath([(xx, 37)], w=3.4), xx))
+    x = 40
+    k = 0
+    cy = 36
+    while x < SW - 70:
+        if k % 5 == 4:                                           # ornamental connector
+            g = (f'<circle cx="{x}" cy="{cy}" r="23" {BG} stroke-width="2.6"/>' + circle(x, cy, 18, w=1.2) + petals(x, cy, 8, 5, 18, 4.5, rot=.2) +
+                 circle(x, cy, 4, w=1.8) + dotpath([(x - 33, cy), (x + 33, cy)], w=3))
+            b.append(st(g, x - 24))
+            x += 56
+            k += 1
+            continue
+        # ring, then the edge-on link in front of its right end, then the next ring (drawn later) covers the capsule's far end
+        g = ring(x, cy, 31, 18, 7)
+        g += "".join(f'<line x1="{x - 8 + q * 5}" y1="{cy + 12}" x2="{x - 3 + q * 5}" y2="{cy + 16}" stroke-width="1"/>' for q in range(5))   # shading
+        g += f'<path d="M{x - 25} {cy - 7}q4 -9 15 -12" stroke-width="1.3"/>'                                                                 # highlight
+        g += capsule(x + 38, cy, 30, 6)
+        b.append(st(g, x - 31))
+        x += 76
+        k += 1
+    for yy in (7, 65):                                           # fine stitched rails above and below
+        xx = 10
+        while xx < SW - 20:
+            b.append(st(f'<line x1="{xx}" y1="{yy}" x2="{xx + 10}" y2="{yy}" stroke-width="1.6"/>', xx)); xx += 22
     write_div(9, "".join(b))
     # 10 Nepali textile band with eye imagery between zigzag borders
     b = []
@@ -1055,23 +1080,67 @@ def spiral_cloud(cx, cy, s=1.0):
     return "".join(out)
 
 
-def rain_clouds():
-    W, H = 1200, 700
+def lobe_cloud(lobes, tails=()):
+    """A cloud as ONE merged silhouette of overlapping round lobes (outline only on the outside), with nested inner bands,
+    a spiral in each larger lobe, and flowing ribbon tails that curl out. Lobes start above y=0 so it hangs from the top edge."""
+    out = []
+    L = sorted(lobes, key=lambda l: l[2])
+
+    def layer(inset, w):
+        # all strokes first, then all white fills on top: only the outer boundary of the union keeps its stroke
+        for (cx, cy, r) in L:
+            if r - inset > 4:
+                out.append(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(r - inset)}" stroke-width="{2 * w}"/>')
+        for (cx, cy, r) in L:
+            if r - inset > 4:
+                out.append(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(r - inset)}" fill="#fff" stroke="none"/>')
+    layer(0, 2.6)
+    layer(8, 1.2)
+    layer(15, 0.9)
+    for i, (cx, cy, r) in enumerate(L):
+        if r >= 24:
+            out.append(spiral(cx, cy + r * .1, r * .6, turns=2.4, dirn=1 if i % 2 else -1, n=64, w=2.1, a=.2, start=i))
+    for (x0, y0, dx, dy, side) in tails:                            # flowing ribbons that curl out of the cloud
+        pts = bez((x0, y0), (x0 + dx * .5, y0 + 34), (x0 + dx * 1.05, y0 + 30), (x0 + dx, y0 + 8 + dy), n=26)
+        out.append(ribbon(pts, (-7, -3.5, 0, 3.5, 7), (1.1, 1.5, 2.8, 1.5, 1.1)))
+        ex, ey = pts[-1]
+        out.append(spiral(ex, ey, 14, turns=2.4, dirn=side, n=44, w=2.1, a=.1))
+        out.append(circle(ex, ey, 17, w=1.2))
+    return "".join(out)
+
+
+def clouds_band():
     b = []
-    for (cx, cy, sc) in ((170, 96, 0.8), (520, 86, 1.0), (880, 98, 0.85), (1130, 70, 0.55)):
-        b.append(spiral_cloud(cx, cy, sc))
-    for k in range(26):                                           # spiral raindrops, falling at different times and distances
-        # drops fall in the margins and the open right-hand area, not through the left-hand paragraphs
-        zone = (k % 5)
-        x = [R.uniform(20, 100), R.uniform(610, 640), R.uniform(660, 1180), R.uniform(660, 1180), R.uniform(1090, 1185)][zone]
-        y0 = 190 + R.uniform(0, 30)
+    # five irregular clouds hanging from the top edge; every bottom stays inside the section's top padding band
+    b.append(lobe_cloud([(48, 30, 30), (98, 44, 42), (152, 32, 36), (200, 46, 38), (240, 26, 24), (22, 14, 16)], [(236, 54, 56, 0, 1)]))
+    b.append(lobe_cloud([(332, 24, 24), (378, 38, 33), (424, 26, 23)]))
+    b.append(lobe_cloud([(520, 36, 30), (574, 48, 42), (634, 32, 36), (698, 50, 46), (760, 36, 34), (806, 22, 20)], [(530, 56, -52, 0, -1)]))
+    b.append(lobe_cloud([(880, 28, 25), (930, 44, 38), (986, 28, 26)]))
+    b.append(lobe_cloud([(1068, 34, 29), (1120, 52, 44), (1174, 32, 29)], [(1104, 60, -50, 0, -1)]))
+    write("clouds", (1200, 112), "".join(b))
+
+
+def teardrop(cx, cy, r):
+    h = r * 2.4
+    return (f"M{f(cx)} {f(cy - h)}C{f(cx + r * .25)} {f(cy - h * .62)} {f(cx + r)} {f(cy - r * 1.05)} {f(cx + r)} {f(cy)}"
+            f"A{f(r)} {f(r)} 0 0 1 {f(cx - r)} {f(cy)}C{f(cx - r)} {f(cy - r * 1.05)} {f(cx - r * .25)} {f(cy - h * .62)} {f(cx)} {f(cy - h)}Z")
+
+
+def rain():
+    b = []
+    cols = 29
+    for k in range(cols):
+        x = 34 + k * 39.5 + R.uniform(-4, 4)                      # one column each, so drops never overlap on the way down
+        r = R.uniform(10, 14.5)
+        y0 = R.uniform(92, 108)
         sdelay = R.uniform(0, .5)
-        dist = R.uniform(.62, 1.0)
-        r = R.uniform(10, 15)
-        g = (line(x, y0 - 30, x, y0 - r, w=1.4) + circle(x, y0, r, w=2.2) + spiral(x, y0, r * .8, turns=2, w=1.5, n=22) +
-             path([(x - r * .6, y0 - 22), (x, y0 - r - 8), (x + r * .6, y0 - 22)], w=1.2, a=.1))
+        dist = R.uniform(.3, 1.0)
+        td = teardrop(x, y0, r)
+        inner = teardrop(x, y0 + r * .1, r * .72)
+        g = (f'<path d="{td}" stroke-width="2.2"/><path d="{inner}" stroke-width="1"/>' +
+             spiral(x, y0, r * .55, turns=2.0, w=1.5, n=26, a=.1) + dotpath([(x - r * .35, y0 - r * 1.35)], w=1.6))
         b.append(f'<g class="raindrop" style="--s:{sdelay:.2f};--d:{dist:.2f}">{g}</g>')
-    write("rain-clouds", (W, H), "".join(b))
+    write("rain", (1200, 700), "".join(b))
 
 
 # ---------------------------------------------------------------- lotus that blooms from the bottom centre
@@ -1273,6 +1342,6 @@ def flow():
 
 
 if __name__ == "__main__":
-    for fn in (weave, hands_cup, rain_clouds, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
+    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
         fn()
     print("motifs written to", OUT)

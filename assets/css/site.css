@@ -360,7 +360,13 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 /* spiral clouds and the rain that falls from them */
 .motif.rain-art{left:0;top:0;width:100%;opacity:.6}
 .motif .raindrop{transform:translate3d(0,calc(var(--d) * 560px * clamp(0, calc((var(--p,1) - var(--s)) * 2.2), 1)),0)}
-#why .wrap{text-shadow:0 0 6px #fff,0 0 12px #fff,0 0 3px #fff}
+/* rain passes behind the text; a half-white veil over each text block fades it to 50% where the two meet */
+#why .wrap p,#why .wrap h2,#why .wrap .eyebrow,#why .wrap .quote,#why .wrap .btn--ghost{background:rgba(255,255,255,.5)}
+#why .wrap .btn--ghost:hover{background:var(--orange-tint)}
+/* clouds hang from the top edge, inside the section's top padding, so they never reach the text */
+.motif.cloud-band{left:0;right:0;top:0;margin-inline:auto;width:min(100%,1500px);opacity:.75}
+.stitchdiv{--divbg:#fff}
+.sec--orange .stitchdiv{--divbg:var(--orange)}
 /* one lotus, blooming at the bottom centre; fully open it is a fifth of the screen wide */
 .motif.lotus-art{left:50%;bottom:0;width:max(29vw,210px);margin-left:calc(max(29vw,210px) / -2);opacity:.6}   /* the open flower itself spans about a fifth of the screen */
 .lotus-art .petal{transform-box:view-box;transform-origin:250px 250px;transform:rotate(calc(var(--k) * var(--sp) * var(--p,1)))}
