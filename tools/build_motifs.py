@@ -959,16 +959,29 @@ def dividers():
         b.append(st(dotpath([(xx + 6, 66)], w=3), xx))
     write_div(8, "".join(b))
 
-    # 9 embroidery chain stitch: one row of simple linked loops, each worked just inside the one before it
+    # 9 a plain metal chain: wide oval links alternating with edge-on links that pass through them. It runs off both sides of the screen.
+    BG = 'style="fill:var(--divbg,#fff)"'
+    def link(cx, cy):                                          # a link seen face-on: outer ring, a hole, an inner line, highlight and shading
+        o = f"M{cx - 22} {cy}a22 15 0 1 0 44 0a22 15 0 1 0 -44 0z"
+        h = f"M{cx - 12} {cy}a12 7.5 0 1 0 24 0a12 7.5 0 1 0 -24 0z"
+        return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/>'
+                f'<path d="{o}" stroke-width="2.6"/><path d="{h}" stroke-width="2"/>'
+                f'<ellipse cx="{cx}" cy="{cy}" rx="17" ry="11.2" stroke-width="1"/>'
+                f'<path d="M{cx - 17} {cy - 5}q3 -8 12 -10" stroke-width="1.8"/>'                          # highlight, upper left
+                f'<path d="M{cx + 8} {cy + 13}l4 -3M{cx + 13} {cy + 10}l4 -4M{cx + 17} {cy + 6}l3 -3" stroke-width="1"/>')   # shading, lower right
+    def side(cx, cy):                                          # a link seen edge-on: a rounded bar with a centre line and a highlight
+        d = f"M{cx - 28} {cy - 6}h56a6 6 0 0 1 0 12h-56a6 6 0 0 1 0 -12z"
+        return (f'<path d="{d}" {BG} stroke-width="2.4"/>'
+                f'<path d="M{cx - 22} {cy}h44" stroke-width="1"/>'
+                f'<path d="M{cx - 21} {cy - 3.2}h30" stroke-width="1.5"/>')
     b = []
-    x = 14
-    while x < SW - 34:
-        loop = (f'<path d="M{x} 36C{x} 26 {x + 8} 24 {x + 20} 24C{x + 32} 24 {x + 36} 30 {x + 36} 36C{x + 36} 42 {x + 32} 48 {x + 20} 48'
-                f'C{x + 8} 48 {x} 46 {x} 36Z" stroke-width="2.6"/>'
-                f'<path d="M{x + 7} 36C{x + 7} 31 {x + 12} 29 {x + 20} 29C{x + 27} 29 {x + 30} 32 {x + 30} 36C{x + 30} 40 {x + 27} 43 {x + 20} 43'
-                f'C{x + 12} 43 {x + 7} 41 {x + 7} 36Z" stroke-width="1.2"/>')
-        b.append(st(loop, x))
-        x += 28
+    cy = 36
+    k = 0
+    x = -4
+    while x < SW + 40:
+        g = side(x + 32, cy) + link(x, cy)                      # the edge-on link first, so the ring's bars sit over its ends
+        b.append(st(g, max(0, x - 24)))
+        x += 64
     write_div(9, "".join(b))
     # 10 Nepali textile band with eye imagery between zigzag borders
     b = []
