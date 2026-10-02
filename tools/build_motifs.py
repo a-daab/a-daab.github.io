@@ -1596,31 +1596,45 @@ def village():
     b.append(house_stone(430, 104, 86))
     b.append(house(566, 112, 124, 30, 3))
     b.append(house_stone(702, 80, 66))
-    # clothesline between two poles in the yard
-    b.append(line(20, 186, 20, 52, w=2.6)); b.append(line(150, 186, 150, 58, w=2.6))
-    line_pts = [(20, 56), (85, 70), (150, 60)]
-    b.append(path(line_pts, w=1.4, a=.2))
-    # shirt (kurta)
-    b.append('<path d="M34 66l-12 10l6 8l8 -4v34h22v-34l8 4l6 -8l-12 -10z" stroke-width="1.8"/>' + dotpath([(51, 90), (51, 98)], w=2.2))
-    # long garment with a border (sari piece)
-    b.append('<path d="M104 68h16v62h-16z" stroke-width="1.8"/><path d="M104 118h16M104 124h16" stroke-width="1.1"/>' + dotpath([(112, 80), (112, 90), (112, 100)], w=2.2))
-    # small trousers
-    b.append('<path d="M126 62h20v10h-8l2 28h-6l-4 -20l-4 20h-6l2 -28h-8z" stroke-width="1.6"/>')
-    # the YogaMaty draped over the line: stripes across, binding, fringe
-    mx0, mx1, my0, my1 = 60, 92, 62, 146
-    b.append(f'<path d="M{mx0} {my0}H{mx1}V{my1}H{mx0}Z" fill="#fff" stroke-width="2.4"/><path d="M{mx0 + 4} {my0 + 3}V{my1 - 2}M{mx1 - 4} {my0 + 3}V{my1 - 2}" stroke-width="1"/>')
-    yy = my0 + 8
+    # clothesline between two poles in the yard: smaller, with the clothes hanging from the line by their shoulders / waists
+    px0, px1, pt = 14, 148, 104
+    b.append(line(px0, 186, px0, pt, w=2.4)); b.append(line(px1, 186, px1, pt, w=2.4))
+
+    def ly(x):
+        return 108 + 5 * math.sin(math.pi * (x - px0) / (px1 - px0))
+    b.append(path([(x, ly(x)) for x in range(px0, px1 + 1, 6)] + [(px1, ly(px1))], w=1.3, a=.2))
+    # kurta
+    cx = 38
+    y = ly(cx)
+    b.append(f'<path d="M{cx - 6} {y:.1f}l-13 7l4 6l6 -3v20h18v-20l6 3l4 -6l-13 -7q-6 5 -12 0z" stroke-width="1.7"/>' + dotpath([(cx, y + 14), (cx, y + 20)], w=2))
+    # the YogaMaty, folded over the line: stripes, bound edge, fringe
+    mx0, mx1 = 62, 88
+    y = ly((mx0 + mx1) / 2)
+    my1 = y + 40
+    b.append(f'<path d="M{mx0} {y:.1f}H{mx1}V{my1:.1f}H{mx0}Z" fill="#fff" stroke-width="2.2"/><path d="M{mx0 + 3} {y + 3:.1f}V{my1 - 2:.1f}M{mx1 - 3} {y + 3:.1f}V{my1 - 2:.1f}" stroke-width="1"/>')
+    yy = y + 7
     kind = 0
-    while yy < my1 - 8:
+    while yy < my1 - 7:
         if kind % 3 == 0:
-            b.append(f'<path d="M{mx0 + 6} {yy}H{mx1 - 6}M{mx0 + 6} {yy + 4}H{mx1 - 6}" stroke-width="1.1"/>'); yy += 9
+            b.append(f'<path d="M{mx0 + 5} {yy:.1f}H{mx1 - 5}M{mx0 + 5} {yy + 3.5:.1f}H{mx1 - 5}" stroke-width="1"/>'); yy += 8
         elif kind % 3 == 1:
-            b.append(dotpath([(x, yy) for x in range(mx0 + 8, mx1 - 4, 7)], w=2.2)); yy += 8
+            b.append(dotpath([(x, yy) for x in range(mx0 + 7, mx1 - 3, 6)], w=2)); yy += 7
         else:
-            b.append(f'<path d="M{mx0 + 6} {yy + 3}l5 -5l5 5l5 -5l5 5" stroke-width="1.1"/>'); yy += 9
+            b.append(f'<path d="M{mx0 + 5} {yy + 3:.1f}l4 -4l4 4l4 -4l4 4" stroke-width="1"/>'); yy += 8
         kind += 1
     for x in range(mx0 + 2, mx1, 4):
-        b.append(line(x, my1, x, my1 + 10, w=1.1))
+        b.append(line(x, my1, x, my1 + 7, w=1))
+    # sari length with a patterned border
+    sx0, sx1 = 98, 112
+    y = ly((sx0 + sx1) / 2)
+    b.append(f'<path d="M{sx0} {y:.1f}H{sx1}V{y + 44:.1f}H{sx0}Z" stroke-width="1.7"/><path d="M{sx0} {y + 36:.1f}H{sx1}M{sx0} {y + 40:.1f}H{sx1}" stroke-width="1"/>' + dotpath([(105, y + 9), (105, y + 17), (105, y + 25)], w=2))
+    # small trousers hung by the waist
+    cx = 133
+    y = ly(cx)
+    b.append(f'<path d="M{cx - 9} {y:.1f}H{cx + 9}V{y + 4:.1f}L{cx + 8} {y + 28:.1f}H{cx + 2}L{cx} {y + 11:.1f}L{cx - 2} {y + 28:.1f}H{cx - 8}L{cx - 9} {y + 4:.1f}Z" stroke-width="1.6"/>')
+    # pegs
+    for px in (33, 43, 62, 88, 101, 109, 128, 138):
+        b.append(dotpath([(px, ly(px) - 1)], w=2.4))
     write("village", (900, 210), "".join(b))
 
 
