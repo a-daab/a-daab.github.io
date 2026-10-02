@@ -884,10 +884,14 @@ def dividers():
     def wave_y(x):
         return 36 + 11 * math.sin(x / 60.0 * math.pi)
     x = 10.0
-    while x < SW - 24:
+    while x < 1138:
         pts = [(x + t * 3.2, wave_y(x + t * 3.2)) for t in range(0, 6)]       # each stitch is ~16 units long and follows the wave
         b.append(st(f'<path d="{smooth2(pts)}" stroke-width="2.8"/>', x))
         x += 25
+    # the wave ends in an embroidered X, like X marks the spot: two crossing diagonals, each a pair of thick parallel threads
+    cx, cy, r = 1166, wave_y(1166), 17
+    xm = f"M{cx - r} {cy - r}L{cx + r} {cy + r}M{cx + r} {cy - r}L{cx - r} {cy + r}"
+    b.append(st(f'<path d="{xm}" stroke-width="5.2"/>', 1166))
     write_div(3, "".join(b))
     # 4 Mithila teeth: triangles with dots over a zig baseline
     b = []
