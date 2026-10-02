@@ -809,7 +809,7 @@ def mandala():
 
 # =====================================================================================================
 # Stitched dividers: every stroke is a `.stitch` carrying --i, so the page can reveal them left to right
-# as the visitor scrolls; some carry a needle that leads the way.
+# as the visitor scrolls.
 # =====================================================================================================
 SW = 1200
 
@@ -817,11 +817,6 @@ SW = 1200
 def st(inner, x):
     i = max(0, min(99, int(x / SW * 96)))
     return f'<g class="stitch" style="--i:{i}">{inner}</g>'
-
-
-def needle():
-    return ('<g class="needle"><path d="M0 36L-52 31Q-62 36 -52 41Z" stroke-width="2.4"/><ellipse cx="-50" cy="36" rx="3" ry="2" stroke-width="1.4"/>'
-            '<path d="M-52 36C-84 54 -104 20 -140 40" stroke-width="1.6"/></g>')
 
 
 def write_div(n, body):
@@ -836,7 +831,7 @@ def dividers():
         while x < SW - 24:
             b.append(st(f'<line x1="{x}" y1="{y + R.uniform(-1, 1):.0f}" x2="{x + 18}" y2="{y + R.uniform(-1, 1):.0f}" stroke-width="2.6"/>', x))
             x += 30
-    write_div(1, "".join(b) + needle())
+    write_div(1, "".join(b))
     # 2 cross-stitch row with diamonds
     b = []
     x = 20
@@ -851,7 +846,7 @@ def dividers():
         xx = 8
         while xx < SW - 20:
             b.append(st(f'<line x1="{xx}" y1="{y}" x2="{xx + 10}" y2="{y}" stroke-width="1.6"/>', xx)); xx += 20
-    write_div(2, "".join(b) + needle())
+    write_div(2, "".join(b))
     # 3 lotus chain
     b = []
     for k in range(12):
@@ -870,15 +865,25 @@ def dividers():
         g += dotpath([(x + 19, 42), (x + 19, 52)], w=3)
         b.append(st(g, x))
     write_div(4, "".join(b))
-    # 5 thangka flames
+    # 5 Mithila fish alternating with Nepali-embroidery diamond medallions
     b = []
-    for k in range(20):
-        x = 8 + k * 59.5
-        o = f"M{f(x)} 66C{f(x - 4)} 46 {f(x + 22)} 40 {f(x + 14)} 22C{f(x + 12)} 14 {f(x + 22)} 10 {f(x + 30)} 4C{f(x + 28)} 22 {f(x + 52)} 38 {f(x + 48)} 66"
-        g = f'<path d="{o}" stroke-width="2.4"/>'
-        g += f'<path d="M{f(x + 10)} 66C{f(x + 8)} 52 {f(x + 26)} 46 {f(x + 24)} 30C{f(x + 36)} 40 {f(x + 40)} 54 {f(x + 38)} 66" stroke-width="1.2"/>'
-        g += f'<path d="M{f(x + 22)} 66C{f(x + 22)} 56 {f(x + 28)} 52 {f(x + 28)} 44" stroke-width="1.1"/>' + dotpath([(x + 28, 58)], w=3)
-        b.append(st(g, x))
+    for k in range(10):
+        x0 = 10 + k * 120
+        cx = x0 + 28
+        med = (f'<path d="M{cx} 6l26 30l-26 30l-26 -30z" stroke-width="2.4"/><path d="M{cx} 16l17 20l-17 20l-17 -20z" stroke-width="1.4"/>'
+               f'<path d="M{cx} 26l8 10l-8 10l-8 -10z" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=4)
+               + dotpath([(cx - 36, 36), (cx + 36, 36), (cx, 2), (cx, 70)], w=3))
+        b.append(st(med, x0))
+        fx = x0 + 74
+        fish = (f'<path d="M{fx} 36C{fx + 8} 22 {fx + 30} 22 {fx + 38} 36C{fx + 30} 50 {fx + 8} 50 {fx} 36Z" stroke-width="2.2"/>'
+                f'<path d="M{fx} 36l-12 -12v24z" stroke-width="2"/>'
+                f'<path d="M{fx + 8} 30q6 6 0 12M{fx + 14} 28q6 8 0 16M{fx + 20} 28q6 8 0 16" stroke-width="1.2"/>'
+                + dotpath([(fx + 31, 33)], w=3.4))
+        b.append(st(fish, fx))
+    for yy in (4, 68):
+        xx = 8
+        while xx < SW - 20:
+            b.append(st(f'<line x1="{xx}" y1="{yy}" x2="{xx + 8}" y2="{yy}" stroke-width="1.6"/>', xx)); xx += 18
     write_div(5, "".join(b))
     # 6 floral vine scroll
     b = []

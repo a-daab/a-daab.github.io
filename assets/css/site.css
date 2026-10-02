@@ -343,12 +343,11 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 .feather{transform-box:view-box;transform-origin:250px 370px;transform:rotate(calc(var(--k) * 13deg * (.2 + var(--p,1) * .8)))}
 .motif--xs{width:clamp(80px,9vw,130px)}
 
-/* ---------- Stitched section dividers: stitches are added left to right, led by a needle, as the divider scrolls in ---------- */
+/* ---------- Stitched section dividers: stitches and designs are added left to right as the divider scrolls in ---------- */
 .stitchdiv{position:absolute;left:0;right:0;bottom:clamp(14px,2.2vw,32px);z-index:1;pointer-events:none;color:var(--motif);opacity:.85}
 .stitchdiv svg{display:block;width:100%;height:auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;overflow:hidden}
 .stitchdiv svg *{vector-effect:non-scaling-stroke}
-.stitchdiv .needle{transform:translate3d(calc(var(--p,1) * 1250px),0,0)}
 .sec{padding-bottom:clamp(120px,13vw,170px)}
 .sec--tight,.sec--pp{padding-bottom:clamp(110px,11vw,140px)}
 .sec--hero-last{padding-bottom:clamp(48px,6vw,90px)}
-@media (prefers-reduced-motion:reduce){.stitchdiv .needle{display:none}}
+@media (prefers-reduced-motion:reduce){
