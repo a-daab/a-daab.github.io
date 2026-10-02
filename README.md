@@ -49,6 +49,6 @@ One template renders any batch. To publish a batch: copy `data/batches/B-2026-04
 - Header label is **“Petition”** and the header bar uses **88% opacity + blur** — both approved.
 - The **health appeal** no longer says "cotton" (now "natural hemp fibers and reclaimed sari fabric") until the sari fiber content is confirmed.
 - Share text points to **endmodernslaverynow.org**, as written; that is a setting (`petition_share_url`).
-- The Global Slavery Index link is the direct PDF; the Global Commission scoping study link is still the publisher's landing page (`mspec_scoping_study` in `src/site.json`).
-- The TransparaTrade whitepaper summary is a draft written from the Concept document, marked for confirmation.
+- Both statistic sources link to their direct PDFs (`walkfree_gsi_2023`, `mspec_scoping_study` in `src/site.json`).
+- The TransparaTrade whitepaper summary was accepted for now; the yellow "confirm against the updated whitepaper" marker is still on the page and should be removed once the real whitepaper is checked.
 - Buttons use the deeper orange `#A34400` fill (6.2:1) so 13px white text passes AA; change `--btn-bg` in `assets/css/site.css` to revert to `#CC5500`.

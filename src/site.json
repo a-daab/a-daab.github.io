@@ -17,7 +17,7 @@
   "ec_site": "https://www.empowermentcollective.org",
   "ec_newsletter": "https://www.empowermentcollective.org",
   "walkfree_gsi_2023": "https://cdn.walkfree.org/content/uploads/2023/05/17114737/Global-Slavery-Index-2023.pdf",
-  "mspec_scoping_study": "https://www.modernslaverypec.org/",
+  "mspec_scoping_study": "https://files.modernslaverypec.org/production/assets/downloads/Global-Commission-Scoping-Study-Report.pdf?dm=1736268034",
   "default_batch": "B-2026-04",
   "_notes": {
     "noindex": "true while this is a test build. Run `python3 tools/set-indexing.py index` at launch.",
@@ -25,7 +25,6 @@
     "turnstile_site_key": "Cloudflare Turnstile PUBLIC site key. Empty = widget omitted (the Worker will then reject unless TURNSTILE_SECRET is also unset).",
     "stripe_payment_link": "The Stripe Payment Link URL (https://buy.stripe.com/...). Empty = the buy button shows a disabled 'opens at launch' state.",
     "sold_out": "Flip to true when stock is gone (also set the inventory limit on the Stripe Payment Link).",
-    "whitepaper_url": "Path or URL of the whitepaper PDF, e.g. /assets/docs/transparatrade-whitepaper.pdf. Empty = 'coming shortly' state.",
-    "mspec_scoping_study": "Landing page used until the exact Global-Commission-Scoping-Study-Report.pdf link is confirmed."
+    "whitepaper_url": "Path or URL of the whitepaper PDF, e.g. /assets/docs/transparatrade-whitepaper.pdf. Empty = 'coming shortly' state."
   }
 }
