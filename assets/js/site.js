@@ -69,6 +69,26 @@
     }
   }
 
+  /* "Why transparency": raise the left column so its first paragraph's text top lines up with the top of the quote on the right */
+  function alignWhy() {
+    var left = d.querySelector('#why .why-left'), q = d.querySelector('#why .quote');
+    if (!left || !q) return;
+    left.style.removeProperty('--why-shift');
+    if (window.innerWidth <= 820) return;
+    var para = left.querySelector('h2 ~ p');
+    if (!para) return;
+    var pr = para.getBoundingClientRect(), qr = q.getBoundingClientRect();
+    var pfs = parseFloat(getComputedStyle(para).fontSize), qfs = parseFloat(getComputedStyle(q).fontSize);
+    /* compare where the letters start (cap height), not the line boxes: ~0.30em below the top of the text in Mulish, ~0.29em in Cormorant */
+    var pTop = pr.top + (pr.height > 0 ? ((parseFloat(getComputedStyle(para).lineHeight) || pfs * 1.65) - pfs) / 2 : 0) + 0.30 * pfs * 0.9;
+    var qTop = qr.top + (((parseFloat(getComputedStyle(q).lineHeight) || qfs * 1.3) - qfs) / 2) + 0.29 * qfs * 0.9;
+    left.style.setProperty('--why-shift', Math.round(qTop - pTop - 2) + 'px');
+  }
+  alignWhy();
+  window.addEventListener('resize', alignWhy, { passive: true });
+  window.addEventListener('load', alignWhy);
+  if (d.fonts && d.fonts.ready) d.fonts.ready.then(alignWhy);
+
   /* Hero: stays pinned while the mat unrolls. If its text block is taller than one screen it is scaled down to fit
      (so the pin still works); only on very short windows does the hero scroll normally. Nothing slides under the nav. */
   function fitHero() {

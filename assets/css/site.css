@@ -426,5 +426,5 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 /* the left text rises into the space above it (the cloud only occupies the right half); the right column stays put */
 @media (min-width:821px){
   #why{min-height:58.5vw}   /* keeps room for the whole rain fall */
-  #why .why-left{margin-top:calc(clamp(72px,11vw,150px) - 16.5vw - 34px)}
+  #why .why-left{margin-top:calc(clamp(72px,11vw,150px) - 16.5vw - 34px + var(--why-shift,0px))}
 }
