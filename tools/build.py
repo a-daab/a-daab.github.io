@@ -193,7 +193,10 @@ def build_lang(lang, pages_out):
         indexable = not re.search(r'{%\s*set\s+indexable\s*=\s*false\s*%}', source)
         ctx = dict(t=t, url=url, lang=lang, i18n=strings, js_strings=strings.get("js", {}), year=datetime.date.today().year,
                    current=path, page_path=path)
-        html = add_symbols(add_dividers(tpl.render(**ctx)))
+        html = tpl.render(**ctx)
+        if path == "":                    # decorative artwork (motifs, stitched dividers) lives on the Home page only
+            html = add_dividers(html)
+        html = add_symbols(html)
         out = ROOT / lang / path / "index.html" if path else ROOT / lang / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

@@ -4,13 +4,6 @@
 {% set description = "YogaMaty and TransparaTrade are being developed by Empowerment Collective, a 100% survivor-led nonprofit that trains and employs the women artisans who weave every mat in the Kathmandu Valley." %}
 {% block main %}
 <section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hands', 'lg', 'mid', 'right:-4%;bottom:-8%', scale=0.3) }}
-    {{ motif('sun', 'md', 'bg', 'right:24%;top:-16%', rot=240, mobile=False) }}
-    {{ motif('cloud', 'md', 'fast', 'left:34%;top:1%', dx=260, mobile=False) }}
-    {{ motif('rosette', 'sm', 'accent', 'left:-3%;top:-6%', rot=300, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'right:34%;bottom:3%', dx=-300, flip=True, mobile=False) }}
-  </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('about.eyebrow') }}</span>
     <h1 class="display">Made by<br>Empowerment<br>Collective.</h1>
@@ -19,11 +12,6 @@
 </section>
 
 <section class="sec sec--white">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('peacock', 'md', 'mid', 'right:3%;bottom:-6%', inline=True, mobile=False) }}
-    {{ motif('cloud', 'md', 'bg', 'right:6%;top:0%', dx=-240, flip=True, mobile=False) }}
-    {{ motif('hemp', 'sm', 'bg', 'left:-3%;top:-4%', rise=120, mobile=False) }}
-  </div>
   <div class="wrap grid grid--split">
     <div>
       <span class="eyebrow">The organization</span>
@@ -42,11 +30,6 @@
 </section>
 
 <section class="sec sec--white" style="padding-top:0">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hank', 'md', 'mid', 'right:2%;top:-4%', rot=-14, mobile=False) }}
-    {{ motif('cloud', 'md', 'fast', 'left:4%;top:0%', dx=300, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'right:36%;top:-2%', dx=-240, flip=True, mobile=False) }}
-  </div>
   <div class="wrap grid grid--2">
     <div>
       <span class="eyebrow">The workshop</span>
@@ -72,10 +55,6 @@
 </section>
 
 <section class="sec sec--orange sec--tight">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('mandala', 'lg', 'bg', 'right:-14%;top:-70%', rot=-200, mobile=False) }}
-    {{ motif('lotus', 'sm', 'accent', 'right:30%;top:6%', scale=0.6, mobile=False) }}
-  </div>
   <div class="wrap">
     <p class="statement">Who grows the hemp? A known grower — not Empowerment Collective. Their details appear in tier A1 of the passport.</p>
     <div class="btn-row"><a class="btn" href="{{ url('supply-chain') }}#chain-a">{{ t('about.see_a1') }}</a></div>
