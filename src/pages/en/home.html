@@ -4,14 +4,16 @@
 {% set description = "YogaMaty is a hemp and recycled-sari yoga mat woven by women artisans in the Kathmandu Valley — the first product to ship with a full, tier-by-tier supply chain passport you can open by scanning the label." %}
 {% block main %}
 
-{# ───────── 1. Hero — the mat unrolls as you scroll ───────── #}
-<section class="sec sec--orange sec--hero" id="top">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('rosette', 'md', 'bg', 'right:-5%;bottom:-18%', rot=40, mobile=False) }}
-    {{ motif('spool', 'sm', 'accent', 'right:44%;bottom:-4%', rot=120, mobile=False) }}
-  </div>
-  <div class="wrap hero-grid">
-    <div>
+{# ───────── 1. Hero — a horizontal mat unrolls down the right half as you scroll ───────── #}
+<section class="sec sec--orange hero-tall" id="top">
+  <div class="hero-stick">
+    <div class="hero-mat" aria-hidden="true">
+      {{ motif('mat-roll', 'static', 'content', '', cls='hero-roll', inline=True) }}
+      <div class="hero-clip">
+        {{ motif('mat-sheet', 'static', 'content', '', cls='hero-sheet', inline=True, progress='hero') }}
+      </div>
+    </div>
+    <div class="hero-text">
       <span class="eyebrow">{{ t('home.hero_eyebrow') }}</span>
       <h1 class="display">A mat you<br>can trace.</h1>
       <p class="lede">YogaMaty is a hemp and recycled-sari yoga mat, woven primarily on hundred-year-old electricity-free looms in the Kathmandu Valley by women artisans employed through the survivor-led anti-slavery organization Empowerment Collective. It is the first product in the world to ship with a full, tier-by-tier supply chain passport that a buyer can open by scanning the label.</p>
@@ -19,9 +21,6 @@
         <a class="btn btn--lg" href="{{ url('shop') }}">{{ t('nav.shop_yogamaty') }}</a>
         <a class="btn btn--ghost btn--lg" href="{{ url('supply-chain') }}">{{ t('home.open_passport') }}</a>
       </div>
-    </div>
-    <div class="hero-mat">
-      {{ motif('mat', 'static', 'content', '', cls='motif--static', inline=True, progress='hero') }}
     </div>
   </div>
 </section>
@@ -49,13 +48,12 @@
   </div>
 </section>
 
-{{ divider('spool', 'white') }}
+{{ divider('rosette', 'white') }}
 
 {# ───────── 3. The makers ───────── #}
 <section class="sec sec--orange" id="makers">
   <div class="motifs" aria-hidden="true">
     {{ motif('hands', 'lg', 'bg', 'right:-2%;bottom:-4%', speed=0.8) }}
-    {{ motif('spool', 'sm', 'accent', 'left:6%;top:10%', rot=200, mobile=False) }}
   </div>
   <div class="wrap wrap--narrow" style="max-width:860px;margin-left:0;margin-right:auto">
     <span class="eyebrow">{{ t('home.makers_eyebrow') }}</span>

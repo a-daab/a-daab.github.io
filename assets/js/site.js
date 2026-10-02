@@ -109,7 +109,11 @@
       var vh = window.innerHeight, sy = window.pageYOffset;
       for (var k = 0; k < vis.length; k++) {
         var m = vis[k], o = info.get(m), r = o.host.getBoundingClientRect(), p;
-        if (o.mode === 'hero') p = clamp(sy / (r.height * 0.85));          /* the mat unrolls over the hero */
+        if (o.mode === 'hero') {                                            /* the mat unrolls as the pinned hero scrolls past */
+          var stick = o.host.querySelector('.hero-stick');
+          if (stick && getComputedStyle(stick).position === 'sticky') p = clamp(sy / Math.max(1, r.height - vh));
+          else { var mr = m.getBoundingClientRect(); p = clamp((vh - mr.top) / (vh * 0.8)); }   /* small screens: unrolls as it scrolls into view */
+        }
         else p = clamp((vh - r.top) / (vh + r.height));                    /* 0 entering, 1 leaving */
         var centre = r.top + r.height / 2 - vh / 2;                        /* >0 while section is below viewport centre */
         m.style.setProperty('--p', p.toFixed(3));

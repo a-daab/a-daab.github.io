@@ -345,70 +345,101 @@ def sewing():
     write("sewing", (720, 460), "".join(b))
 
 
-# ---------------------------------------------------------------- the mat (hero unroll)
-def mat():
+# ---------------------------------------------------------------- the mat (hero unroll, vertical)
+# Two pieces: a horizontal roll that spans the right half of the hero, and the sheet that hangs from it.
+# The page slides the sheet down out of the roll as the visitor scrolls (translateY only).
+def mat_roll():
+    W, H = 600, 92
     b = []
-    r = 62
-    dx, dy = 96, -72                      # direction of the roll's axis = width of the mat
-    c1 = (r + 8, 330)                     # front end-face centre
-    c2 = (c1[0] + dx, c1[1] + dy)
-    # roll: cylinder body (two tangents + back arc) and the front face with the cream-binding spiral
-    nl = math.hypot(dx, dy)
-    nx, ny = -dy / nl * r, dx / nl * r    # perpendicular offset to tangent points
-    b.append(line(c1[0] + nx, c1[1] + ny, c2[0] + nx, c2[1] + ny, w=3.4))
-    b.append(line(c1[0] - nx, c1[1] - ny, c2[0] - nx, c2[1] - ny, w=3.4))
-    a0, a1 = math.atan2(-ny, -nx), math.atan2(ny, nx)
-    arc = [(c2[0] + r * math.cos(a0 + (a1 - a0 + (2 * math.pi if a1 < a0 else 0)) * t / 8),
-            c2[1] + r * math.sin(a0 + (a1 - a0 + (2 * math.pi if a1 < a0 else 0)) * t / 8)) for t in range(9)]
-    b.append(path(arc, w=3.4, a=.4))
-    b.append(circle(c1[0], c1[1], r, w=3.6))
+    x0, x1, yt, yb = 40, 566, 12, 80
+    b.append(path([(x0, yt), (300, yt - 2), (x1, yt)], w=3.4, a=.5))
+    b.append(path([(x0, yb), (300, yb + 2), (x1, yb)], w=3.4, a=.5))
+    b.append(path([(x0, yt + 7), (300, yt + 5), (x1, yt + 7)], w=1.2, a=.4))      # cream binding, doubled line
+    b.append(path([(x0, yb - 7), (300, yb - 5), (x1, yb - 7)], w=1.2, a=.4))
+    # left end face with the spiral of the binding
+    cy, ry, rx = (yt + yb) / 2, (yb - yt) / 2, 26
+    b.append(ellipse(x0, cy, rx, ry, w=3.4, n=16))
     sp = []
-    for k in range(0, 70):
-        a = k * .36
-        rr = 5 + a * 3.9
-        if rr < r - 4:
-            sp.append((c1[0] + rr * math.cos(a), c1[1] + rr * math.sin(a)))
-    b.append(path(sp, w=2.8, a=.4))
-    b.append(path([(x + 3.5, y + 3.5) for x, y in sp[3:]], w=1.2, a=.4))
-    for t in range(1, 6):  # stripes seen on the rolled body
-        k = t / 6
-        b.append(path([(c1[0] + nx * (1 - 2 * k) + dx * .12, c1[1] + ny * (1 - 2 * k) + dy * .12),
-                       (c1[0] + nx * (1 - 2 * k) + dx * .6, c1[1] + ny * (1 - 2 * k) + dy * .6)], w=1.1, a=.5))
-    # flat mat, oblique. Starts under the roll's bottom tangent and runs right; the page scales it with scroll.
-    ox, oy = c1[0] - ny * 0 + 0, c1[1] + r
-    L = 400
-    flat = []
-    for off in (0, 1):
-        ex, ey = ox + dx * off, oy + dy * off
-        flat.append(path([(ex, ey), (ex + L / 2, ey + 2), (ex + L, ey)], w=3.4))
-        flat.append(path([(ex + 6, ey - 6 * (1 - 2 * off)), (ex + L / 2, ey + 2 - 6 * (1 - 2 * off)), (ex + L - 6, ey - 6 * (1 - 2 * off))], w=1.3))
-    flat.append(line(ox + L, oy, ox + L + dx, oy + dy, w=3.4))
-    x = ox + 14
-    kinds = ["hatch", "open", "dots", "dash"]
+    for k in range(0, 60):
+        t = k * .42
+        rr = .10 + t * .062
+        if rr < .93:
+            sp.append((x0 + rx * rr * math.cos(t) * .9, cy + ry * rr * math.sin(t)))
+    b.append(path(sp, w=2.2, a=.3))
+    # right end: the curve of the cylinder
+    b.append(path([(x1, yt), (x1 + 22, cy), (x1, yb)], w=3.4, a=.5))
+    b.append(path([(x1, yt + 7), (x1 + 13, cy), (x1, yb - 7)], w=1.2, a=.4))
+    # stripes seen along the rolled body: bands of changing rhythm
+    x = x0 + 40
     i = 0
-    while x < ox + L - 24:
-        wband = R.choice([14, 20, 26, 34])
-        kind = kinds[i % 4]
-        step = 6 if kind == "hatch" else 10
-        for sidx in range(int(wband / step)):
-            xx = x + sidx * step
-            if kind in ("hatch", "open"):
-                flat.append(line(xx, oy - 8, xx + dx * .9, oy + dy * .9 + 4, w=1.1 if kind == "hatch" else 2))
-            elif kind == "dots":
-                for q in range(1, 7):
-                    flat.append(circle(xx + dx * q / 7.4, oy + dy * q / 7.4 - 4, 1.2, w=1.6))
-            else:
-                for q in range(0, 5):
-                    flat.append(line(xx + dx * q / 5.4, oy + dy * q / 5.4 - 6, xx + dx * (q + .55) / 5.4, oy + dy * (q + .55) / 5.4 - 6, w=1.6))
-        x += wband + 6
+    while x < x1 - 20:
+        wb = R.choice([10, 16, 24, 34])
+        kind = i % 4
+        if kind == 0:
+            for q in range(int(wb / 5)):
+                b.append(line(x + q * 5, yt + 14, x + q * 5 + R.uniform(-.8, .8), yb - 14, w=1.1))
+        elif kind == 1:
+            b.append(line(x + 2, yt + 14, x + 2, yb - 14, w=2.2)); b.append(line(x + wb - 2, yt + 14, x + wb - 2, yb - 14, w=2.2))
+        elif kind == 2:
+            for q in range(int(wb / 9) + 1):
+                for yy in range(int(yt + 20), int(yb - 14), 10):
+                    b.append(f'<path d="M{f(x + q * 9)} {f(yy)}h0" stroke-width="3"/>')
+        else:
+            for q in range(int(wb / 8) + 1):
+                for yy in range(int(yt + 16), int(yb - 18), 16):
+                    b.append(line(x + q * 8, yy, x + q * 8, yy + 8, w=1.6))
+        x += wb + 10
         i += 1
-    for k in range(14):  # knotted fringe at the far short end
-        t = (k + .5) / 14
-        sx, sy = ox + L + dx * t, oy + dy * t
-        flat.append(path([(sx, sy), (sx + 18, sy + 1 + R.uniform(-1, 1)), (sx + 30, sy + R.uniform(-2, 3))], w=1.6, a=.5))
-        flat.append(circle(sx + 31, sy + 1, 1.8, w=1.8))
-    b.append(f'<g class="mat-flat">{"".join(flat)}</g>')
-    write("mat", (0, 190, 620, 330), "".join(b))
+    write("mat-roll", (W, H), "".join(b))
+
+
+def mat_sheet():
+    W, H = 600, 640
+    b = []
+    x0, x1, y1 = 40, 566, 596
+    # binding down both long edges (doubled lines)
+    for xx in (x0, x1):
+        b.append(path([(xx, -4), (xx + R.uniform(-1, 1), 300), (xx, y1)], w=3.4, a=.5))
+    for xx in (x0 + 7, x1 - 7):
+        b.append(path([(xx, -4), (xx + R.uniform(-1, 1), 300), (xx, y1)], w=1.2, a=.4))
+    b.append(path([(x0, y1), (300, y1 + 2), (x1, y1)], w=3.4, a=.5))
+    b.append(path([(x0, y1 - 7), (300, y1 - 5), (x1, y1 - 7)], w=1.2, a=.4))
+    # stripes run the short way across the mat; each band has its own rhythm
+    y = 10
+    i = 0
+    while y < y1 - 30:
+        hb = R.choice([14, 22, 30, 44, 60])
+        kind = i % 5
+        top, bot = y, min(y + hb, y1 - 22)
+        if kind == 0:                       # dense hatching
+            yy = top
+            while yy < bot:
+                b.append(path([(x0 + 14, yy), (300, yy + R.uniform(-.8, .8)), (x1 - 14, yy)], w=1.1, a=.3)); yy += 5
+        elif kind == 1:                     # open spacing, two heavy lines
+            for yy in (top + 3, bot - 3):
+                b.append(path([(x0 + 14, yy), (300, yy + R.uniform(-1, 1)), (x1 - 14, yy)], w=2.4, a=.4))
+        elif kind == 2:                     # dotted runs
+            yy = top + 6
+            while yy < bot:
+                d = "".join(f"M{f(xx)} {f(yy)}h0" for xx in range(x0 + 20, x1 - 14, 11))
+                b.append(f'<path d="{d}" stroke-width="3"/>'); yy += 11
+        elif kind == 3:                     # dashed runs
+            yy = top + 6
+            while yy < bot:
+                d = "".join(f"M{f(xx)} {f(yy)}h8" for xx in range(x0 + 16, x1 - 24, 16))
+                b.append(f'<path d="{d}" stroke-width="1.8"/>'); yy += 10
+        else:                               # zig-zag
+            yy = top + 4
+            pts = [(xx, yy + (hb - 8 if (k % 2) else 0) * .5) for k, xx in enumerate(range(x0 + 16, x1 - 10, 14))]
+            b.append(path(pts, w=1.6, a=.3))
+        y = bot + 8
+        i += 1
+    # knotted fringe at the free end
+    for k in range(27):
+        xx = x0 + 6 + k * (x1 - x0 - 12) / 26
+        b.append(path([(xx, y1), (xx + R.uniform(-3, 3), y1 + 18), (xx + R.uniform(-4, 4), y1 + 34)], w=1.6, a=.4))
+        b.append(f'<path d="M{f(xx)} {f(y1 + 14)}h0" stroke-width="4"/>')
+    write("mat-sheet", (W, H), "".join(b), extra=' preserveAspectRatio="none"')
 
 
 # ---------------------------------------------------------------- water, leaves, bloom, rosette
@@ -507,6 +538,6 @@ def favicon():
 
 
 if __name__ == "__main__":
-    for fn in (hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat, water, leaves, bloom, rosette, border, favicon):
+    for fn in (hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
         fn()
     print("motifs written to", OUT)
