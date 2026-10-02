@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set path = "shipping-returns" %}
+{% set title = "Shipping & returns" %}
+{% set description = "Where YogaMaty ships, rates, delivery times, import duties, and how returns and refunds work." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Shipping &amp; returns</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> Items in brackets still need confirmation.</div>
+
+    <h2>Shipping</h2>
+    <table class="facts"><tbody>
+      <tr><th scope="row">Ships from</th><td>New Haven, Connecticut. Mats are made in the Kathmandu Valley, shipped in bulk to New Haven, and sent to you from there.</td></tr>
+      <tr><th scope="row">Where</th><td>Worldwide {{ ph('CONFIRM: international buyers from day one, or US only at launch') }}</td></tr>
+      <tr><th scope="row">Rates</th><td>Standard postal rates: USPS domestic; USPS International (or a comparable carrier) for overseas orders. The cost is shown at checkout.</td></tr>
+      <tr><th scope="row">Delivery time</th><td>United States: a few days to a week. International: longer and variable — customs processing in your country can add time we don't control.</td></tr>
+      <tr><th scope="row">Import duties</th><td>Recipients outside the United States may owe import duties and taxes on delivery. These are not included in the price.</td></tr>
+    </tbody></table>
+
+    <h2>Returns and exchanges</h2>
+    <p>You can return a YogaMaty within 30 days of delivery {{ ph('CONFIRM MATCHES ETSY') }}.</p>
+    <ul>
+      <li><strong>Condition:</strong> unused, as sold.</li>
+      <li><strong>Return postage:</strong> you pay it, unless you can show that the mat has serious quality issues or is significantly different from what was described — then Empowerment Collective covers it.</li>
+      <li><strong>Handmade variation:</strong> each mat has its own color palette; this alone is not a reason for the postage exception.</li>
+      <li><strong>Return address:</strong> {{ ph('ADD NEW HAVEN RETURN ADDRESS') }}</li>
+      <li><strong>Refund timeline:</strong> {{ ph('ADD REFUND TIMELINE') }}</li>
+    </ul>
+    <p>To start a return, <a href="{{ url('contact') }}">contact us</a> first.</p>
+  </div>
+</section>
+{% endblock %}

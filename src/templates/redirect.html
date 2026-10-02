@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="{{ default }}"><head><meta charset="utf-8"><title>YogaMaty</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% if noindex %}<meta name="robots" content="noindex">{% endif %}
+<link rel="canonical" href="{{ site.origin }}{{ target }}">
+<meta http-equiv="refresh" content="0; url={{ target }}">
+<script>
+(function(){var langs={{ langs|tojson }},t={{ target|tojson }},d={{ default|tojson }};
+var pref=(navigator.language||"").slice(0,2);
+if(langs.indexOf(pref)>-1&&pref!==d){t=t.replace("/"+d+"/","/"+pref+"/")}
+location.replace(t+location.search+location.hash)})();
+</script></head>
+<body><p><a href="{{ target }}">YogaMaty</a></p></body></html>

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% from "macros.html" import field %}
+{% set path = "transparatrade" %}
+{% set title = "TransparaTrade" %}
+{% set description = "TransparaTrade is a survivor-led initiative to transform global supply chains by demanding transparency, accountability and ethical practices. Read the argument, the whitepaper, and apply to join the development team." %}
+{% block main %}
+
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('spool', 'md', 'mid', 'right:6%;top:8%', rot=240, mobile=False) }}
+    {{ motif('bloom', 'lg', 'bg', 'left:-12%;bottom:-30%', rot=-40, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('tt.eyebrow') }}</span>
+    <h1 class="display">TransparaTrade.</h1>
+    <p class="statement">A survivor-led initiative designed to transform global supply chains by demanding transparency, accountability, and ethical practices.</p>
+    <div class="btn-row">
+      <a class="btn" href="#apply">{{ t('home.join_team') }}</a>
+      <a class="btn btn--ghost" href="{{ url('petition') }}">{{ t('home.sign_petition') }}</a>
+    </div>
+  </div>
+</section>
+
+{# ───────── Mission ───────── #}
+<section class="sec sec--white" id="mission">
+  <div class="motifs" aria-hidden="true">{{ motif('hemp', 'md', 'bg', 'right:-3%;top:6%', rise=120, mobile=False) }}</div>
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Mission</span>
+    <h2 class="h1">Why transparency.</h2>
+    <p>TransparaTrade was designed by survivors of modern slavery to address two entangled crises: forced labor and the climate crisis.</p>
+    <p>Preventing exploitation of both human labor and environmental resources requires a collective effort to shift global cultures of production and consumption. This shift is only possible when the depths of the supply chain are unveiled, allowing for a clearer global vision of the extent of abuse and how we can direct our spending power as consumers to create economic incentives for companies to maximize social and environmental impact rather than profit at the expense of innumerable livelihoods.</p>
+    <p>Through increasing consumer-facing supply chain transparency, TransparaTrade aims to cultivate a global culture of informed, ethical consumption and corporate accountability. Transparency, paired with a shared commitment to ethical action, has the power to end modern slavery, address climate change, and preserve our earth and key human rights for future generations.</p>
+    <p>We created YogaMaty to show that a fully transparent product is possible today. We trace every stage of the product's life openly and accurately, from raw material to final sale, providing key metrics of labor rights and sustainability to every consumer via a QR code on the product's label.</p>
+    <p class="statement" style="color:var(--orange);margin-top:1.6em">Our mission starts with YogaMaty and ends with a world where supply chain transparency labeling is mandatory for every product that enters the market.</p>
+    <p>This mandate eliminates any competitive advantage that companies could gain from exploiting their workers or the Earth's ecosystems.</p>
+  </div>
+</section>
+
+{{ divider('rosette', 'white') }}
+
+{# ───────── Argument ───────── #}
+<section class="sec sec--orange" id="argument">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('water', 'xl', 'bg', 'left:-10%;bottom:-6%', mobile=False) }}
+    {{ motif('leaves', 'md', 'mid', 'right:2%;top:4%', rot=40) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">The argument</span>
+    <h2 class="h1" style="max-width:20ch">Modern slavery is hidden in supply chains.</h2>
+    <p class="statement" data-source="Walk Free, Global Slavery Index 2023 — 50 million people in modern slavery on any given day in 2021, an increase of 10 million since 2016">50 million people are trapped in modern slavery worldwide — and the number grew by 10 million between 2016 and 2021.<sup><a href="#src-gsi" aria-label="Source 1">1</a></sup></p>
+    <p class="statement">Many of these people are trapped inside supply chains, producing clothing, electronics and food for global markets.</p>
+  </div>
+</section>
+
+<section class="sec sec--white">
+  <div class="wrap grid grid--2">
+    <div>
+      <h2 class="h2" style="color:var(--orange)">Survivors face a second barrier.</h2>
+      <p>Survivors face poverty, interrupted education, social stigma, and sometimes even criminalization, which make it difficult to secure an empowering job and break the cycle of exploitation.</p>
+      <h2 class="h2" style="color:var(--orange);margin-top:2rem">The climate connection.</h2>
+      <p>Modern slavery and the climate crisis are tangled in a vicious cycle. Changes in climate and resulting disasters — droughts, flooding, wildfires, and more — upend people's livelihoods, leaving them in extreme poverty and vulnerability.</p>
+      <p>Traffickers take advantage of this desperation for work. A farmer could fall into debt — and then debt bondage — because of drought-induced crop failure. Or a rugmaker could lose their entire stock of rugs, their equipment, and their home in a flash flood, forcing them to migrate and accept a job offer from an unknown recruiter falsely promising a living income and good working conditions.<sup><a href="#src-pec" aria-label="Source 2">2</a></sup></p>
+    </div>
+    <div>
+      <p>Forced labor is most heavily concentrated in environmentally destructive industries: mining, deforestation, fast fashion, unsustainable farming, and many others. The resource depletion and greenhouse gas emissions within these industries' supply chains feed climate change and fuel an increase in disasters. The cycle continues.</p>
+      <h2 class="h2" style="color:var(--orange);margin-top:2rem">Conscious consumption.</h2>
+      <p>With each dollar we spend, we vote for the world we want to live in and we shape the future for generations to come. Conscious consumption is the practice of making informed, ethical purchasing decisions that support companies prioritizing human rights and environmental sustainability. With transparency labeling, our choices become informed decisions rather than hopeful guesses, and through TransparaTrade, individual purchases become an organized call for legal reform.</p>
+      <p class="quote" style="margin-top:1.6rem">Consumer choice matters. If it didn't, companies wouldn't spend money on advertising.</p>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:3rem">
+    <h3>Sources</h3>
+    <p class="small" id="src-gsi" data-source="Walk Free, Global Slavery Index 2023; builds on the 2022 Global Estimates of Modern Slavery (ILO, Walk Free and IOM)"><strong>1.</strong> <a href="{{ site.walkfree_gsi_2023 }}" rel="noopener">Walk Free, Global Slavery Index 2023</a>, which builds on the 2022 Global Estimates of Modern Slavery (ILO, Walk Free and IOM). Estimate: 50 million people in modern slavery on any given day in 2021, an increase of 10 million since 2016.</p>
+    <p class="small" id="src-pec" data-source="Modern Slavery and Human Rights Policy and Evidence Centre, Global Commission scoping study report"><strong>2.</strong> <a href="{{ site.mspec_scoping_study }}" rel="noopener">Modern Slavery and Human Rights Policy and Evidence Centre, Global Commission scoping study report</a>.</p>
+  </div>
+</section>
+
+{# ───────── What the passport does today ───────── #}
+<section class="sec sec--white" style="padding-top:0" id="prototype">
+  <div class="motifs" aria-hidden="true">{{ motif('sewing', 'lg', 'mid', 'right:-6%;bottom:-6%', inline=True, mobile=False) }}</div>
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">The prototype</span>
+    <h2 class="h1">What the label does today — and what it should do.</h2>
+    <p>Today, scanning the QR code on a YogaMaty label opens the <a href="{{ url('supply-chain') }}">supply chain passport</a>: the full record for that batch, including product ID, materials and where they came from, production stages and events, dates, locations, craft information presented so identities stay protected, photos and video, packaging and distribution details, and verification notes.</p>
+    <p><strong>All of it is entered by hand.</strong> That is precisely the limitation this initiative exists to fix: if every company enters its own data manually, the ones not committed to ethics or sustainability can enter false data and keep hiding forced labor and environmental destruction.</p>
+    <p>TransparaTrade is the technology that would collect transparent, immutable data at every tier, so a consumer scanning a QR code sees not only each step but proof of where, when and how each record was entered. In the design, each artisan stage would be created and signed by the worker with a biometric-protected key, and countersigned by the artisan center before the record leaves the workshop. The passport already renders from a data file, so that automated data can replace hand entry without a redesign.</p>
+  </div>
+</section>
+
+{# ───────── Whitepaper ───────── #}
+<section class="sec sec--orange" id="whitepaper">
+  <div class="motifs" aria-hidden="true">{{ motif('spin', 'md', 'mid', 'right:8%;top:-4%', rot=120, mobile=False) }}</div>
+  <div class="wrap grid grid--split">
+    <div>
+      <span class="eyebrow">Whitepaper</span>
+      <h2 class="h1">{{ ph('WHITEPAPER TITLE') }}</h2>
+      {# Summary below is written from the Concept document; confirm against the updated whitepaper before launch. #}
+      <p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1.1vw,1.8rem)">TransparaTrade proposes a labeling standard in which every product carries a record of how it was made — each step, who did the work, and under what conditions — that any shopper can open by scanning a code.</p>
+      <p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1.1vw,1.8rem)">The record is built to be tamper-evident, so a company cannot quietly rewrite its own history. The whitepaper sets out how it would work, why it matters, and the case for making it mandatory.</p>
+      <p class="small">{{ ph('CONFIRM THIS SUMMARY AGAINST THE UPDATED WHITEPAPER') }}</p>
+    </div>
+    <div>
+      {% if site.whitepaper_url %}
+      <a class="btn btn--lg" href="{{ site.whitepaper_url }}" download>{{ t('tt.download') }}</a>
+      {% else %}
+      <span class="btn btn--lg" aria-disabled="true" role="link">{{ t('tt.coming_shortly') }}</span>
+      <p class="small" style="margin-top:14px;color:#fff;font-size:15px">{{ t('tt.wp_note') }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{# ───────── Allies application ───────── #}
+<section class="sec sec--white" id="apply">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('hands', 'md', 'bg', 'right:-4%;top:6%', speed=0.8, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">Allies</span>
+    <h2 class="h1">Join the TransparaTrade development team.</h2>
+    <p class="lede" style="max-width:50ch">Tell us a little about yourself and why you'd like to contribute.</p>
+
+    <form class="form" data-form="allies" novalidate autocomplete="off" aria-labelledby="apply-h">
+      <h3 id="apply-h" class="sr-only">Allies application</h3>
+      <div class="form-live">
+        <div class="grid grid--2" style="gap:0 36px">
+          {{ field('first_name', 'First name', required=True, maxlength=80) }}
+          {{ field('last_name', 'Last name', required=True, maxlength=80) }}
+        </div>
+        {{ field('email', 'Email address', type='email', required=True, autocomplete='email', maxlength=200, hint='We only use this to reply to you.') }}
+        {{ field('company', 'Company / job title', required=True, maxlength=160) }}
+
+        <fieldset class="skills field" data-field="skills">
+          <legend>Relevant skills</legend>
+          <div class="chips">
+            {% for s in ['Software engineering', 'Security / cryptography', 'Distributed ledgers', 'Product / UX design', 'Data and analytics', 'Supply chain and logistics', 'Law and policy', 'Human rights / anti-trafficking', 'Partnerships and fundraising', 'Communications'] %}
+            <label class="chip"><input type="checkbox" name="skills" value="{{ s }}"><span>{{ s }}</span></label>
+            {% endfor %}
+          </div>
+          <div class="hint" style="margin-top:14px">Choose any that apply, and/or add your own below.</div>
+          <input type="text" name="skills_other" id="f-skills_other" maxlength="200" aria-label="Other skills" placeholder="Other skills" autocomplete="off" data-lpignore="true" style="width:100%;font:inherit;font-size:18px;border:0;border-bottom:1px solid var(--ink);padding:12px 0 10px;margin-top:10px;background:transparent;border-radius:0">
+          <div class="err" role="alert"></div>
+        </fieldset>
+
+        <div class="field" data-field="statement">
+          <label for="f-statement">Statement</label>
+          <textarea id="f-statement" name="ym_statement" required aria-required="true" aria-describedby="statement-hint" data-maxwords="250" autocomplete="off"></textarea>
+          <div class="hint" id="statement-hint"><span>Why you want to join the TransparaTrade development team, what you hope to contribute, and anything else we should know.</span><span class="count" data-count aria-live="polite">0 / 250</span></div>
+          <div class="err" role="alert"></div>
+        </div>
+
+        {{ field('link', 'Link to a profile or portfolio', type='url', maxlength=300) }}
+        {{ field('country', 'Country / time zone', maxlength=120) }}
+
+        <label class="check"><input type="checkbox" name="consent" required aria-required="true"><span>I agree to Empowerment Collective using the information above to consider my application, as described in the <a href="{{ url('privacy') }}">privacy policy</a>.</span></label>
+        <div class="field" data-field="consent" style="margin-top:-1rem"><div class="err" role="alert"></div></div>
+
+        <input type="text" class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="t" value="">
+        <div class="cf-turnstile-mount"></div>
+        <button class="btn btn--lg" type="submit">{{ t('forms.submit_application') }}</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+        <p class="small" style="margin-top:1.6rem;max-width:60ch">Thank you for applying. Applications are read by the Empowerment Collective team. If we'd like to take yours further, we'll email you to request your résumé. Either way, you'll hear from us within {{ ph('ADD RESPONSE TIME, e.g. four weeks') }}. Replies come from Empowerment Collective. We email your application to our team and do not store it on this website.</p>
+      </div>
+      <div class="form-done" tabindex="-1">
+        <h3>Thank you.</h3>
+        <p class="lede">Your application is on its way to the Empowerment Collective team. If we'd like to take it further, we'll email you to request your résumé. Either way, you'll hear from us within {{ ph('ADD RESPONSE TIME') }}.</p>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/forms.js?v={{ year }}-1" defer></script>{% endblock %}

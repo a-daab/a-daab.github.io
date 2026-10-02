@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "macros.html" import field %}
+{% set path = "shop/wholesale" %}
+{% set title = "Wholesale & Studios" %}
+{% set description = "Request a meeting about stocking YogaMaty or outfitting your yoga studio with a mat that carries a story your staff can tell." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px)">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('spool', 'md', 'mid', 'right:6%;top:6%', rot=200, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('nav.shop') }}</span>
+    <h1 class="display">Wholesale<br>&amp; Studios.</h1>
+    <p class="statement">Stock or outfit your studio with a mat that carries a story your staff can tell.</p>
+  </div>
+</section>
+<section class="sec sec--white">
+  <div class="motifs" aria-hidden="true">{{ motif('sari', 'md', 'mid', 'right:-6%;top:12%', mobile=False) }}</div>
+  <div class="wrap">
+    <p class="lede">Tell us a little about your business and we'll be in touch by email to arrange a meeting. We don't publish wholesale pricing; the conversation happens directly.</p>
+    <form class="form" data-form="wholesale" novalidate autocomplete="off" style="margin-top:2.4rem" aria-label="Wholesale and studio inquiry">
+      <div class="form-live">
+        {{ field('name', 'Name', required=True, maxlength=120) }}
+        {{ field('phone', 'Phone number', type='tel', required=True, autocomplete='tel', maxlength=40, inputmode='tel') }}
+        {{ field('email', 'Email', type='email', required=True, autocomplete='email', maxlength=200) }}
+        {{ field('business', 'Business', required=True, maxlength=160) }}
+        <div class="field" data-field="note"><label for="f-note">Note <span class="opt">(optional)</span></label><textarea id="f-note" name="ym_note" maxlength="1500" autocomplete="off" style="min-height:120px"></textarea><div class="err" role="alert"></div></div>
+        <label class="check"><input type="checkbox" name="consent" required aria-required="true"><span>I agree to Empowerment Collective using this information to respond to my inquiry, as described in the <a href="{{ url('privacy') }}">privacy policy</a>.</span></label>
+        <div class="field" data-field="consent" style="margin-top:-1rem"><div class="err" role="alert"></div></div>
+        <input type="text" class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="t" value="">
+        <div class="cf-turnstile-mount"></div>
+        <button class="btn btn--lg" type="submit">{{ t('forms.submit_inquiry') }}</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+        <p class="small" style="margin-top:1.2rem;max-width:60ch">Your inquiry is emailed to our team and is not stored on this website.</p>
+      </div>
+      <div class="form-done" tabindex="-1">
+        <h2 class="h1">Thank you.</h2>
+        <p class="lede">We've received your inquiry and will email you to arrange a meeting.</p>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/forms.js?v={{ year }}-1" defer></script>{% endblock %}

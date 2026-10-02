@@ -1,0 +1,15 @@
+{# Shared macros. Import with: {% from "macros.html" import field, check, media_ph %} #}
+{% macro field(id, label, type="text", required=False, hint="", autocomplete="off", maxlength=200, inputmode="") -%}
+<div class="field" data-field="{{ id }}">
+  <label for="f-{{ id }}">{{ label }}{% if not required %} <span class="opt">(optional)</span>{% endif %}</label>
+  <input id="f-{{ id }}" name="ym_{{ id }}" type="{{ type }}" {% if required %}required aria-required="true"{% endif %} autocomplete="{{ autocomplete }}" autocapitalize="off" spellcheck="false" maxlength="{{ maxlength }}"{% if inputmode %} inputmode="{{ inputmode }}"{% endif %} data-lpignore="true" data-1p-ignore>
+  {% if hint %}<div class="hint">{{ hint }}</div>{% endif %}
+  <div class="err" role="alert"></div>
+</div>
+{%- endmacro %}
+
+{% macro media_ph(label, ar="land", extra="") -%}
+<figure class="media media--{{ ar }}" {{ extra }}>
+  <div class="media-ph" role="img" aria-label="Photograph placeholder: {{ label }}"><b>{{ label }}</b></div>
+</figure>
+{%- endmacro %}

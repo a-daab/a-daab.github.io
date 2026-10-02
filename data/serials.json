@@ -1,0 +1,10 @@
+{
+ "_doc": "Serial -> batch index. A QR code encodes /passport/<batch>?mat=<serial>; this index lets a bare ?mat= resolve too.",
+ "ranges": [
+  {
+   "batch": "B-2026-04",
+   "from": 1,
+   "to": null
+  }
+ ]
+}
