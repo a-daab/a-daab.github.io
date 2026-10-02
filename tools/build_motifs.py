@@ -1231,8 +1231,6 @@ def covered(x, y, shapes):
 # One wide cloud in the style of a traditional auspicious cloud: a crown of overlapping spiral-coil lobes, each ribbed like a
 # shell, with a pointed tail sweeping out at each end. Lobes are painted back to front. The top is cut by the section edge.
 # ---------------------------------------------------------------------------------------------------------------
-CLOUD_SHIFT = 55          # units of the cloud's top that sit above the section edge
-CLOUD_H = 198             # visible height in units
 
 
 def coil_lobe(cx, cy, R, dirn, start, turns=2.05):
@@ -1280,19 +1278,57 @@ LOBES = [   # (cx, cy, R, dirn, start angle): back to front
     (268, 134, 22, -1, 3.1), (344, 150, 20, 1, 0.4),
 ]
 
-# tapering chains of smaller and smaller lobes running out along the bottom to the left and right (listed from the body outwards)
-TAIL_LOBES = [(88, 214, 21), (66, 221, 16), (48, 226, 12), (34, 230, 9), (23, 233, 7), (14, 235, 5.2), (7, 236, 3.8)]
+# short chains of smaller lobes at the two ends (listed from the body outwards)
+TAIL_LOBES = [(88, 214, 21), (66, 221, 16), (48, 226, 12)]
+CLOUD_SCALE = 1.12                 # widens the cloud so it fills the right half
+CLOUD_YMAX = 250                   # lowest point of the cloud in its own (upright) coordinates
+CLOUD_HIDE = 3                     # units of the (new) top edge tucked under the previous section: about a millimetre
+CLOUD_H = 280
+
+
+def cloud_circles():
+    """All main circles (cx, cy, R, dirn, start) in upright coordinates, left tail, right tail, then the body."""
+    out = []
+    for mirror in (False, True):
+        for i, (x, y, R) in enumerate(reversed(TAIL_LOBES)):
+            out.append((600 - x if mirror else x, y, R, 1 if (i % 2) ^ mirror else -1, i * 1.3))
+    for (cx, cy, R, d, st_) in LOBES:
+        out.append((cx, cy, R, d, st_))
+    return out
+
+
+def extra_edge_lobes(mains):
+    """A few extra circles set at random spots on the outline, so the silhouette is not uniformly round."""
+    rng = random.Random(41)
+    extras = []
+    tries = 0
+    while len(extras) < 12 and tries < 400:
+        tries += 1
+        cx, cy, R = rng.choice(mains)[:3]
+        out_ang = math.atan2(cy - 150, cx - 300)
+        ang = out_ang + rng.uniform(-1.1, 1.1)
+        r = rng.uniform(11, 21)
+        x, y = cx + R * .92 * math.cos(ang), cy + R * .92 * math.sin(ang)
+        deep = sum(1 for (mx, my, mr, *_r) in mains if (x - mx) ** 2 + (y - my) ** 2 < (mr * .8) ** 2)
+        if deep > 0:                                        # skip spots that are inside the cloud, keep ones on its edge
+            continue
+        if any((x - ex) ** 2 + (y - ey) ** 2 < (er + r) ** 2 * .35 for ex, ey, er in extras):
+            continue
+        extras.append((round(x, 1), round(y, 1), round(r, 1)))
+    return extras
 
 
 def cloud_build():
+    mains = cloud_circles()
+    extras = extra_edge_lobes(mains)
     out = []
     shapes = []
-    for mirror in (False, True):                       # small lobes first so the body overlaps them
-        for i, (x, y, R) in enumerate(reversed(TAIL_LOBES)):
-            xx = 600 - x if mirror else x
-            out.append(coil_lobe(xx, y, R, 1 if (i % 2) ^ mirror else -1, i * 1.3))
-            shapes.append(("circ", (xx, y, R)))
-    for (cx, cy, R, d, st_) in LOBES:
+    for i, (x, y, r) in enumerate(extras):                   # extras sit behind the body so only their outer bulge shows
+        out.append(coil_lobe(x, y, r, 1 if i % 2 else -1, i * 2.1))
+        shapes.append(("circ", (x, y, r)))
+    tails = [c for c in mains[:2 * len(TAIL_LOBES)]]
+    body = mains[2 * len(TAIL_LOBES):]
+    for (cx, cy, R, d, st_) in tails + body:
         out.append(coil_lobe(cx, cy, R, d, st_))
         shapes.append(("circ", (cx, cy, R)))
     return "".join(out), shapes
@@ -1301,15 +1337,23 @@ def cloud_build():
 CLOUD_CACHE = (None, None)
 
 
+def _tr():
+    s_ = CLOUD_SCALE
+    return 300 + 300 * s_, CLOUD_YMAX * s_ - CLOUD_HIDE, s_
+
+
 def view_covered(x, y):
-    return covered(x, y + CLOUD_SHIFT, CLOUD_CACHE[1])
+    tx, ty, s_ = _tr()
+    return covered((tx - x) / s_, (ty - y) / s_, CLOUD_CACHE[1])
 
 
 def clouds_band():
+    """The cloud is turned 180 degrees so its crown hangs down; only a sliver of its top edge is tucked under the section above."""
     global CLOUD_CACHE
     inner, shapes = cloud_build()
     CLOUD_CACHE = (inner, shapes)
-    write("clouds", (600, CLOUD_H), f'<g transform="translate(0 {-CLOUD_SHIFT})">{inner}</g>')
+    tx, ty, s_ = _tr()
+    write("clouds", (600, CLOUD_H), f'<g transform="translate({f2(tx)} {f2(ty)}) scale({-s_} {-s_})">{inner}</g>')
 
 
 def teardrop2(cx, cy, r):
@@ -1336,7 +1380,7 @@ def rain():
         pick = None
         for attempt in range(60):                                # find an x, inside this column, where a whole drop can start hidden
             x = 22 + (c + rng.uniform(.1, .9)) * (556 / cols)
-            for y0 in range(150, 4, -2):
+            for y0 in range(250, 4, -2):
                 pts = [(x, y0 - h), (x - r, y0), (x + r, y0), (x, y0 + r), (x - r * .6, y0 - h * .5), (x + r * .6, y0 - h * .5), (x, y0 - h * .5)]
                 if all(py < 0 or view_covered(px, py) for px, py in pts):
                     pick = (x, y0)
@@ -1346,7 +1390,7 @@ def rain():
         if not pick:
             pick = (22 + (c + .5) * (556 / cols), -h - 4)          # fall back to starting just above the top edge (clipped)
         x, y0 = pick
-        y_end = 150 + (r_ + rng.uniform(.15, .85)) * (520 / rows)
+        y_end = 330 + (r_ + rng.uniform(.15, .85)) * (340 / rows)
         dist = max(40, y_end - y0)
         td = teardrop2(x, y0, r)
         inner = teardrop2(x, y0 + r * .08, r * .72)
