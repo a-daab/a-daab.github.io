@@ -751,7 +751,7 @@ def ribbon(pts, offs, ws):
     for o, w in zip(offs, ws):
         q = []
         for i, (p, (nx, ny)) in enumerate(zip(pts, nrm)):
-            tp = math.sin(math.pi * i / (n - 1)) ** .5
+            tp = max(0.0, math.sin(math.pi * i / (n - 1))) ** .5
             q.append((p[0] + nx * o * tp, p[1] + ny * o * tp))
         out.append(path(q, w=w, a=.35))
     return "".join(out)
@@ -824,13 +824,21 @@ def write_div(n, body):
 
 
 def dividers():
-    # 1 running stitch, two staggered rows
+    # 1 two lines of plain running stitch with a repeating Nepali-pattern band between them
     b = []
-    for row, y in enumerate((26, 46)):
-        x = 14 + (row * 14)
+    for y in (12, 60):
+        x = 8
         while x < SW - 24:
-            b.append(st(f'<line x1="{x}" y1="{y + R.uniform(-1, 1):.0f}" x2="{x + 18}" y2="{y + R.uniform(-1, 1):.0f}" stroke-width="2.6"/>', x))
-            x += 30
+            b.append(st(f'<line x1="{x}" y1="{y}" x2="{x + 18}" y2="{y}" stroke-width="2.6"/>', x)); x += 30
+    k = 0
+    x = 18
+    while x < SW - 30:
+        if k % 2 == 0:       # diamond with a dot
+            b.append(st(f'<path d="M{x} 36l11 -13l11 13l-11 13z" stroke-width="2.2"/><path d="M{x + 5} 36l6 -7l6 7l-6 7z" stroke-width="1.2"/>' + dotpath([(x + 11, 36)], w=3), x))
+        else:                # hourglass of two triangles between small stitched dots
+            b.append(st(f'<path d="M{x} 25h22l-22 22h22z" stroke-width="2.2"/>' + dotpath([(x - 6, 36), (x + 28, 36)], w=3), x))
+        x += 36
+        k += 1
     write_div(1, "".join(b))
     # 2 cross-stitch row with diamonds
     b = []
@@ -847,15 +855,23 @@ def dividers():
         while xx < SW - 20:
             b.append(st(f'<line x1="{xx}" y1="{y}" x2="{xx + 10}" y2="{y}" stroke-width="1.6"/>', xx)); xx += 20
     write_div(2, "".join(b))
-    # 3 lotus chain
+    # 3 abstract floral border: rosettes and half-flowers joined by a flowing stitched stem
     b = []
-    for k in range(12):
-        cx = 50 + k * 100
-        g = line(cx - 36, 60, cx - 16, 60, w=2) + line(cx + 16, 60, cx + 36, 60, w=2)
-        for a in (-62, -31, 0, 31, 62):
-            g += leaf(cx, 56, math.radians(-90 + a), 40 - abs(a) * .12, 8, veins=False)
-        g += dotpath([(cx, 58)], w=4)
-        b.append(st(g, cx))
+    stem = [(x, 36 + 9 * math.sin(x / 38)) for x in range(0, SW + 1, 10)]
+    for k in range(0, len(stem) - 2, 2):
+        seg = stem[k:k + 3]
+        b.append(st(path(seg, w=1.6, a=.2), seg[0][0]))
+    for k in range(10):
+        cx = 60 + k * 120
+        cy = 36 + 9 * math.sin(cx / 38)
+        big = petals(cx, cy, 8, 8, 30, 7.5, rot=0.2) + circle(cx, cy, 6, w=1.8) + dotpath([(cx, cy)], w=3.4)
+        b.append(st(big, cx))
+        mx = cx + 60
+        my = 36 + 9 * math.sin(mx / 38)
+        small = petals(mx, my, 4, 5, 18, 5, rot=math.pi / 4, double=False) + dotpath([(mx, my)], w=3)
+        small += leaf(mx - 20, my + 2, math.radians(200), 20, 5, veins=False) + leaf(mx + 20, my + 2, math.radians(-20), 20, 5, veins=False)
+        small += dotpath([(mx, my - 20), (mx, my + 20)], w=3)
+        b.append(st(small, mx))
     write_div(3, "".join(b))
     # 4 Mithila teeth: triangles with dots over a zig baseline
     b = []
@@ -865,21 +881,23 @@ def dividers():
         g += dotpath([(x + 19, 42), (x + 19, 52)], w=3)
         b.append(st(g, x))
     write_div(4, "".join(b))
-    # 5 Mithila fish alternating with Nepali-embroidery diamond medallions
+    # 5 Nepali stepped-diamond (dhaka-style) geometric border
+    def stepped(cx, cy, n, step):
+        q = []
+        for k in range(n):
+            q += [(cx + step * (k + 1), cy - step * (n - k)), (cx + step * (k + 1), cy - step * (n - k - 1))]
+        q = [(cx, cy - n * step)] + q
+        quad = q + [(cx + n * step, cy)]
+        pts = quad + [(x, 2 * cy - y) for x, y in reversed(quad)] + [(2 * cx - x, 2 * cy - y) for x, y in quad] + [(2 * cx - x, y) for x, y in reversed(quad)]
+        return "M" + "L".join(f"{f(x)} {f(y)}" for x, y in pts) + "Z"
     b = []
-    for k in range(10):
-        x0 = 10 + k * 120
-        cx = x0 + 28
-        med = (f'<path d="M{cx} 6l26 30l-26 30l-26 -30z" stroke-width="2.4"/><path d="M{cx} 16l17 20l-17 20l-17 -20z" stroke-width="1.4"/>'
-               f'<path d="M{cx} 26l8 10l-8 10l-8 -10z" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=4)
-               + dotpath([(cx - 36, 36), (cx + 36, 36), (cx, 2), (cx, 70)], w=3))
-        b.append(st(med, x0))
-        fx = x0 + 74
-        fish = (f'<path d="M{fx} 36C{fx + 8} 22 {fx + 30} 22 {fx + 38} 36C{fx + 30} 50 {fx + 8} 50 {fx} 36Z" stroke-width="2.2"/>'
-                f'<path d="M{fx} 36l-12 -12v24z" stroke-width="2"/>'
-                f'<path d="M{fx + 8} 30q6 6 0 12M{fx + 14} 28q6 8 0 16M{fx + 20} 28q6 8 0 16" stroke-width="1.2"/>'
-                + dotpath([(fx + 31, 33)], w=3.4))
-        b.append(st(fish, fx))
+    for k in range(15):
+        cx = 40 + k * 80
+        g = f'<path d="{stepped(cx, 36, 4, 7)}" stroke-width="2.4"/><path d="{stepped(cx, 36, 2, 7)}" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=4.5)
+        b.append(st(g, cx - 28))
+        sx = cx + 40
+        sq = "".join(f'<rect x="{sx - 3}" y="{y - 3}" width="6" height="6" stroke-width="1.6"/>' for y in (18, 36, 54))
+        b.append(st(sq, sx))
     for yy in (4, 68):
         xx = 8
         while xx < SW - 20:
@@ -917,8 +935,344 @@ def dividers():
         b.append(st(dotpath([(xx + 6, 66)], w=3), xx))
     write_div(8, "".join(b))
 
+    # 9 embroidered chain stitch: two interlinked rows
+    b = []
+    for row, y in enumerate((24, 50)):
+        x = 14 + row * 10
+        while x < SW - 30:
+            b.append(st(f'<path d="M{x} {y - 8}q14 0 14 8q0 8 -14 8q-14 0 -14 -8q0 -8 14 -8z" stroke-width="2"/><path d="M{x + 14} {y}l7 0" stroke-width="1.6"/>', x)); x += 22
+    for xx in range(24, SW - 20, 44):
+        b.append(st(dotpath([(xx, 37)], w=3.4), xx))
+    write_div(9, "".join(b))
+    # 10 Nepali textile band with eye imagery between zigzag borders
+    b = []
+    for k in range(30):
+        x = 6 + k * 40
+        b.append(st(f'<path d="M{x} 14l10 -9l10 9l10 -9" stroke-width="1.8"/><path d="M{x} 58l10 9l10 -9l10 9" stroke-width="1.8"/>', x))
+    for k in range(10):
+        cx = 60 + k * 120
+        eye_g = (f'<path d="M{cx - 34} 36Q{cx} 10 {cx + 34} 36Q{cx} 62 {cx - 34} 36Z" stroke-width="2.6"/>'
+                 f'<path d="M{cx - 24} 36Q{cx} 18 {cx + 24} 36Q{cx} 54 {cx - 24} 36Z" stroke-width="1.2"/>'
+                 f'<circle cx="{cx}" cy="36" r="11" stroke-width="2.2"/><circle cx="{cx}" cy="36" r="5" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=3)
+                 + "".join(f'<line x1="{cx + d * 1.15:.0f}" y1="{26 - abs(d) * .2:.0f}" x2="{cx + d * 1.5:.0f}" y2="{16 - abs(d) * .2:.0f}" stroke-width="1.5"/>' for d in (-22, -11, 0, 11, 22)))
+        b.append(st(eye_g, cx - 34))
+        mx = cx + 60
+        mot = (f'<path d="M{mx} 22l9 14l-9 14l-9 -14z" stroke-width="2"/>' + dotpath([(mx, 36), (mx - 20, 36), (mx + 20, 36)], w=3))
+        b.append(st(mot, mx))
+    write_div(10, "".join(b))
+
+
+
+
+# =====================================================================================================
+# Home-page feature illustrations (Mithila-style, single colour). Inline SVGs animated by scroll variables.
+# =====================================================================================================
+def spiral(cx, cy, r, turns=2.4, start=0.0, dirn=1, n=70, w=1.6, a=.25, inner=2.5):
+    pts = []
+    for k in range(n + 1):
+        t = k / n
+        ang = start + dirn * turns * 2 * math.pi * t
+        rr = inner + (r - inner) * t
+        pts.append((cx + rr * math.cos(ang), cy + rr * math.sin(ang)))
+    return path(pts, w=w, a=a)
+
+
+# ---------------------------------------------------------------- loom: sari strips woven in as you scroll
+def weave():
+    W, H = 560, 440
+    xs = [40 + i * 20 for i in range(25)]
+    b = []
+    for yy in (12, 22, 418, 428):
+        b.append(path([(18, yy), (280, yy + R.uniform(-1, 1)), (542, yy)], w=3.2 if yy in (12, 428) else 1.4, a=.4))
+    for x in (18, 542):
+        b.append(path([(x, 12), (x + R.uniform(-1, 1), 220), (x, 428)], w=3.4, a=.4))
+    for x in xs:                                                  # warp threads
+        b.append(line(x, 24, x, 418, w=1.3))
+    kinds = ["hatch", "dots", "zig", "bands", "diamond"]
+    for j in range(12):
+        y, h = 44 + j * 30, 24
+        g = [f'<rect x="30" y="{y}" width="500" height="{h}" fill="#fff" stroke-width="2.4"/>']
+        kind = kinds[j % 5]
+        if kind == "hatch":
+            g.append(f'<path d="' + "".join(f"M{x} {y + 4}v{h - 8}" for x in range(40, 520, 7)) + '" stroke-width="1"/>')
+        elif kind == "dots":
+            g.append(dotpath([(x, y + hh) for x in range(40, 524, 12) for hh in (7, 17)], w=2.4))
+        elif kind == "zig":
+            g.append(path([(x, y + (5 if (x // 12) % 2 else h - 5)) for x in range(36, 530, 12)], w=1.5, a=.2))
+        elif kind == "bands":
+            g.append(f'<path d="M34 {y + 7}h492M34 {y + h - 7}h492" stroke-width="1.2"/>' + dotpath([(x, y + h / 2) for x in range(46, 524, 16)], w=3))
+        else:
+            g.append("".join(f'<path d="M{x} {y + h / 2}l8 -8l8 8l-8 8z" stroke-width="1.4"/>' for x in range(40, 520, 24)))
+        b.append(f'<g class="weft" style="--j:{j};--dir:{1 if j % 2 == 0 else -1}">{"".join(g)}</g>')
+        for k, x in enumerate(xs):                                # thread passes over the strip here
+            if (j + k) % 2 == 1:
+                b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke="#fff" stroke-width="6"/><line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke-width="1.5"/>')
+    write("weave", (W, H), "".join(b))
+
+
+# ---------------------------------------------------------------- hands, palms up, cupped; arms from the top right
+def hand_up(tx, ty, rot, mirror=False, arm=560):
+    pts = [(-30, 70), (-38, 10), (-40, -40), (-38, -72), (-34, -100), (-26, -108), (-18, -100), (-17, -76),
+           (-17, -118), (-9, -130), (-1, -118), (-1, -80), (0, -134), (9, -146), (18, -134), (18, -80),
+           (19, -120), (27, -132), (35, -120), (36, -70), (40, -40), (46, -34), (64, -52), (80, -80),
+           (88, -86), (93, -76), (78, -36), (54, 0), (36, 28), (30, 70)]
+    g = [path(pts, w=3.2, a=.4)]
+    g.append(path([(x * .86, (y + 30) * .86 - 30) for x, y in pts[:-3]], w=1.2, a=.5))
+    for (x, y) in ((-26, -78), (-9, -92), (9, -100), (27, -90)):
+        g.append(line(x - 7, y, x + 7, y + 1, w=1.2)); g.append(line(x - 7, y - 22, x + 7, y - 21, w=1.2))
+    # mehndi-style palm decoration: rings, spiral and dots
+    g.append(circle(0, -8, 24, w=1.6)); g.append(circle(0, -8, 17, w=1.2)); g.append(spiral(0, -8, 13, 2.2, w=1.4, a=.2))
+    g.append(dotpath([(24 * math.cos(k * math.pi / 5), -8 + 24 * math.sin(k * math.pi / 5)) for k in range(10)], w=2.4))
+    # forearm: two long edges, bangles and a chain of diamonds
+    g.append(path([(-30, 70), (-34, 300), (-30, arm)], w=3.2, a=.8)); g.append(path([(30, 70), (34, 300), (30, arm)], w=3.2, a=.8))
+    for yy in (82, 98, 114):
+        g.append(path([(-32, yy), (0, yy + 6), (32, yy)], w=2.6 if yy == 98 else 1.5, a=.4))
+    for yy in range(140, arm - 20, 46):
+        g.append(f'<path d="M0 {yy}l9 14l-9 14l-9 -14z" stroke-width="1.6"/>' + dotpath([(0, yy + 14)], w=3))
+        g.append(path([(-30, yy + 14), (-18, yy + 2), (-30, yy - 10)], w=1.2, a=.2)); g.append(path([(30, yy + 14), (18, yy + 2), (30, yy - 10)], w=1.2, a=.2))
+    tr = f"translate({tx} {ty}) rotate({rot})" + (" scale(-1 1)" if mirror else "")
+    return f'<g transform="{tr}">{"".join(g)}</g>'
+
+
+def hands_cup():
+    # two cupped hands, scaled up, meeting at the lower left; the forearms run off the top right edge
+    b = ['<g transform="translate(-30 -40) scale(1.5)">' + hand_up(176, 318, 206) + hand_up(290, 418, 238) + '</g>']
+    write("hands-cup", (640, 780), "".join(b))
+
+
+# ---------------------------------------------------------------- spiral clouds and spiral rain
+def spiral_cloud(cx, cy, s=1.0):
+    out = []
+    discs = [(-118, 14, 32), (118, 14, 32), (-66, -10, 44), (66, -10, 44), (0, -26, 56)]
+    for dx, dy, r in discs:
+        x, y, r = cx + dx * s, cy + dy * s, r * s
+        out.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="{f(r)}" fill="#fff" stroke-width="2.6"/>')
+        out.append(circle(x, y, r * .84, w=1.2))
+        out.append(spiral(x, y, r * .78, turns=2.5, w=1.8, dirn=1 if dx >= 0 else -1, n=44))
+    for k, yy in enumerate((cy + 42 * s, cy + 52 * s, cy + 62 * s)):
+        pts = [(cx - 150 * s + t * 30 * s, yy + math.sin(t * 1.1 + k) * 4) for t in range(11)]
+        out.append(path(pts, w=[2.4, 1.6, 1.2][k], a=.3))
+    return "".join(out)
+
+
+def rain_clouds():
+    W, H = 1200, 700
+    b = []
+    for (cx, cy, sc) in ((170, 96, 0.8), (520, 86, 1.0), (880, 98, 0.85), (1130, 70, 0.55)):
+        b.append(spiral_cloud(cx, cy, sc))
+    for k in range(26):                                           # spiral raindrops, falling at different times and distances
+        # drops fall in the margins and the open right-hand area, not through the left-hand paragraphs
+        zone = (k % 5)
+        x = [R.uniform(20, 100), R.uniform(610, 640), R.uniform(660, 1180), R.uniform(660, 1180), R.uniform(1090, 1185)][zone]
+        y0 = 190 + R.uniform(0, 30)
+        sdelay = R.uniform(0, .5)
+        dist = R.uniform(.62, 1.0)
+        r = R.uniform(10, 15)
+        g = (line(x, y0 - 30, x, y0 - r, w=1.4) + circle(x, y0, r, w=2.2) + spiral(x, y0, r * .8, turns=2, w=1.5, n=22) +
+             path([(x - r * .6, y0 - 22), (x, y0 - r - 8), (x + r * .6, y0 - 22)], w=1.2, a=.1))
+        b.append(f'<g class="raindrop" style="--s:{sdelay:.2f};--d:{dist:.2f}">{g}</g>')
+    write("rain-clouds", (W, H), "".join(b))
+
+
+# ---------------------------------------------------------------- lotus that blooms from the bottom centre
+def lotus_bloom():
+    b = []
+    cx, cy = 250, 250
+    rows = [(9, 17, 190, 24, "back"), (7, 23, 150, 28, "mid"), (5, 31, 112, 32, "front")]
+    for n, sp, L, w, name in rows:
+        half = n // 2
+        for k in range(-half, half + 1):
+            g = leaf(cx, cy, math.radians(-90), L - abs(k) * 4, w, veins=False)
+            g += line(cx, cy - 20, cx, cy - L * .8, w=1.1)
+            g += dotpath([(cx, cy - L * (.3 + q * .13)) for q in range(4)], w=2.2)
+            b.append(f'<g class="petal" style="--k:{k};--sp:{sp}deg">{g}</g>')
+    b.append(path([(60, 262), (250, 274), (440, 262)], w=3.2, a=.5))
+    b.append(path([(110, 286), (250, 296), (390, 286)], w=2.2, a=.5))
+    b.append(path([(160, 308), (250, 316), (340, 308)], w=1.4, a=.5))
+    b.append(dotpath([(86 + i * 17, 276 + 4 * math.sin(i)) for i in range(21)], w=2.4))
+    write("lotus-bloom", (500, 330), "".join(b))
+
+
+# ---------------------------------------------------------------- sun in spirals
+def sun_spiral():
+    b = []
+    cx = cy = 200
+    b.append(circle(cx, cy, 78, w=3.2)); b.append(circle(cx, cy, 70, w=1.3))
+    b.append(spiral(cx, cy, 64, turns=4.2, w=2.2, n=140, a=.3))
+    b.append(dotpath([(cx + 88 * math.cos(k * math.pi / 14), cy + 88 * math.sin(k * math.pi / 14)) for k in range(28)], w=2.6))
+    for k in range(16):
+        a = k * 2 * math.pi / 16
+        p0, p1 = rot_pt(98, 0, a, cx, cy), rot_pt(140, 0, a, cx, cy)
+        b.append(line(p0[0], p0[1], p1[0], p1[1], w=1.8))
+        sc = rot_pt(156, 0, a, cx, cy)
+        b.append(spiral(sc[0], sc[1], 17, turns=2.2, start=a, dirn=1 if k % 2 else -1, w=2, n=40))
+        b.append(circle(sc[0], sc[1], 17, w=1.2))
+    write("sun-spiral", (400, 400), "".join(b))
+
+
+# ---------------------------------------------------------------- Nepali village, clothesline with clothes and a YogaMaty
+def house(x, w, h, roof, tiers=1):
+    b = []
+    y1 = 186
+    y0 = y1 - h
+    b.append(f'<path d="M{x} {y1}V{y0}H{x + w}V{y1}" stroke-width="2.4"/>')
+    b.append(clipped("v", [(x, y0), (x + w, y0), (x + w, y1), (x, y1)], hatch_lines(x, y0, x + w, y1, 0, 5, .8) + hatch_lines(x, y0, x + w, y1, 90, 14, .6)))
+    for t in range(tiers):                                        # tiered pitched roof
+        ry = y0 - t * roof * .62
+        ov = 8 + t * 5
+        b.append(f'<path d="M{x - ov} {ry}L{x + ov + 4} {ry - roof * .62}H{x + w - ov - 4}L{x + w + ov} {ry}Z" stroke-width="2.4"/>')
+        b.append(f'<path d="M' + "".join(f"{x - ov + 6 + i * 9} {ry - 2}l5 -{roof * .5:.0f}M" for i in range(int((w + 2 * ov) / 9) - 1)).rstrip("M") + '" stroke-width="1"/>')
+    dw = max(10, w * .2)
+    b.append(f'<path d="M{x + w / 2 - dw / 2} {y1}v-{h * .38:.0f}h{dw}v{h * .38:.0f}" stroke-width="2"/>')
+    for wx in (x + w * .16, x + w * .66):                          # carved windows
+        wy = y0 + h * .2
+        b.append(f'<rect x="{wx:.0f}" y="{wy:.0f}" width="{w * .18:.0f}" height="{h * .28:.0f}" stroke-width="1.8"/>')
+        b.append(f'<path d="M{wx + w * .09:.0f} {wy:.0f}v{h * .28:.0f}M{wx:.0f} {wy + h * .14:.0f}h{w * .18:.0f}" stroke-width="1"/>')
+    return "".join(b)
+
+
+def village():
+    b = []
+    W = 900
+    b.append(path([(0, 187), (450, 189), (900, 187)], w=2.4, a=.5))
+    b.append(dotpath([(8 + i * 14, 196) for i in range(63)], w=2))
+    # yard fence
+    for x in range(6, 150, 18):
+        b.append(line(x, 186, x, 164, w=1.6))
+    b.append(line(6, 172, 148, 172, w=1.4)); b.append(line(6, 180, 148, 180, w=1.2))
+    # leftmost house, then neighbours
+    b.append(house(160, 120, 74, 36, 2))
+    b.append(house(306, 96, 94, 40, 3))
+    b.append(house(424, 130, 66, 32, 2))
+    b.append(house(582, 110, 86, 38, 3))
+    b.append(house(722, 84, 60, 28, 1))
+    # clothesline between two poles in the yard
+    b.append(line(20, 186, 20, 52, w=2.6)); b.append(line(150, 186, 150, 58, w=2.6))
+    line_pts = [(20, 56), (85, 70), (150, 60)]
+    b.append(path(line_pts, w=1.4, a=.2))
+    # shirt (kurta)
+    b.append('<path d="M34 66l-12 10l6 8l8 -4v34h22v-34l8 4l6 -8l-12 -10z" stroke-width="1.8"/>' + dotpath([(51, 90), (51, 98)], w=2.2))
+    # long garment with a border (sari piece)
+    b.append('<path d="M104 68h16v62h-16z" stroke-width="1.8"/><path d="M104 118h16M104 124h16" stroke-width="1.1"/>' + dotpath([(112, 80), (112, 90), (112, 100)], w=2.2))
+    # small trousers
+    b.append('<path d="M126 62h20v10h-8l2 28h-6l-4 -20l-4 20h-6l2 -28h-8z" stroke-width="1.6"/>')
+    # the YogaMaty draped over the line: stripes across, binding, fringe
+    mx0, mx1, my0, my1 = 60, 92, 62, 146
+    b.append(f'<path d="M{mx0} {my0}H{mx1}V{my1}H{mx0}Z" fill="#fff" stroke-width="2.4"/><path d="M{mx0 + 4} {my0 + 3}V{my1 - 2}M{mx1 - 4} {my0 + 3}V{my1 - 2}" stroke-width="1"/>')
+    yy = my0 + 8
+    kind = 0
+    while yy < my1 - 8:
+        if kind % 3 == 0:
+            b.append(f'<path d="M{mx0 + 6} {yy}H{mx1 - 6}M{mx0 + 6} {yy + 4}H{mx1 - 6}" stroke-width="1.1"/>'); yy += 9
+        elif kind % 3 == 1:
+            b.append(dotpath([(x, yy) for x in range(mx0 + 8, mx1 - 4, 7)], w=2.2)); yy += 8
+        else:
+            b.append(f'<path d="M{mx0 + 6} {yy + 3}l5 -5l5 5l5 -5l5 5" stroke-width="1.1"/>'); yy += 9
+        kind += 1
+    for x in range(mx0 + 2, mx1, 4):
+        b.append(line(x, my1, x, my1 + 10, w=1.1))
+    # birds and a prayer-flag string over the rooftops
+    b.append(path([(300, 52), (450, 38), (600, 52)], w=1.1, a=.2))
+    for i, x in enumerate(range(318, 590, 28)):
+        b.append(f'<path d="M{x} {49 - 10 * math.sin((x - 300) / 285 * math.pi) * 0.0 + 0:.0f}l7 2l-1 9l-6 -1z" stroke-width="1"/>')
+    write("village", (900, 210), "".join(b))
+
+
+# ---------------------------------------------------------------- the passport flow (A-E): interactive Mithila-style piece
+NODES = [("A", "Hemp"), ("B", "Reclaimed saris"), ("C", "Weaving"), ("D", "Finishing"), ("E", "Distribution")]
+
+
+def picto(i, cx, cy):
+    g = []
+    if i == 0:                                                    # hemp leaf fan
+        g.append(line(cx, cy + 30, cx, cy + 6, w=2))
+        for a in (-64, -32, 0, 32, 64):
+            g.append(leaf(cx, cy + 12, math.radians(-90 + a), 34 - abs(a) * .1, 8, veins=False))
+    elif i == 1:                                                  # strips of sari
+        for k, dy in enumerate((-18, 0, 18)):
+            top = [(cx - 32 + t * 8, cy + dy - 6 + math.sin(t + k) * 3) for t in range(9)]
+            g.append(path(top, w=2, a=.2)); g.append(path([(x, y + 12) for x, y in top], w=2, a=.2))
+            g.append(dotpath([(cx - 26 + t * 13, cy + dy + 2 + math.sin(t * 1.6 + k)) for t in range(5)], w=2.2) if k != 1 else
+                     f'<path d="' + "".join(f"M{cx - 28 + t * 8} {cy + dy - 2}l4 8" for t in range(8)) + '" stroke-width="1"/>')
+    elif i == 2:                                                  # warp and weft
+        for k in range(6):
+            g.append(line(cx - 25 + k * 10, cy - 28, cx - 25 + k * 10, cy + 28, w=1.4))
+        for j in range(5):
+            y = cy - 20 + j * 10
+            for k in range(5):
+                if (j + k) % 2:
+                    g.append(f'<rect x="{cx - 25 + k * 10 + 1}" y="{y - 3}" width="8" height="6" fill="#CC5500" stroke-width="1.4"/>')
+    elif i == 3:                                                  # a ring of running stitches around a cross-stitch
+        g.append(f'<path d="' + "".join(f"M{cx + 28 * math.cos(a):.0f} {cy + 28 * math.sin(a):.0f}l{-5 * math.sin(a):.0f} {5 * math.cos(a):.0f}" for a in [k * math.pi / 8 for k in range(16)]) + '" stroke-width="2.2"/>')
+        g.append(f'<path d="M{cx - 11} {cy - 11}l22 22M{cx + 11} {cy - 11}l-22 22" stroke-width="2.4"/>' + dotpath([(cx, cy - 20), (cx, cy + 20), (cx - 20, cy), (cx + 20, cy)], w=3))
+    else:                                                         # a home
+        g.append(f'<path d="M{cx - 26} {cy + 24}V{cy - 4}H{cx + 26}V{cy + 24}Z" stroke-width="2.2"/><path d="M{cx - 34} {cy - 4}L{cx - 14} {cy - 24}H{cx + 14}L{cx + 34} {cy - 4}Z" stroke-width="2.2"/>')
+        g.append(f'<path d="M{cx - 6} {cy + 24}v-14h12v14" stroke-width="1.8"/><path d="M{cx - 22} {cy + 2}h10v8h-10zM{cx + 12} {cy + 2}h10v8h-10z" stroke-width="1.4"/>' + dotpath([(cx, cy - 14)], w=3))
+    return "".join(g)
+
+
+def node(i, cx, cy, vertical=False):
+    letter, name = NODES[i]
+    pic = (circle(cx, cy, 54, w=3) + circle(cx, cy, 46, w=1.3) + picto(i, cx, cy) +
+           dotpath([(cx + 62 * math.cos(k * math.pi / 8), cy + 62 * math.sin(k * math.pi / 8)) for k in range(16)], w=2.6))
+    if vertical:
+        label = f'<text x="{cx + 92}" y="{cy - 4}" class="fl-letter">{letter}</text><text x="{cx + 92}" y="{cy + 32}" class="fl-name">{name}</text>'
+    else:
+        label = f'<text x="{cx}" y="{cy + 112}" text-anchor="middle" class="fl-name"><tspan class="fl-letter">{letter}</tspan> {name}</text>'
+    hit = (f'<circle cx="{cx}" cy="{cy}" r="68" fill="transparent" stroke="none"/>' +
+           (f'<rect x="{cx + 80}" y="{cy - 40}" width="270" height="84" fill="transparent" stroke="none"/>' if vertical else
+            f'<rect x="{cx - 110}" y="{cy + 84}" width="220" height="40" fill="transparent" stroke="none"/>'))
+    return (f'<a class="flow-node" href="__{letter}__" aria-label="{letter}: {name} — see this stage in the passport">'
+            f'{hit}<g class="pic">{pic}</g>{label}</a>')
+
+
+def conn(p0, p1, horizontal=True):
+    if horizontal:
+        c1, c2 = (p0[0] + 100, p0[1]), (p1[0] - 100, p1[1])
+    else:
+        c1, c2 = (p0[0] + 120, p0[1] + 40), (p1[0] + 120, p1[1] - 40)
+    pts = bez(p0, c1, c2, p1, n=26)
+    out = [ribbon(pts, (-9, 0, 9), (1.3, 2.8, 1.3))]
+    for t, sgn in ((.25, -1), (.5, 1), (.75, -1)):
+        px, py = pts[int(t * 26)]
+        out.append(leaf(px, py + sgn * 4, math.radians(-90 * sgn - 18 * sgn), 30, 7, veins=False))
+        out.append(dotpath([(px, py + sgn * 38)], w=3))
+    mx, my = pts[13]
+    out.append(spiral(mx + 2, my - 40, 13, turns=2.2, w=1.6, n=40)); out.append(circle(mx + 2, my - 40, 13, w=1.2))
+    out.append(dotpath([pts[k] for k in range(4, 24, 3)], w=2.2))
+    return "".join(out)
+
+
+def flow():
+    # horizontal (desktop)
+    b = []
+    xs = [110, 355, 600, 845, 1090]
+    ys = [112, 150, 112, 150, 112]
+    for i in range(4):
+        b.append(st(conn((xs[i] + 66, ys[i]), (xs[i + 1] - 66, ys[i + 1])), xs[i] + 80))
+    for i in range(5):
+        b.append(st(node(i, xs[i], ys[i]), xs[i] - 60))
+    # flourishes: spirals and dot rows framing the piece
+    for k in range(12):
+        b.append(st(dotpath([(30 + k * 96, 18), (30 + k * 96 + 48, 262)], w=2.6), 30 + k * 96))
+    b.append(st(path([(10, 30), (300, 12), (600, 30), (900, 12), (1190, 30)], w=1.6, a=.8), 10))
+    b.append(st(path([(10, 288), (300, 270), (600, 288), (900, 270), (1190, 288)], w=1.6, a=.8), 10))
+    write("flow-h", (1200, 310), "".join(b))
+    # vertical (phones)
+    b = []
+    X = 80
+    ys = [90, 300, 510, 720, 930]
+    def stv(inner, y):
+        i = max(0, min(99, int(y / 1100 * 96)))
+        return f'<g class="stitch" style="--i:{i}">{inner}</g>'
+    for i in range(4):
+        b.append(stv(conn((X, ys[i] + 60), (X, ys[i + 1] - 60), horizontal=False), ys[i] + 60))
+    for i in range(5):
+        b.append(stv(node(i, X, ys[i], vertical=True), ys[i] - 60))
+    write("flow-v", (400, 1040), "".join(b))
+
 
 if __name__ == "__main__":
-    for fn in (fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
+    for fn in (weave, hands_cup, rain_clouds, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
         fn()
     print("motifs written to", OUT)

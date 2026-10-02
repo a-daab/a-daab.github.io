@@ -104,9 +104,23 @@ def add_dividers(html):
     out = []
     for i, part in enumerate(parts[:-1]):
         div = "" if i == len(parts) - 2 else stitch_divider(STITCH_ORDER[i % len(STITCH_ORDER)])
+        m = re.search(r'<section[^>]*data-divider="([^"]+)"', part)      # per-section override: a divider number, or "none"
+        if m:
+            div = "" if m.group(1) == "none" else stitch_divider(int(m.group(1)))
         out.append(part + div + "</section>")
     out.append(parts[-1])
     return html[:a] + "".join(out) + html[b:]
+
+
+def flow(base):
+    """The passport flow (A-E): a horizontal piece for wide screens and a vertical one for phones. Nodes link to the passport tiers."""
+    out = ""
+    for kind in ("h", "v"):
+        raw, _ = _svg(f"flow-{kind}")
+        for letter in "ABCDE":
+            raw = raw.replace(f'href="__{letter}__"', f'href="{base}#chain-{letter.lower()}"')
+        out += f'<div class="flow flow-{kind}" data-progress="self">{raw}</div>'
+    return Markup(out)
 
 
 def ph(text):
@@ -118,7 +132,7 @@ def sold_out():
     return bool(site.get("sold_out"))
 
 
-env.globals.update(motif=motif, divider=divider, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
+env.globals.update(motif=motif, divider=divider, flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
 
 # ---------------------------------------------------------------- media manifest (passport photos by tier)
 MEDIA_DIR = ROOT / "assets" / "media" / "passport"

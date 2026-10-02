@@ -75,23 +75,26 @@
      Reduced motion: nothing here runs, the CSS static compositions apply. */
   var motion = null;
   function initMotifs() {
-    var vis = [], info = new Map(), queued = false, io = null;
+    var items = [], info = new Map(), hostsVisible = new Set(), observed = new Set(), queued = false, io = null;
     var active = !(reduce || !('IntersectionObserver' in window));
 
     function register() {
-      [].slice.call(d.querySelectorAll('.motif, .stitchdiv')).forEach(function (m) {
+      [].slice.call(d.querySelectorAll('.motif, .stitchdiv, .flow')).forEach(function (m) {
         if (info.has(m)) return;
         var u = m.getAttribute('data-mask');                       /* artwork loads after first paint */
         if (u) m.style.setProperty('--mask', 'url("' + new URL(u, document.baseURI).href + '")');
+        var host = m.closest('.sec') || m;
         info.set(m, {
           speed: parseFloat(m.getAttribute('data-speed') || '1'),
           rot: parseFloat(m.getAttribute('data-rot') || '0'),
           dx: parseFloat(m.getAttribute('data-dx') || '0'),
           scale: parseFloat(m.getAttribute('data-scale') || '0'),
-          mode: m.getAttribute('data-progress') || (m.classList.contains('stitchdiv') ? 'self' : 'view'),
-          host: m.closest('.sec') || m
+          mode: m.getAttribute('data-progress') || (m.classList.contains('stitchdiv') || m.classList.contains('flow') ? 'self' : 'view'),
+          host: host
         });
-        if (active) io.observe(m);
+        items.push(m);
+        /* visibility is tracked per section, not per motif: a motif that has animated itself off-screen must keep updating */
+        if (active && !observed.has(host)) { observed.add(host); io.observe(host); }
       });
     }
     function schedule() { if (!queued) { queued = true; requestAnimationFrame(update); } }
@@ -99,11 +102,7 @@
 
     if (active) {
       io = new IntersectionObserver(function (es) {
-        es.forEach(function (e) {
-          var i = vis.indexOf(e.target);
-          if (e.isIntersecting && i < 0) vis.push(e.target);
-          else if (!e.isIntersecting && i > -1) vis.splice(i, 1);
-        });
+        es.forEach(function (e) { if (e.isIntersecting) hostsVisible.add(e.target); else hostsVisible.delete(e.target); });
         schedule();
       }, { rootMargin: '30% 0px 30% 0px' });
     }
@@ -115,8 +114,9 @@
     function update() {
       queued = false;
       var vh = window.innerHeight, sy = window.pageYOffset;
-      for (var k = 0; k < vis.length; k++) {
-        var m = vis[k], o = info.get(m), p;
+      for (var k = 0; k < items.length; k++) {
+        var m = items[k], o = info.get(m), p;
+        if (!hostsVisible.has(o.host)) continue;
         var r = o.host.getBoundingClientRect();
         if (o.mode === 'hero') {                                           /* the mat unrolls as the pinned hero scrolls past */
           var stick = o.host.querySelector('.hero-stick');
@@ -125,6 +125,8 @@
         } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to mid-screen */
           var sr = m.getBoundingClientRect();
           p = clamp((vh * 0.96 - sr.top) / (vh * 0.5));
+        } else if (o.mode === 'end') {                                      /* blooms as the section's end rises into view */
+          p = clamp(1 - (r.bottom - vh * 0.55) / (vh * 0.6));
         } else p = clamp((vh - r.top) / (vh + r.height));                  /* 0 entering, 1 leaving */
         var centre = r.top + r.height / 2 - vh / 2;
         m.style.setProperty('--p', p.toFixed(3));

@@ -5,13 +5,8 @@
 {% block main %}
 
 {# ───────── 1. Hero — a horizontal mat unrolls down the right half as you scroll ───────── #}
-<section class="sec sec--orange hero-tall" id="top">
+<section class="sec sec--orange hero-tall" id="top" data-divider="1">
   <div class="hero-stick">
-    <div class="motifs" aria-hidden="true">
-      {{ motif('cloud', 'md', 'mid', 'left:2%;top:11%', dx=260, mobile=False) }}
-      {{ motif('fish', 'sm', 'fast', 'left:4%;bottom:3%', dx=340, mobile=False) }}
-      {{ motif('lotus', 'sm', 'accent', 'left:40%;bottom:-3%', scale=0.5, mobile=False) }}
-    </div>
     <div class="hero-mat" aria-hidden="true">
       {{ motif('mat-roll', 'static', 'content', '', cls='hero-roll', inline=True) }}
       <div class="hero-clip">
@@ -30,41 +25,29 @@
   </div>
 </section>
 
-{# ───────── 2. The mat ───────── #}
-<section class="sec sec--white" id="the-mat">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hemp', 'md', 'bg', 'right:-3%;top:-6%', rise=160, mobile=False) }}
-    {{ motif('peacock', 'md', 'mid', 'right:3%;bottom:-8%', inline=True, mobile=False) }}
-    {{ motif('cloud', 'md', 'bg', 'left:30%;top:0%', dx=220, mobile=False) }}
-    {{ motif('sari', 'sm', 'mid', 'right:-3%;top:46%', mobile=False) }}
-    {{ motif('rosette', 'sm', 'accent', 'right:20%;top:2%', rot=300, mobile=False) }}
-  </div>
-  <div class="wrap grid grid--split">
+{# ───────── 2. The mat — sari strips are woven into the loom as you scroll ───────── #}
+<section class="sec sec--white" id="the-mat" data-divider="5">
+  <div class="wrap grid grid--split" style="align-items:start">
     <div>
       <span class="eyebrow">{{ t('home.mat_eyebrow') }}</span>
       <h2 class="h1">Woven on looms that use no electricity.</h2>
       <p>The face of every YogaMaty is hemp thread and strips cut from reclaimed post-consumer saris, woven together on a hundred-year-old loom. Its backing is a separate handwoven hemp cloth, woven on a second hundred-year-old loom, then washed and sun-dried. The bound edge and knotted fringe are sewn on after each mat is checked by hand.</p>
       <p>Both looms run on no electricity at all. Some other stages do use power — the finishing is done on an industrial sewing machine — which is why the passport states electricity stage by stage, never as a blanket claim for the whole product.</p>
       <p><a href="{{ url('supply-chain') }}#electricity">{{ t('home.see_electricity') }}</a></p>
-    </div>
-    <div>
-      <figure class="media media--land" style="--ar:68/40">
-        <div class="media-ph" role="img" aria-label="Product photograph placeholder: flat overhead, full length"><b>Product — flat overhead</b></div>
+      <figure class="media media--land" style="--ar:68/34;margin-top:2rem;max-width:520px">
+        <div class="media-ph" role="img" aria-label="Product photograph placeholder: flat overhead, full length" style="aspect-ratio:68/34"><b>Product — flat overhead</b></div>
       </figure>
+    </div>
+    <div aria-hidden="true">
+      {{ motif('weave', 'static', 'content', '', cls='weave-art motif--clip', inline=True) }}
     </div>
   </div>
 </section>
 
-
-{# ───────── 3. The makers ───────── #}
-<section class="sec sec--orange" id="makers">
+{# ───────── 3. The makers — two cupped hands reach down from the top right ───────── #}
+<section class="sec sec--orange" id="makers" data-divider="2">
   <div class="motifs" aria-hidden="true">
-    {{ motif('sun', 'lg', 'bg', 'right:-12%;top:-16%', rot=240, mobile=False) }}
-    {{ motif('hands', 'lg', 'mid', 'right:2%;bottom:-6%', scale=0.35) }}
-    {{ motif('cloud', 'md', 'mid', 'left:1%;top:1%', dx=300, mobile=False) }}
-    {{ motif('lotus', 'md', 'accent', 'left:-4%;bottom:-8%', scale=0.6, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'right:34%;bottom:2%', dx=-260, flip=True, mobile=False) }}
-    {{ motif('rosette', 'sm', 'fast', 'right:36%;top:4%', rot=360, mobile=False) }}
+    {{ motif('hands-cup', 'none', 'content', '', cls='hands-cup') }}
   </div>
   <div class="wrap wrap--narrow" style="max-width:860px;margin-left:0;margin-right:auto">
     <span class="eyebrow">{{ t('home.makers_eyebrow') }}</span>
@@ -74,15 +57,10 @@
   </div>
 </section>
 
-{# ───────── 4. The problem ───────── #}
-<section class="sec sec--white" id="why">
+{# ───────── 4. The problem — spiral clouds, and spiral rain that falls as you scroll ───────── #}
+<section class="sec sec--white" id="why" data-divider="9">
   <div class="motifs" aria-hidden="true">
-    {{ motif('water', 'lg', 'bg', 'right:-10%;bottom:-2%', dx=-160, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'left:1%;top:-1%', dx=500, mobile=False) }}
-    {{ motif('leaves', 'md', 'mid', 'right:1%;top:44%', rot=140, dx=-120) }}
-    {{ motif('bloom', 'md', 'accent', 'left:-14%;bottom:-12%', rot=160, mobile=False) }}
-    {{ motif('cloud', 'md', 'bg', 'right:10%;top:-2%', dx=-240, flip=True, mobile=False) }}
-    {{ motif('peacock', 'md', 'mid', 'left:34%;bottom:-10%', inline=True, flip=True, mobile=False) }}
+    {{ motif('rain-clouds', 'none', 'content', '', cls='rain-art motif--clip', inline=True) }}
   </div>
   <div class="wrap grid grid--2">
     <div>
@@ -104,27 +82,14 @@
   </div>
 </section>
 
-{# ───────── 5. The passport ───────── #}
-<section class="sec sec--orange" id="passport">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('mandala', 'xl', 'bg', 'right:-24%;top:-10%', rot=-200, mobile=False) }}
-    {{ motif('sewing', 'lg', 'mid', 'right:6%;bottom:-6%', inline=True, mobile=False) }}
-    {{ motif('hank', 'md', 'mid', 'left:-5%;bottom:-6%', rot=-30, mobile=False) }}
-    {{ motif('cloud', 'md', 'fast', 'left:30%;top:1%', dx=280, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'right:42%;bottom:1%', dx=-320, flip=True, mobile=False) }}
-  </div>
+{# ───────── 5. The passport — an abstract Mithila flow; each stage links into the passport ───────── #}
+<section class="sec sec--orange" id="passport" data-divider="3">
   <div class="wrap">
     <span class="eyebrow">{{ t('home.passport_eyebrow') }}</span>
     <h2 class="h1" style="max-width:20ch">Scan the label. See every stage.</h2>
     <p class="statement">From raw plant and reclaimed sari to the customer who scans the code.</p>
-    <div class="chain-flow" style="max-width:900px">
-      <a href="{{ url('supply-chain') }}#chain-a"><b>A</b><span>Hemp</span></a>
-      <a href="{{ url('supply-chain') }}#chain-b"><b>B</b><span>Reclaimed saris</span></a>
-      <a href="{{ url('supply-chain') }}#chain-c"><b>C</b><span>Weaving</span></a>
-      <a href="{{ url('supply-chain') }}#chain-d"><b>D</b><span>Finishing</span></a>
-      <a href="{{ url('supply-chain') }}#chain-e"><b>E</b><span>Distribution</span></a>
-    </div>
-    <p class="statement" style="margin-top:2.4rem;max-width:34ch">Today, every record is entered by hand. That is exactly the limitation TransparaTrade exists to fix.</p>
+    {{ flow(url('supply-chain')) }}
+    <p class="statement" style="margin-top:2rem;max-width:34ch">Today, every record is entered by hand. That is exactly the limitation TransparaTrade exists to fix.</p>
     <div class="btn-row">
       <a class="btn" href="{{ url('supply-chain') }}">{{ t('home.open_passport') }}</a>
       <a class="btn btn--ghost" href="{{ url('transparatrade') }}">{{ t('home.what_is_tt') }}</a>
@@ -132,15 +97,10 @@
   </div>
 </section>
 
-{# ───────── 6. Three reasons ───────── #}
-<section class="sec sec--white" id="reasons">
+{# ───────── 6. Three reasons — one lotus blooms from the bottom centre as you scroll ───────── #}
+<section class="sec sec--white" id="reasons" data-divider="none">
   <div class="motifs" aria-hidden="true">
-    {{ motif('peacock', 'md', 'mid', 'left:-17%;bottom:-12%', inline=True, mobile=False) }}
-    {{ motif('peacock', 'md', 'mid', 'right:-17%;bottom:-12%', inline=True, flip=True, mobile=False) }}
-    {{ motif('lotus', 'md', 'accent', 'left:38%;bottom:-4%', scale=0.7, mobile=False) }}
-    {{ motif('sun', 'md', 'bg', 'right:6%;top:-8%', rot=200, mobile=False) }}
-    {{ motif('cloud', 'md', 'fast', 'left:6%;top:0%', dx=300, mobile=False) }}
-    {{ motif('ret', 'sm', 'mid', 'right:21%;bottom:1%', mobile=False) }}
+    {{ motif('lotus-bloom', 'none', 'content', '', cls='lotus-art motif--clip', inline=True, progress='end') }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
@@ -157,14 +117,8 @@
   </div>
 </section>
 
-{# ───────── 7. The ask ───────── #}
-<section class="sec sec--orange" id="ask">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('peacock', 'lg', 'mid', 'right:-4%;bottom:-6%', inline=True, flip=True) }}
-    {{ motif('mandala', 'lg', 'bg', 'right:-18%;top:-24%', rot=160, mobile=False) }}
-    {{ motif('cloud', 'md', 'fast', 'left:34%;top:0%', dx=-260, flip=True, mobile=False) }}
-    {{ motif('fish', 'sm', 'fast', 'left:36%;bottom:2%', dx=300, mobile=False) }}
-  </div>
+{# ───────── 7. The ask — text only; the eye-pattern stitched divider closes the section ───────── #}
+<section class="sec sec--orange" id="ask" data-divider="10">
   <div class="wrap wrap--narrow" style="margin-left:0;margin-right:auto;max-width:880px">
     <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
     <h2 class="display" style="font-size:clamp(2.2rem,1rem + 5vw,4.2rem);color:#fff">Make transparency the law.</h2>
@@ -176,12 +130,11 @@
   </div>
 </section>
 
-{# ───────── 8. Shop ───────── #}
+{# ───────── 8. Shop — a village with a clothesline (right, bottom) and a spiral sun (top right) ───────── #}
 <section class="sec sec--white sec--tight sec--hero-last" id="shop-cta">
   <div class="motifs" aria-hidden="true">
-    {{ motif('fish', 'sm', 'fast', 'left:-2%;bottom:6%', dx=300, mobile=False) }}
-    {{ motif('lotus', 'sm', 'accent', 'right:-2%;top:-6%', scale=0.6, mobile=False) }}
-    {{ motif('cloud', 'sm', 'mid', 'left:44%;top:-4%', dx=-200, mobile=False) }}
+    {{ motif('sun-spiral', 'none', 'content', '', cls='sun-art', rot=120) }}
+    {{ motif('village', 'none', 'content', '', cls='village-art') }}
   </div>
   <div class="wrap grid grid--split">
     <div>
