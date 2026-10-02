@@ -377,7 +377,7 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 /* spiral sun, top right of the last section */
 .motif.sun-art{right:-2%;top:-3%;width:clamp(150px,15vw,230px);opacity:.6}
 /* village, bottom right: a little over half the width */
-#shop-cta{min-height:clamp(480px,42vw,600px)}
+#shop-cta{min-height:0;padding-bottom:calc(13.1vw + 28px)}
 .motif.village-art{right:0;bottom:0;left:auto;width:56%;opacity:.8}
 
 /* ---------- The passport flow (A to E) ---------- */
