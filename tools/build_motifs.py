@@ -1568,50 +1568,73 @@ def node(i, cx, cy, vertical=False):
             f'{hit}<g class="pic">{pic}</g>{label}</a>')
 
 
-def conn(p0, p1, horizontal=True):
-    if horizontal:
-        c1, c2 = (p0[0] + 100, p0[1]), (p1[0] - 100, p1[1])
-    else:
-        c1, c2 = (p0[0] + 120, p0[1] + 40), (p1[0] + 120, p1[1] - 40)
-    pts = bez(p0, c1, c2, p1, n=26)
-    out = [ribbon(pts, (-9, 0, 9), (1.3, 2.8, 1.3))]
-    for t, sgn in ((.25, -1), (.5, 1), (.75, -1)):
-        px, py = pts[int(t * 26)]
-        out.append(leaf(px, py + sgn * 4, math.radians(-90 * sgn - 18 * sgn), 30, 7, veins=False))
-        out.append(dotpath([(px, py + sgn * 38)], w=3))
-    mx, my = pts[13]
-    out.append(spiral(mx + 2, my - 40, 13, turns=2.2, w=1.6, n=40)); out.append(circle(mx + 2, my - 40, 13, w=1.2))
-    out.append(dotpath([pts[k] for k in range(4, 24, 3)], w=2.2))
+def thread(p0, p1, c1, c2, amp=2.6, wl=18.0):
+    """Two-ply twisted thread along a bezier: two strands that cross each other every half wavelength."""
+    pts = bez(p0, c1, c2, p1, n=60)
+    out = []
+    for sign in (1, -1):
+        q = []
+        acc = 0.0
+        for i, (x, y) in enumerate(pts):
+            a_, c_ = pts[max(0, i - 1)], pts[min(len(pts) - 1, i + 1)]
+            dx, dy = c_[0] - a_[0], c_[1] - a_[1]
+            L = math.hypot(dx, dy) or 1
+            if i:
+                acc += math.hypot(x - pts[i - 1][0], y - pts[i - 1][1])
+            off = sign * amp * math.sin(2 * math.pi * acc / wl)
+            q.append((x - dy / L * off, y + dx / L * off))
+        out.append(f'<path d="{smooth2(q[::2] + [q[-1]])}" stroke-width="2"/>')
     return "".join(out)
 
 
+def needle(ox, oy, rot=0, length=130):
+    """A sewing needle: blunt eye end at the origin, a long slot for the thread, tapering to a point. Local +x is the needle's axis."""
+    L = length
+    body = (f"M0 -5.5L{L * .8:.1f} -3.4Q{L * .95:.1f} -1.2 {L} 0Q{L * .95:.1f} 1.2 {L * .8:.1f} 3.4L0 5.5Q-5 0 0 -5.5Z")
+    slot = "M10 0a9 2.3 0 1 0 18 0a9 2.3 0 1 0 -18 0z"
+    return (f'<g transform="translate({ox} {oy}) rotate({rot})"><path d="{body}" style="fill:var(--orange)" stroke-width="2.4"/>'
+            f'<path d="{slot}" stroke-width="1.6"/><path d="M34 -1.6L{L * .78:.1f} -0.9" stroke-width="1"/></g>')
+
+
 def flow():
-    # horizontal (desktop)
+    # horizontal (desktop): five circles shifted left to leave room for a needle at the right
     b = []
-    xs = [110, 355, 600, 845, 1090]
+    xs = [96, 312, 528, 744, 960]
     ys = [112, 150, 112, 150, 112]
     for i in range(4):
-        b.append(st(conn((xs[i] + 66, ys[i]), (xs[i + 1] - 66, ys[i + 1])), xs[i] + 80))
+        p0, p1 = (xs[i] + 58, ys[i]), (xs[i + 1] - 58, ys[i + 1])
+        b.append(st(thread(p0, p1, (p0[0] + 60, p0[1] - 26), (p1[0] - 60, p1[1] + 26)), xs[i] + 80))
+    # from the last circle the thread runs out to the eye of the needle, passes through it and trails off
+    eye = (1062 + 19, 112)
+    p0 = (xs[4] + 58, ys[4])
+    b.append(st(thread(p0, eye, (p0[0] + 26, p0[1] + 22), (eye[0] - 26, eye[1] + 20)), xs[4] + 80))
+    b.append(st(f'<path d="{smooth2([eye, (eye[0] + 12, eye[1] + 10), (eye[0] + 22, eye[1] + 26), (eye[0] + 40, eye[1] + 30)])}" stroke-width="2"/>', 1062))
+    b.append(st(needle(1062, 112), 1062))
     for i in range(5):
         b.append(st(node(i, xs[i], ys[i]), xs[i] - 60))
-    # flourishes: spirals and dot rows framing the piece
-    for k in range(12):
-        b.append(st(dotpath([(30 + k * 96, 18), (30 + k * 96 + 48, 262)], w=2.6), 30 + k * 96))
+    # frame: a fine line above and a fine line below, the lower one set well clear of the labels
     b.append(st(path([(10, 30), (300, 12), (600, 30), (900, 12), (1190, 30)], w=1.6, a=.8), 10))
-    b.append(st(path([(10, 288), (300, 270), (600, 288), (900, 270), (1190, 288)], w=1.6, a=.8), 10))
-    write("flow-h", (1200, 310), "".join(b))
-    # vertical (phones)
+    b.append(st(path([(10, 326), (300, 308), (600, 326), (900, 308), (1190, 326)], w=1.6, a=.8), 10))
+    write("flow-h", (1200, 344), "".join(b))
+    # vertical (phones): the needle sits below the last circle
     b = []
     X = 80
-    ys = [90, 300, 510, 720, 930]
+    ys = [90, 290, 490, 690, 890]
+
     def stv(inner, y):
-        i = max(0, min(99, int(y / 1100 * 96)))
+        i = max(0, min(99, int(y / 1150 * 96)))
         return f'<g class="stitch" style="--i:{i}">{inner}</g>'
     for i in range(4):
-        b.append(stv(conn((X, ys[i] + 60), (X, ys[i + 1] - 60), horizontal=False), ys[i] + 60))
+        p0, p1 = (X, ys[i] + 60), (X, ys[i + 1] - 60)
+        b.append(stv(thread(p0, p1, (X + 70, p0[1] + 30), (X - 70, p1[1] - 30)), ys[i] + 60))
+    eye = (X, 1000 + 19)
+    p0 = (X, ys[4] + 60)
+    b.append(stv(thread(p0, eye, (X + 40, p0[1] + 30), (X - 30, eye[1] - 30)), ys[4] + 60))
+    b.append(stv(f'<path d="{smooth2([eye, (eye[0] + 10, eye[1] + 12), (eye[0] + 26, eye[1] + 22), (eye[0] + 34, eye[1] + 40)])}" stroke-width="2"/>', 1000))
+    b.append(stv(needle(X, 1000, rot=90), 1000))
     for i in range(5):
         b.append(stv(node(i, X, ys[i], vertical=True), ys[i] - 60))
-    write("flow-v", (400, 1040), "".join(b))
+    write("flow-v", (400, 1150), "".join(b))
 
 
 if __name__ == "__main__":
