@@ -1620,30 +1620,28 @@ def rhododendron_tree(cx, base=186, seed=5):
     limb(tx1 - 1, ty1 + 2, -math.pi / 2 + lean - .5, 28, 3.4, 2)
     limb(tx1 + 1, ty1 + 2, -math.pi / 2 + lean + .45, 30, 3.4, 2)
     limb(tx1, ty1 + 4, -math.pi / 2 + lean + .02, 26, 3.0, 2)
-    # foliage clumps (irregular blobs) with leaves, and blossom on some
+    # foliage: at each branch tip a loose whorl of long leaves (as a rhododendron carries them), no two clumps alike; some tips carry a truss of blossom
+    def leaf_at(x, y, a, L, wd):
+        ex, ey = x + L * math.cos(a), y + L * math.sin(a)
+        nx, ny = -math.sin(a) * wd, math.cos(a) * wd
+        c1 = (x + (ex - x) * .45 + nx, y + (ey - y) * .45 + ny)
+        c2 = (x + (ex - x) * .45 - nx, y + (ey - y) * .45 - ny)
+        return (f'<path d="M{x:.1f} {y:.1f}Q{c1[0]:.1f} {c1[1]:.1f} {ex:.1f} {ey:.1f}Q{c2[0]:.1f} {c2[1]:.1f} {x:.1f} {y:.1f}Z" stroke-width="1.4"/>'
+                f'<path d="M{x:.1f} {y:.1f}L{x + (ex - x) * .8:.1f} {y + (ey - y) * .8:.1f}" stroke-width=".8"/>')
+
     for i, (x, y, ang) in enumerate(clumps):
-        r = rng.uniform(10, 14)
-        n = 9
-        pts = [(x + r * rng.uniform(.75, 1.2) * math.cos(2 * math.pi * k / n), y - r * .2 + r * .8 * rng.uniform(.75, 1.2) * math.sin(2 * math.pi * k / n)) for k in range(n)]
-        d = ""
+        n = rng.randint(6, 9)
+        base_ang = ang if rng.random() < .5 else -math.pi / 2 + (ang + math.pi / 2) * .5          # lean toward the light, a little
         for k in range(n):
-            (x0, y0), (x1, y1) = pts[k], pts[(k + 1) % n]
-            m0 = ((pts[k - 1][0] + x0) / 2, (pts[k - 1][1] + y0) / 2)
-            if k == 0:
-                d += f"M{m0[0]:.1f} {m0[1]:.1f}"
-            d += f"Q{x0:.1f} {y0:.1f} {(x0 + x1) / 2:.1f} {(y0 + y1) / 2:.1f}"
-        b.append(f'<path d="{d}Z" stroke-width="1.8"/>')
-        for _ in range(3):                                              # leaves: small pointed ovals fanning outward
-            lx, ly_ = x + rng.uniform(-r * .6, r * .6), y - r * .2 + rng.uniform(-r * .4, r * .4)
-            la = rng.uniform(0, 2 * math.pi)
-            L = rng.uniform(5.5, 8)
-            ex, ey = lx + L * math.cos(la), ly_ + L * math.sin(la)
-            px_, py_ = -math.sin(la) * L * .28, math.cos(la) * L * .28
-            b.append(f'<path d="M{lx:.1f} {ly_:.1f}Q{(lx + ex) / 2 + px_:.1f} {(ly_ + ey) / 2 + py_:.1f} {ex:.1f} {ey:.1f}Q{(lx + ex) / 2 - px_:.1f} {(ly_ + ey) / 2 - py_:.1f} {lx:.1f} {ly_:.1f}Z" stroke-width="1"/>')
-        if i % 2 == 0:                                                  # a bunch of blossoms
-            for _ in range(2):
-                fx, fy = x + rng.uniform(-r * .45, r * .45), y - r * .25 + rng.uniform(-r * .3, r * .3)
-                b.append("".join(f'<circle cx="{fx + 2.2 * math.cos(q * 2 * math.pi / 5):.1f}" cy="{fy + 2.2 * math.sin(q * 2 * math.pi / 5):.1f}" r="1.6" stroke-width=".9"/>' for q in range(5)))
+            a_ = base_ang + (k - (n - 1) / 2) * rng.uniform(.42, .55) + rng.uniform(-.14, .14)
+            L = rng.uniform(9, 15) * (1 - abs(k - (n - 1) / 2) / n * .5)
+            b.append(leaf_at(x, y, a_, L, L * rng.uniform(.17, .26)))
+        if i % 2 == 0:
+            tx, ty = x + rng.uniform(-3, 3), y - rng.uniform(7, 11)
+            for dx_, dy_ in ((0, -3), (-5, 0), (5, 1), (-2.5, 4), (3, -5), (0, 3)):
+                fx, fy = tx + dx_ * 1.0, ty + dy_
+                b.append("".join(f'<circle cx="{fx + 2.1 * math.cos(q * 2 * math.pi / 5 + dx_):.1f}" cy="{fy + 2.1 * math.sin(q * 2 * math.pi / 5 + dx_):.1f}" r="1.5" stroke-width=".9"/>' for q in range(5)))
+                b.append(f'<circle cx="{fx:.1f}" cy="{fy:.1f}" r=".7" stroke-width="1"/>')
     b.append(dotpath([(cx + rng.uniform(-34, 34), base + rng.uniform(-6, -1)) for _ in range(9)], w=1.8))   # fallen petals
     return f'<g transform="translate({cx} {base}) scale(1.12) translate({-cx} {-base})">' + "".join(b) + "</g>"
 
