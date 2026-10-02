@@ -1581,6 +1581,37 @@ def house_stone(x, w, h):
     return "".join(b)
 
 
+def pipal_tree(cx, base=186):
+    """A pipal (sacred fig) tree on a stone resting platform, the kind that shades a Nepali village crossing: scalloped crown of heart-shaped leaves, a flared trunk and surface roots."""
+    b = []
+    ccy, rx, ry = base - 100, 52, 40
+    n = 18
+    pts = [(cx + rx * math.cos(2 * math.pi * k / n - math.pi / 2), ccy + ry * math.sin(2 * math.pi * k / n - math.pi / 2)) for k in range(n + 1)]
+    d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        r = math.hypot(x1 - x0, y1 - y0) * .62
+        d += f"A{r:.1f} {r:.1f} 0 0 1 {x1:.1f} {y1:.1f}"
+    b.append(f'<path d="{d}Z" stroke-width="2.4"/>')
+    # heart-shaped leaves with the long drip tip of a pipal leaf, hung in staggered rows
+    for row, dy in enumerate((-24, -9, 6, 21)):
+        for k in range(-3, 4):
+            x = cx + k * 15 + (7 if row % 2 else 0)
+            y = ccy + dy
+            if ((x - cx) / (rx - 12)) ** 2 + ((y - ccy) / (ry - 9)) ** 2 > 1:
+                continue
+            sz = 5.2
+            b.append(f'<path d="M{x:.1f} {y + sz * 1.4:.1f}C{x - sz * 1.5:.1f} {y + sz * .1:.1f} {x - sz * .9:.1f} {y - sz:.1f} {x:.1f} {y - sz * .3:.1f}C{x + sz * .9:.1f} {y - sz:.1f} {x + sz * 1.5:.1f} {y + sz * .1:.1f} {x:.1f} {y + sz * 1.4:.1f}Z" stroke-width="1.2"/>')
+    # trunk, flaring into roots, standing on the platform
+    top = ccy + ry - 6
+    b.append(f'<path d="M{cx - 5} {top}C{cx - 5} {top + 22} {cx - 7} {base - 24} {cx - 15} {base - 12}M{cx + 5} {top}C{cx + 5} {top + 22} {cx + 7} {base - 24} {cx + 15} {base - 12}" stroke-width="2.2"/>')
+    b.append(f'<path d="M{cx - 1} {top + 6}C{cx - 3} {top + 20} {cx - 2} {base - 28} {cx - 4} {base - 14}M{cx + 2} {top + 14}C{cx + 3} {top + 26} {cx + 1} {base - 26} {cx + 3} {base - 14}" stroke-width="1"/>')
+    # the platform (chautara): two stone steps
+    b.append(f'<path d="M{cx - 40} {base}V{base - 10}H{cx + 40}V{base}" stroke-width="2.2"/>')
+    b.append(line(cx - 46, base - 10, cx + 46, base - 10, w=2.2))
+    b.append(dotpath([(cx - 34 + j * 11, base - 5) for j in range(7)], w=1.6))
+    return "".join(b)
+
+
 def village():
     b = []
     W = 900
@@ -1596,6 +1627,7 @@ def village():
     b.append(house_stone(430, 104, 86))
     b.append(house(566, 112, 124, 30, 3))
     b.append(house_stone(702, 80, 66))
+    b.append(pipal_tree(842))
     # clothesline between two poles in the yard: smaller, with the clothes hanging from the line by their shoulders / waists
     px0, px1, pt = 14, 148, 104
     b.append(line(px0, 186, px0, pt, w=2.4)); b.append(line(px1, 186, px1, pt, w=2.4))
