@@ -1170,67 +1170,128 @@ def spiral_cloud(cx, cy, s=1.0):
     return "".join(out)
 
 
-def lobe_cloud(lobes, tails=()):
-    """A cloud as ONE merged silhouette of overlapping round lobes (outline only on the outside), with nested inner bands,
-    a spiral in each larger lobe, and flowing ribbon tails that curl out. Lobes start above y=0 so it hangs from the top edge."""
-    out = []
-    L = sorted(lobes, key=lambda l: l[2])
+def f2(n):
+    return f"{n:.2f}".rstrip("0").rstrip(".")
 
-    def layer(inset, w):
-        # all strokes first, then all white fills on top: only the outer boundary of the union keeps its stroke
-        for (cx, cy, r) in L:
-            if r - inset > 4:
-                out.append(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(r - inset)}" stroke-width="{2 * w}"/>')
-        for (cx, cy, r) in L:
-            if r - inset > 4:
-                out.append(f'<circle cx="{f(cx)}" cy="{f(cy)}" r="{f(r - inset)}" fill="#fff" stroke="none"/>')
-    layer(0, 2.6)
-    layer(8, 1.2)
-    layer(15, 0.9)
-    for i, (cx, cy, r) in enumerate(L):
-        if r >= 24:
-            out.append(spiral(cx, cy + r * .1, r * .6, turns=2.4, dirn=1 if i % 2 else -1, n=64, w=2.1, a=.2, start=i))
-    for (x0, y0, dx, dy, side) in tails:                            # flowing ribbons that curl out of the cloud
-        pts = bez((x0, y0), (x0 + dx * .5, y0 + 34), (x0 + dx * 1.05, y0 + 30), (x0 + dx, y0 + 8 + dy), n=26)
-        out.append(ribbon(pts, (-7, -3.5, 0, 3.5, 7), (1.1, 1.5, 2.8, 1.5, 1.1)))
-        ex, ey = pts[-1]
-        out.append(spiral(ex, ey, 14, turns=2.4, dirn=side, n=44, w=2.1, a=.1))
-        out.append(circle(ex, ey, 17, w=1.2))
+
+def smooth2(pts, closed=False):
+    """Catmull-Rom through points -> cubic Bezier, two decimals and no jitter (smooth, steady lines)."""
+    n = len(pts)
+    d = f"M{f2(pts[0][0])} {f2(pts[0][1])}"
+    rng = range(n) if closed else range(n - 1)
+    for i in rng:
+        p0 = pts[(i - 1) % n] if (closed or i > 0) else pts[i]
+        p1, p2 = pts[i], pts[(i + 1) % n]
+        p3 = pts[(i + 2) % n] if (closed or i + 2 < n) else p2
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        d += f"C{f2(c1[0])} {f2(c1[1])} {f2(c2[0])} {f2(c2[1])} {f2(p2[0])} {f2(p2[1])}"
+    return d + ("Z" if closed else "")
+
+
+def sspiral(cx, cy, r, turns=2.2, dirn=1, start=0.0, n=48, w=2, inner=.06, rot=0.0, squash=1.0):
+    pts = []
+    for k in range(n + 1):
+        t = k / n
+        ang = start + dirn * turns * 2 * math.pi * t
+        rr = r * (inner + (1 - inner) * t)
+        pts.append((cx + rr * math.cos(ang), cy + rr * squash * math.sin(ang)))
+    return f'<path d="{smooth2(pts)}" stroke-width="{w}"/>'
+
+
+CLOUD_LOBES = [   # (cx, cy, rx, ry): wide, irregular lobes; they start above the top edge so each cloud hangs from it
+    [(44, 26, 44, 46), (108, 34, 56, 56), (170, 22, 38, 42)],
+    [(250, 24, 36, 40), (308, 36, 54, 54), (364, 20, 36, 38), (392, 30, 22, 30)],
+    [(458, 26, 38, 44), (518, 38, 54, 54), (576, 24, 36, 40)],
+]
+
+
+def cloud_depth(x):
+    """Lowest y that is covered by cloud at this x (None where there is no cloud)."""
+    best = None
+    for cloud in CLOUD_LOBES:
+        for (cx, cy, rx, ry) in cloud:
+            u = (x - cx) / rx
+            if abs(u) < 1:
+                y = cy + ry * math.sqrt(1 - u * u)
+                best = y if best is None else max(best, y)
+    return best
+
+
+def curl_outline(cx, cy, rx, ry, dirn):
+    """A comma-shaped lobe: a round body whose lower edge sweeps out into a pointed, flowing tail (dirn = +1 right, -1 left)."""
+    d = dirn
+    p0 = (cx, cy + ry)
+    a30 = math.radians(28)
+    p1 = (cx + d * rx * math.cos(a30), cy + ry * math.sin(a30))
+    tip = (cx + d * rx * 1.62, cy + ry * .9)
+    sweep = 1 if d > 0 else 0
+    return (f"M{f2(p0[0])} {f2(p0[1])}A{f2(rx)} {f2(ry)} 0 1 {sweep} {f2(p1[0])} {f2(p1[1])}"
+            f"C{f2(cx + d * rx * 1.12)} {f2(cy + ry * .62)} {f2(cx + d * rx * 1.5)} {f2(cy + ry * .66)} {f2(tip[0])} {f2(tip[1])}"
+            f"C{f2(cx + d * rx * 1.2)} {f2(cy + ry * 1.12)} {f2(cx + d * rx * .5)} {f2(cy + ry * 1.12)} {f2(p0[0])} {f2(p0[1])}Z")
+
+
+def swirl_cloud2(lobes, idx):
+    """Layered curled lobes painted back to front: each is a white-filled, outlined comma with nested bands and a spiral, so the front
+    lobe cleanly hides the one behind (as in the reference sheet)."""
+    out = []
+    order = sorted(range(len(lobes)), key=lambda i: (lobes[i][2] * lobes[i][3], i))
+    for i in order:
+        cx, cy, rx, ry = lobes[i]
+        dirn = 1 if i % 2 == 0 else -1
+        out.append(f'<path d="{curl_outline(cx, cy, rx, ry, dirn)}" fill="#fff" stroke-width="2.8"/>')
+        out.append(f'<path d="{curl_outline(cx, cy, rx * .8, ry * .8, dirn)}" stroke-width="1.2"/>')
+        out.append(sspiral(cx - dirn * rx * .04, cy + ry * .08, min(rx, ry) * .55, turns=1.8, dirn=dirn, start=i * .8, w=2.3))
     return "".join(out)
 
 
 def clouds_band():
-    b = []
-    # five irregular clouds hanging from the top edge; every bottom stays inside the section's top padding band
-    b.append(lobe_cloud([(48, 30, 30), (98, 44, 42), (152, 32, 36), (200, 46, 38), (240, 26, 24), (22, 14, 16)], [(236, 54, 56, 0, 1)]))
-    b.append(lobe_cloud([(332, 24, 24), (378, 38, 33), (424, 26, 23)]))
-    b.append(lobe_cloud([(520, 36, 30), (574, 48, 42), (634, 32, 36), (698, 50, 46), (760, 36, 34), (806, 22, 20)], [(530, 56, -52, 0, -1)]))
-    b.append(lobe_cloud([(880, 28, 25), (930, 44, 38), (986, 28, 26)]))
-    b.append(lobe_cloud([(1068, 34, 29), (1120, 52, 44), (1174, 32, 29)], [(1104, 60, -50, 0, -1)]))
-    write("clouds", (1200, 112), "".join(b))
+    b = "".join(swirl_cloud2(c, i) for i, c in enumerate(CLOUD_LOBES))
+    write("clouds", (600, 112), b)
 
 
-def teardrop(cx, cy, r):
-    h = r * 2.4
-    return (f"M{f(cx)} {f(cy - h)}C{f(cx + r * .25)} {f(cy - h * .62)} {f(cx + r)} {f(cy - r * 1.05)} {f(cx + r)} {f(cy)}"
-            f"A{f(r)} {f(r)} 0 0 1 {f(cx - r)} {f(cy)}C{f(cx - r)} {f(cy - r * 1.05)} {f(cx - r * .25)} {f(cy - h * .62)} {f(cx)} {f(cy - h)}Z")
+def teardrop2(cx, cy, r):
+    h = r * 2.5
+    return (f"M{f2(cx)} {f2(cy - h)}C{f2(cx + r * .22)} {f2(cy - h * .6)} {f2(cx + r)} {f2(cy - r * 1.1)} {f2(cx + r)} {f2(cy)}"
+            f"A{f2(r)} {f2(r)} 0 0 1 {f2(cx - r)} {f2(cy)}C{f2(cx - r)} {f2(cy - r * 1.1)} {f2(cx - r * .22)} {f2(cy - h * .6)} {f2(cx)} {f2(cy - h)}Z")
 
 
 def rain():
+    """Teardrops with smooth swirls. Each starts hidden behind a cloud and falls straight down to its own resting height.
+    Positions come from a jittered grid (even spread); the order they fall in is shuffled."""
+    rng = random.Random(8)
+    cols, rows = 6, 4
+    cells = []
+    for c in range(cols):
+        for r_ in range(rows):
+            cells.append((c, r_))
+    rng.shuffle(cells)
+    order = list(range(len(cells)))
+    rng.shuffle(order)
     b = []
-    cols = 29
-    for k in range(cols):
-        x = 34 + k * 39.5 + R.uniform(-4, 4)                      # one column each, so drops never overlap on the way down
-        r = R.uniform(10, 14.5)
-        y0 = R.uniform(92, 108)
-        sdelay = R.uniform(0, .5)
-        dist = R.uniform(.3, 1.0)
-        td = teardrop(x, y0, r)
-        inner = teardrop(x, y0 + r * .1, r * .72)
+    for i, (c, r_) in enumerate(cells):
+        x = 22 + (c + rng.uniform(.25, .75)) * (556 / cols)
+        cov = cloud_depth(x)
+        tries = 0
+        while cov is None or cov < 62:                           # keep every drop under a thick part of a cloud
+            x = 22 + (c + rng.uniform(.1, .9)) * (556 / cols)
+            cov = cloud_depth(x)
+            tries += 1
+            if tries > 40:
+                x = 92 if c < 2 else 314 if c < 4 else 496
+                cov = cloud_depth(x)
+                break
+        r = rng.uniform(10, 14)
+        y0 = cov - r - 9                                         # drop bottom sits 9 units inside the cloud edge
+        y_end = 150 + (r_ + rng.uniform(.15, .85)) * (520 / rows)
+        dist = max(40, y_end - y0)
+        td = teardrop2(x, y0, r)
+        inner = teardrop2(x, y0 + r * .08, r * .72)
         g = (f'<path d="{td}" stroke-width="2.2"/><path d="{inner}" stroke-width="1"/>' +
-             spiral(x, y0, r * .55, turns=2.0, w=1.5, n=26, a=.1) + dotpath([(x - r * .35, y0 - r * 1.35)], w=1.6))
-        b.append(f'<g class="raindrop" style="--s:{sdelay:.2f};--d:{dist:.2f}">{g}</g>')
-    write("rain", (1200, 700), "".join(b))
+             sspiral(x, y0 + r * .02, r * .56, turns=2.1, dirn=1 if i % 2 else -1, n=44, w=1.5, start=rng.uniform(0, 6)))
+        rank = order[i]
+        b.append(f'<g class="raindrop" style="--s:{.14 + .5 * rank / len(cells):.3f};--d:{dist / 560:.3f}">{g}</g>')
+    write("rain", (600, 700), "".join(b))
 
 
 # ---------------------------------------------------------------- lotus that blooms from the bottom centre
