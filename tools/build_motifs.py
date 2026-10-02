@@ -959,39 +959,16 @@ def dividers():
         b.append(st(dotpath([(xx + 6, 66)], w=3), xx))
     write_div(8, "".join(b))
 
-    # 9 a linked metal chain: ring links alternate with edge-on links, with ornamental rosette connectors
-    BG = 'style="fill:var(--divbg,#fff)"'
-    def ring(cx, cy, rx, ry, bar):
-        o = f"M{cx - rx} {cy}a{rx} {ry} 0 1 0 {2 * rx} 0a{rx} {ry} 0 1 0 {-2 * rx} 0z"
-        i = f"M{cx - rx + bar} {cy}a{rx - bar} {ry - bar} 0 1 0 {2 * (rx - bar)} 0a{rx - bar} {ry - bar} 0 1 0 {-2 * (rx - bar)} 0z"
-        return f'<path d="{o}{i}" fill-rule="evenodd" {BG} stroke="none"/><path d="{o}" stroke-width="2.6"/><path d="{i}" stroke-width="1.4"/>'
-    def capsule(cx, cy, hl, hw):
-        d = f"M{cx - hl + hw} {cy - hw}h{2 * (hl - hw)}a{hw} {hw} 0 0 1 0 {2 * hw}h{-2 * (hl - hw)}a{hw} {hw} 0 0 1 0 {-2 * hw}z"
-        return f'<path d="{d}" {BG} stroke-width="2.4"/><path d="M{cx - hl + hw + 3} {cy}h{2 * (hl - hw) - 6}" stroke-width="1"/>'
+    # 9 embroidery chain stitch: one row of simple linked loops, each worked just inside the one before it
     b = []
-    x = 40
-    k = 0
-    cy = 36
-    while x < SW - 70:
-        if k % 5 == 4:                                           # ornamental connector
-            g = (f'<circle cx="{x}" cy="{cy}" r="23" {BG} stroke-width="2.6"/>' + circle(x, cy, 18, w=1.2) + petals(x, cy, 8, 5, 18, 4.5, rot=.2) +
-                 circle(x, cy, 4, w=1.8) + dotpath([(x - 33, cy), (x + 33, cy)], w=3))
-            b.append(st(g, x - 24))
-            x += 56
-            k += 1
-            continue
-        # ring, then the edge-on link in front of its right end, then the next ring (drawn later) covers the capsule's far end
-        g = ring(x, cy, 31, 18, 7)
-        g += "".join(f'<line x1="{x - 8 + q * 5}" y1="{cy + 12}" x2="{x - 3 + q * 5}" y2="{cy + 16}" stroke-width="1"/>' for q in range(5))   # shading
-        g += f'<path d="M{x - 25} {cy - 7}q4 -9 15 -12" stroke-width="1.3"/>'                                                                 # highlight
-        g += capsule(x + 38, cy, 30, 6)
-        b.append(st(g, x - 31))
-        x += 76
-        k += 1
-    for yy in (7, 65):                                           # fine stitched rails above and below
-        xx = 10
-        while xx < SW - 20:
-            b.append(st(f'<line x1="{xx}" y1="{yy}" x2="{xx + 10}" y2="{yy}" stroke-width="1.6"/>', xx)); xx += 22
+    x = 14
+    while x < SW - 34:
+        loop = (f'<path d="M{x} 36C{x} 26 {x + 8} 24 {x + 20} 24C{x + 32} 24 {x + 36} 30 {x + 36} 36C{x + 36} 42 {x + 32} 48 {x + 20} 48'
+                f'C{x + 8} 48 {x} 46 {x} 36Z" stroke-width="2.6"/>'
+                f'<path d="M{x + 7} 36C{x + 7} 31 {x + 12} 29 {x + 20} 29C{x + 27} 29 {x + 30} 32 {x + 30} 36C{x + 30} 40 {x + 27} 43 {x + 20} 43'
+                f'C{x + 12} 43 {x + 7} 41 {x + 7} 36Z" stroke-width="1.2"/>')
+        b.append(st(loop, x))
+        x += 28
     write_div(9, "".join(b))
     # 10 Nepali textile band with eye imagery between zigzag borders
     b = []
