@@ -26,8 +26,9 @@ env = Environment(loader=FileSystemLoader(str(SRC / "templates")), autoescape=se
                   trim_blocks=True, lstrip_blocks=True)
 
 # ---------------------------------------------------------------- motifs
-SPEEDS = {"bg": 0.3, "mid": 0.6, "accent": 1.2, "content": 1.0}
+SPEEDS = {"bg": 0.3, "mid": 0.6, "accent": 1.2, "fast": 1.35, "content": 1.0}
 _motif_cache = {}
+SYMBOLS = {"peacock"}
 
 
 def _svg(name):
@@ -38,7 +39,7 @@ def _svg(name):
     return _motif_cache[name]
 
 
-def motif(name, size="md", layer="mid", style="", cls="", rot=0, rise=0, inline=False, mobile=True, speed=None, progress=None):
+def motif(name, size="md", layer="mid", style="", cls="", rot=0, rise=0, inline=False, mobile=True, speed=None, progress=None, dx=0, scale=0, flip=False):
     """A decorative motif. Static ones load lazily as CSS masks after first paint; animated ones are inlined."""
     raw, vb = _svg(name)
     s = SPEEDS[layer] if speed is None else speed
@@ -46,11 +47,19 @@ def motif(name, size="md", layer="mid", style="", cls="", rot=0, rise=0, inline=
     attrs = f'data-speed="{s}"'
     if progress:
         attrs += f' data-progress="{progress}"'
+    if dx:
+        attrs += f' data-dx="{dx}"'
+    if scale:
+        attrs += f' data-scale="{scale}"'
+    if flip:
+        style += ";--flip:-1"
     if rot:
         attrs += f' data-rot="{rot}"'
     if rise:
         style += f";--rise:{rise}"
     klass = f"motif motif--{size} {cls}" + ("" if mobile else " motif--hide-sm")
+    if inline and name in SYMBOLS:       # defined once per page (see add_symbols), referenced here
+        return Markup(f'<div class="{klass}" style="--ar:{ar};{style}" {attrs}><svg viewBox="{vb[0]:g} {vb[1]:g} {vb[2]:g} {vb[3]:g}" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#sym-{name}"/></svg></div>')
     if inline:
         return Markup(f'<div class="{klass}" style="--ar:{ar};{style}" {attrs}>{raw}</div>')
     return Markup(f'<div class="{klass} motif--mask" style="--ar:{ar};{style}" {attrs} data-mask="/assets/motifs/{name}.svg"></div>')
@@ -61,6 +70,43 @@ def divider(name, tone="white", rot=360):
     raw, vb = _svg(name)
     return Markup(f'<div class="divider divider--{tone}" aria-hidden="true"><div class="motif motif--mask motif--divider" '
                   f'style="--ar:{vb[2]:.0f}/{vb[3]:.0f}" data-speed="1" data-rot="{rot}" data-mask="/assets/motifs/{name}.svg"></div></div>')
+
+
+STITCH_ORDER = [1, 5, 2, 4, 3, 7, 6, 8]
+
+
+def stitch_divider(n):
+    raw, _ = _svg(f"stitch-{n}")
+    return f'<div class="stitchdiv" aria-hidden="true" data-progress="self">{raw}</div>'
+
+
+def add_symbols(html):
+    """Inline motifs used several times per page are defined once as <symbol>s right after <body>."""
+    defs = ""
+    for name in sorted(SYMBOLS):
+        if f'href="#sym-{name}"' in html:
+            raw, vb = _svg(name)
+            inner = re.sub(r"^<svg[^>]*>|</svg>$", "", raw)
+            defs += f'<symbol id="sym-{name}" viewBox="{vb[0]:g} {vb[1]:g} {vb[2]:g} {vb[3]:g}">{inner}</symbol>'
+    if not defs:
+        return html
+    i = html.find(">", html.find("<body")) + 1
+    return html[:i] + f'<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>{defs}</defs></svg>' + html[i:]
+
+
+def add_dividers(html):
+    """Stitched divider at the bottom of every section in <main> except the last (the footer has its own rule)."""
+    a, b = html.find('<main id="main">'), html.find("</main>")
+    if a < 0 or b < 0:
+        return html
+    main = html[a:b]
+    parts = main.split("</section>")
+    out = []
+    for i, part in enumerate(parts[:-1]):
+        div = "" if i == len(parts) - 2 else stitch_divider(STITCH_ORDER[i % len(STITCH_ORDER)])
+        out.append(part + div + "</section>")
+    out.append(parts[-1])
+    return html[:a] + "".join(out) + html[b:]
 
 
 def ph(text):
@@ -133,7 +179,7 @@ def build_lang(lang, pages_out):
         indexable = not re.search(r'{%\s*set\s+indexable\s*=\s*false\s*%}', source)
         ctx = dict(t=t, url=url, lang=lang, i18n=strings, js_strings=strings.get("js", {}), year=datetime.date.today().year,
                    current=path, page_path=path)
-        html = tpl.render(**ctx)
+        html = add_symbols(add_dividers(tpl.render(**ctx)))
         out = ROOT / lang / path / "index.html" if path else ROOT / lang / "index.html"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(html, encoding="utf-8")

@@ -7,6 +7,11 @@
 {# ───────── 1. Hero — a horizontal mat unrolls down the right half as you scroll ───────── #}
 <section class="sec sec--orange hero-tall" id="top">
   <div class="hero-stick">
+    <div class="motifs" aria-hidden="true">
+      {{ motif('cloud', 'md', 'mid', 'left:2%;top:11%', dx=260, mobile=False) }}
+      {{ motif('fish', 'sm', 'fast', 'left:4%;bottom:3%', dx=340, mobile=False) }}
+      {{ motif('lotus', 'sm', 'accent', 'left:40%;bottom:-3%', scale=0.5, mobile=False) }}
+    </div>
     <div class="hero-mat" aria-hidden="true">
       {{ motif('mat-roll', 'static', 'content', '', cls='hero-roll', inline=True) }}
       <div class="hero-clip">
@@ -28,9 +33,11 @@
 {# ───────── 2. The mat ───────── #}
 <section class="sec sec--white" id="the-mat">
   <div class="motifs" aria-hidden="true">
-    {{ motif('hemp', 'md', 'bg', 'right:-3%;top:-4%', rise=140, mobile=False) }}
-    {{ motif('sari', 'md', 'mid', 'right:-8%;top:50%', mobile=False) }}
-    {{ motif('loom', 'md', 'mid', 'left:-12%;bottom:-16%', inline=True, mobile=False) }}
+    {{ motif('hemp', 'md', 'bg', 'right:-3%;top:-6%', rise=160, mobile=False) }}
+    {{ motif('peacock', 'md', 'mid', 'right:3%;bottom:-8%', inline=True, mobile=False) }}
+    {{ motif('cloud', 'md', 'bg', 'left:30%;top:0%', dx=220, mobile=False) }}
+    {{ motif('sari', 'sm', 'mid', 'right:-3%;top:46%', mobile=False) }}
+    {{ motif('rosette', 'sm', 'accent', 'right:20%;top:2%', rot=300, mobile=False) }}
   </div>
   <div class="wrap grid grid--split">
     <div>
@@ -48,12 +55,16 @@
   </div>
 </section>
 
-{{ divider('rosette', 'white') }}
 
 {# ───────── 3. The makers ───────── #}
 <section class="sec sec--orange" id="makers">
   <div class="motifs" aria-hidden="true">
-    {{ motif('hands', 'lg', 'bg', 'right:-2%;bottom:-4%', speed=0.8) }}
+    {{ motif('sun', 'lg', 'bg', 'right:-12%;top:-16%', rot=240, mobile=False) }}
+    {{ motif('hands', 'lg', 'mid', 'right:2%;bottom:-6%', scale=0.35) }}
+    {{ motif('cloud', 'md', 'mid', 'left:1%;top:1%', dx=300, mobile=False) }}
+    {{ motif('lotus', 'md', 'accent', 'left:-4%;bottom:-8%', scale=0.6, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'right:34%;bottom:2%', dx=-260, flip=True, mobile=False) }}
+    {{ motif('rosette', 'sm', 'fast', 'right:36%;top:4%', rot=360, mobile=False) }}
   </div>
   <div class="wrap wrap--narrow" style="max-width:860px;margin-left:0;margin-right:auto">
     <span class="eyebrow">{{ t('home.makers_eyebrow') }}</span>
@@ -66,9 +77,12 @@
 {# ───────── 4. The problem ───────── #}
 <section class="sec sec--white" id="why">
   <div class="motifs" aria-hidden="true">
-    {{ motif('water', 'lg', 'bg', 'right:-10%;bottom:-2%', speed=0.3, mobile=False) }}
-    {{ motif('leaves', 'md', 'bg', 'right:2%;top:48%', rot=30) }}
-    {{ motif('bloom', 'md', 'accent', 'left:-14%;bottom:-12%', rot=60, mobile=False) }}
+    {{ motif('water', 'lg', 'bg', 'right:-10%;bottom:-2%', dx=-160, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'left:1%;top:-1%', dx=500, mobile=False) }}
+    {{ motif('leaves', 'md', 'mid', 'right:1%;top:44%', rot=140, dx=-120) }}
+    {{ motif('bloom', 'md', 'accent', 'left:-14%;bottom:-12%', rot=160, mobile=False) }}
+    {{ motif('cloud', 'md', 'bg', 'right:10%;top:-2%', dx=-240, flip=True, mobile=False) }}
+    {{ motif('peacock', 'md', 'mid', 'left:34%;bottom:-10%', inline=True, flip=True, mobile=False) }}
   </div>
   <div class="wrap grid grid--2">
     <div>
@@ -93,8 +107,11 @@
 {# ───────── 5. The passport ───────── #}
 <section class="sec sec--orange" id="passport">
   <div class="motifs" aria-hidden="true">
-    {{ motif('sewing', 'lg', 'mid', 'right:-4%;bottom:-4%', inline=True, mobile=False) }}
-    {{ motif('hank', 'md', 'bg', 'right:6%;top:-6%', rot=-10, mobile=False) }}
+    {{ motif('mandala', 'xl', 'bg', 'right:-24%;top:-10%', rot=-200, mobile=False) }}
+    {{ motif('sewing', 'lg', 'mid', 'right:6%;bottom:-6%', inline=True, mobile=False) }}
+    {{ motif('hank', 'md', 'mid', 'left:-5%;bottom:-6%', rot=-30, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'left:30%;top:1%', dx=280, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'right:42%;bottom:1%', dx=-320, flip=True, mobile=False) }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('home.passport_eyebrow') }}</span>
@@ -118,8 +135,12 @@
 {# ───────── 6. Three reasons ───────── #}
 <section class="sec sec--white" id="reasons">
   <div class="motifs" aria-hidden="true">
-    {{ motif('border', 'xl', 'content', 'top:0', cls='motif--border', inline=True) }}
-    {{ motif('ret', 'sm', 'mid', 'right:3%;bottom:4%', mobile=False) }}
+    {{ motif('peacock', 'md', 'mid', 'left:-17%;bottom:-12%', inline=True, mobile=False) }}
+    {{ motif('peacock', 'md', 'mid', 'right:-17%;bottom:-12%', inline=True, flip=True, mobile=False) }}
+    {{ motif('lotus', 'md', 'accent', 'left:38%;bottom:-4%', scale=0.7, mobile=False) }}
+    {{ motif('sun', 'md', 'bg', 'right:6%;top:-8%', rot=200, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'left:6%;top:0%', dx=300, mobile=False) }}
+    {{ motif('ret', 'sm', 'mid', 'right:21%;bottom:1%', mobile=False) }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
@@ -139,8 +160,10 @@
 {# ───────── 7. The ask ───────── #}
 <section class="sec sec--orange" id="ask">
   <div class="motifs" aria-hidden="true">
-    {{ motif('rosette', 'md', 'bg', 'right:-8%;top:-14%', rot=-30, mobile=False) }}
-    {{ motif('hemp', 'sm', 'mid', 'right:4%;bottom:-6%', rise=120, mobile=False) }}
+    {{ motif('peacock', 'lg', 'mid', 'right:-4%;bottom:-6%', inline=True, flip=True) }}
+    {{ motif('mandala', 'lg', 'bg', 'right:-18%;top:-24%', rot=160, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'left:34%;top:0%', dx=-260, flip=True, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'left:36%;bottom:2%', dx=300, mobile=False) }}
   </div>
   <div class="wrap wrap--narrow" style="margin-left:0;margin-right:auto;max-width:880px">
     <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
@@ -154,7 +177,12 @@
 </section>
 
 {# ───────── 8. Shop ───────── #}
-<section class="sec sec--white sec--tight" id="shop-cta">
+<section class="sec sec--white sec--tight sec--hero-last" id="shop-cta">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('fish', 'sm', 'fast', 'left:-2%;bottom:6%', dx=300, mobile=False) }}
+    {{ motif('lotus', 'sm', 'accent', 'right:-2%;top:-6%', scale=0.6, mobile=False) }}
+    {{ motif('cloud', 'sm', 'mid', 'left:44%;top:-4%', dx=-200, mobile=False) }}
+  </div>
   <div class="wrap grid grid--split">
     <div>
       <span class="eyebrow">{{ t('home.shop_eyebrow') }}</span>

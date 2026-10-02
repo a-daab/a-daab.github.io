@@ -196,8 +196,27 @@
       '<a class="btn btn--ghost" href="' + ROOT + LANG + '/petition/' + IDX + '">' + esc(T('bridge_petition')) + '</a></div></div></section>');
 
     app.innerHTML = html.join('');
+    stitchDividers();
     lazyVideos();
     if (location.hash) { var el = d.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+  }
+
+  /* Stitched dividers between the passport's sections (the static pages get theirs at build time) */
+  function stitchDividers() {
+    var secs = [].slice.call(app.querySelectorAll('section.sec'));
+    var kinds = [3, 2, 7, 4, 6, 8, 1, 5];
+    Promise.all(kinds.map(function (n) {
+      return fetch(ROOT + 'assets/motifs/stitch-' + n + '.svg').then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; });
+    })).then(function (svgs) {
+      secs.forEach(function (sec, i) {
+        var svg = svgs[i % svgs.length];
+        if (!svg || i === secs.length - 1) return;
+        var d = document.createElement('div');
+        d.className = 'stitchdiv'; d.setAttribute('aria-hidden', 'true'); d.setAttribute('data-progress', 'self');
+        d.innerHTML = svg; sec.appendChild(d);
+      });
+      if (window.YM_motion) window.YM_motion.refresh();
+    });
   }
 
   function metric(shown, label, raw, howText) {

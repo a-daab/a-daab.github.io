@@ -4,9 +4,11 @@
 {% set title = "Wholesale & Studios" %}
 {% set description = "Request a meeting about stocking YogaMaty or outfitting your yoga studio with a mat that carries a story your staff can tell." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px)">
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px))">
   <div class="motifs" aria-hidden="true">
-    {{ motif('spool', 'md', 'mid', 'right:6%;top:6%', rot=200, mobile=False) }}
+    {{ motif('sun', 'md', 'bg', 'right:6%;top:-12%', rot=240, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'left:40%;top:1%', dx=260, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'right:30%;bottom:3%', dx=-300, flip=True, mobile=False) }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('nav.shop') }}</span>
@@ -15,7 +17,10 @@
   </div>
 </section>
 <section class="sec sec--white">
-  <div class="motifs" aria-hidden="true">{{ motif('sari', 'md', 'mid', 'right:-6%;top:12%', mobile=False) }}</div>
+  <div class="motifs" aria-hidden="true">
+    {{ motif('sari', 'md', 'mid', 'right:-6%;top:12%', mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'right:36%;top:0%', dx=-240, flip=True, mobile=False) }}
+  </div>
   <div class="wrap">
     <p class="lede">Tell us a little about your business and we'll be in touch by email to arrange a meeting. We don't publish wholesale pricing; the conversation happens directly.</p>
     <form class="form" data-form="wholesale" novalidate autocomplete="off" style="margin-top:2.4rem" aria-label="Wholesale and studio inquiry">

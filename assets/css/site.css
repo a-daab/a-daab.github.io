@@ -141,7 +141,7 @@ main{display:block}
 
 .motifs{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .motif{position:absolute;color:var(--motif);opacity:.5;will-change:transform;
-  transform:translate3d(0,calc(var(--ty,0) * 1px + (1 - var(--p,1)) * var(--rise,0) * 1px),0) rotate(calc(var(--rot,0) * 1deg))}
+  transform:translate3d(calc(var(--tx,0) * 1px),calc(var(--ty,0) * 1px + (1 - var(--p,1)) * var(--rise,0) * 1px),0) rotate(calc(var(--rot,0) * 1deg)) scale(calc(var(--sc,1) * var(--flip,1)),var(--sc,1))}
 /* static motifs are recoloured through a CSS mask, loaded after first paint (js sets --mask) */
 .motif--mask{aspect-ratio:var(--ar);background:currentColor;-webkit-mask:var(--mask,none) center/contain no-repeat;mask:var(--mask,none) center/contain no-repeat}
 .motif svg{width:100%;height:auto;overflow:visible;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
@@ -161,7 +161,7 @@ main{display:block}
 
 /* Hooks inside the inlined motifs. js/site.js sets --p (0..1 progress through the host section) on each motif.
    With no js, or with reduced motion, the defaults below are the finished, static compositions. */
-.motif .stitch{opacity:clamp(0,calc(var(--p,1) * 90 - var(--i,0)),1)}
+.motif .stitch,.stitchdiv .stitch{opacity:clamp(0,calc(var(--p,1) * 100 - var(--i,0)),1)}
 .motif .shuttle{transform:translate3d(calc((var(--p,.5) - .5) * 220px),0,0)}
 .motif .layer-1{transform:translate3d(0,calc((var(--p,.5) - .5) * -26px),0)}
 .motif .layer-3{transform:translate3d(0,calc((var(--p,.5) - .5) * 26px),0)}
@@ -338,3 +338,17 @@ details.how p{margin:.6em 0 0;max-width:58ch}
   .hero-text{width:100%;padding:0}
   .hero-mat{position:relative;right:auto;top:auto;width:calc(100% + 2 * var(--gutter));margin:36px calc(-1 * var(--gutter)) 0;height:min(120vw,560px);order:2}
 }
+
+/* ---------- Peacock: the tail fan opens as you scroll ---------- */
+.feather{transform-box:view-box;transform-origin:250px 370px;transform:rotate(calc(var(--k) * 13deg * (.2 + var(--p,1) * .8)))}
+.motif--xs{width:clamp(80px,9vw,130px)}
+
+/* ---------- Stitched section dividers: stitches are added left to right, led by a needle, as the divider scrolls in ---------- */
+.stitchdiv{position:absolute;left:0;right:0;bottom:clamp(14px,2.2vw,32px);z-index:1;pointer-events:none;color:var(--motif);opacity:.85}
+.stitchdiv svg{display:block;width:100%;height:auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;overflow:hidden}
+.stitchdiv svg *{vector-effect:non-scaling-stroke}
+.stitchdiv .needle{transform:translate3d(calc(var(--p,1) * 1250px),0,0)}
+.sec{padding-bottom:clamp(120px,13vw,170px)}
+.sec--tight,.sec--pp{padding-bottom:clamp(110px,11vw,140px)}
+.sec--hero-last{padding-bottom:clamp(48px,6vw,90px)}
+@media (prefers-reduced-motion:reduce){.stitchdiv .needle{display:none}}

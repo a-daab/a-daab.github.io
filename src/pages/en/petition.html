@@ -4,10 +4,12 @@
 {% set title = "Sign the petition" %}
 {% set description = "Sign the TransparaTrade petition demanding mandatory supply chain transparency labeling laws, hand your device to the next person, and share it to end modern slavery." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px)">
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px))">
   <div class="motifs" aria-hidden="true">
-    {{ motif('rosette', 'md', 'bg', 'right:-6%;top:-10%', rot=60, mobile=False) }}
-    {{ motif('spool', 'sm', 'accent', 'right:36%;bottom:-14%', rot=180, mobile=False) }}
+    {{ motif('mandala', 'lg', 'bg', 'right:-14%;top:-40%', rot=-200, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'right:34%;top:2%', dx=-260, flip=True, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'right:28%;bottom:4%', dx=-300, flip=True, mobile=False) }}
+    {{ motif('lotus', 'sm', 'accent', 'right:4%;bottom:-4%', scale=0.6, mobile=False) }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('petition.eyebrow') }}</span>
@@ -20,7 +22,8 @@
 <section class="sec sec--white" id="sign">
   <div class="motifs" aria-hidden="true">
     {{ motif('hank', 'sm', 'bg', 'right:3%;top:3%', mobile=False) }}
-    {{ motif('leaves', 'md', 'bg', 'left:-8%;bottom:-6%', rot=30, mobile=False) }}
+    {{ motif('leaves', 'md', 'mid', 'left:-8%;bottom:-6%', rot=140, dx=160, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'right:36%;top:0%', dx=-240, flip=True, mobile=False) }}
   </div>
   <div class="wrap grid grid--split" style="align-items:start">
     <div>

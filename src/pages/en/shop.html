@@ -24,6 +24,10 @@
 {% endblock %}
 {% block main %}
 <section class="sec sec--white sec--head" style="padding-top:calc(var(--header-h) + clamp(32px,5vw,70px))">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('cloud', 'md', 'fast', 'left:34%;top:0%', dx=260, mobile=False) }}
+    {{ motif('fish', 'sm', 'fast', 'right:-2%;top:1%', dx=-300, flip=True, mobile=False) }}
+  </div>
   <div class="wrap grid grid--split" style="align-items:start">
     <div>
       <figure class="media" style="--ar:68/34">
@@ -62,7 +66,11 @@
 </section>
 
 <section class="sec sec--white" style="padding-top:0" id="details">
-  <div class="motifs" aria-hidden="true">{{ motif('hemp', 'sm', 'bg', 'right:-2%;bottom:-6%', rise=100, mobile=False) }}</div>
+  <div class="motifs" aria-hidden="true">
+    {{ motif('hemp', 'sm', 'bg', 'right:-2%;bottom:-6%', rise=100, mobile=False) }}
+    {{ motif('lotus', 'md', 'accent', 'left:-6%;bottom:-8%', scale=0.6, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'right:30%;top:0%', dx=-240, flip=True, mobile=False) }}
+  </div>
   <div class="wrap grid grid--2">
     <div>
       <span class="eyebrow">{{ t('shop.details') }}</span>
@@ -89,7 +97,11 @@
 </section>
 
 <section class="sec sec--orange" id="appeals">
-  <div class="motifs" aria-hidden="true">{{ motif('bloom', 'lg', 'bg', 'right:-10%;bottom:-30%', rot=40, mobile=False) }}</div>
+  <div class="motifs" aria-hidden="true">
+    {{ motif('bloom', 'lg', 'bg', 'right:-10%;bottom:-30%', rot=160, mobile=False) }}
+    {{ motif('cloud', 'md', 'fast', 'left:36%;top:0%', dx=260, mobile=False) }}
+    {{ motif('sun', 'sm', 'bg', 'right:6%;top:-4%', rot=240, mobile=False) }}
+  </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
     <div class="grid grid--3" style="margin-top:2rem">
@@ -101,6 +113,10 @@
 </section>
 
 <section class="sec sec--white sec--tight">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('fish', 'sm', 'fast', 'left:-2%;top:2%', dx=320, mobile=False) }}
+    {{ motif('lotus', 'sm', 'accent', 'right:-2%;top:-4%', scale=0.6, mobile=False) }}
+  </div>
   <div class="wrap grid grid--split">
     <div><h2 class="h1" style="margin:0">Buying for a studio?</h2><p style="margin-top:.6rem">Request a meeting about a wholesale or studio partnership.</p></div>
     <div class="btn-row" style="margin-top:0"><a class="btn btn--ghost btn--lg" href="{{ url('shop/wholesale') }}">{{ t('nav.wholesale') }}</a></div>
