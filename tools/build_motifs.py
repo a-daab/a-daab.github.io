@@ -1422,25 +1422,51 @@ def lotus_bloom():
     cx, cy = 250, 250
     rng = random.Random(14)
 
+    def bez(p0, c1, c2, p1, n=14):
+        pts = []
+        for i in range(n + 1):
+            t = i / n
+            u = 1 - t
+            pts.append((u ** 3 * p0[0] + 3 * u * u * t * c1[0] + 3 * u * t * t * c2[0] + t ** 3 * p1[0],
+                        u ** 3 * p0[1] + 3 * u * u * t * c1[1] + 3 * u * t * t * c2[1] + t ** 3 * p1[1]))
+        return pts
+
+    def sketch(pts, j, closed=False):
+        """Run a pen through the points with a little tremor: smooth through midpoints, each point nudged."""
+        q = [(x + rng.uniform(-j, j), y + rng.uniform(-j, j)) for x, y in pts]
+        d = f"M{q[0][0]:.1f} {q[0][1]:.1f}"
+        for (x0, y0), (x1, y1) in zip(q[1:], q[2:]):
+            d += f"Q{x0:.1f} {y0:.1f} {(x0 + x1) / 2:.1f} {(y0 + y1) / 2:.1f}"
+        d += f"L{q[-1][0]:.1f} {q[-1][1]:.1f}"
+        return d + ("Z" if closed else "")
+
     def petal(L, w):
-        """One petal, drawn a little differently each time: its own length, a tip that leans, a fuller side and a flatter side."""
+        """One petal, drawn a little differently each time: its own length, a tip that leans, a fuller side and a flatter side;
+        outlined twice by a shaky pencil, the second pass lighter and overshooting."""
         wl, wr = w * rng.uniform(.82, 1.15), w * rng.uniform(.82, 1.15)
         tx = cx + rng.uniform(-6, 6)
         L = L * rng.uniform(.93, 1.06)
         h1, h2 = rng.uniform(.28, .42), rng.uniform(.78, .92)
         k1, k2 = rng.uniform(.4, .65), rng.uniform(.4, .65)
-        d = (f"M{cx} {cy}C{cx - wl:.1f} {cy - L * h1:.1f} {cx - wl * k1:.1f} {cy - L * h2:.1f} {tx:.1f} {cy - L:.1f}"
-             f"C{cx + wr * k2:.1f} {cy - L * (h2 + rng.uniform(-.05, .05)):.1f} {cx + wr:.1f} {cy - L * (h1 + rng.uniform(-.05, .05)):.1f} {cx} {cy}Z")
-        vein = (f"M{cx} {cy - 14}Q{cx + rng.uniform(-4, 4):.1f} {cy - L * .45:.1f} {tx - (tx - cx) * .2:.1f} {cy - L * rng.uniform(.62, .78):.1f}")
-        return d, vein
+        left = bez((cx, cy), (cx - wl, cy - L * h1), (cx - wl * k1, cy - L * h2), (tx, cy - L))
+        right = bez((tx, cy - L), (cx + wr * k2, cy - L * (h2 + rng.uniform(-.05, .05))), (cx + wr, cy - L * (h1 + rng.uniform(-.05, .05))), (cx, cy))
+        pts = left + right[1:]
+        first = sketch(pts, 1.1, closed=True)
+        # second pass: starts a little off the base, wanders, and crosses past the tip
+        i0 = rng.randint(1, 3)
+        second = sketch(pts[i0:] + pts[1:i0 + 2], 1.9)
+        vein = [(cx + rng.uniform(-1, 1), cy - 14 - t * (L * .62)) for t in (0, .25, .5, .75, 1)]
+        vein = [(x + (tx - cx) * t * .5 + 2.5 * math.sin(t * 3), y) for (x, y), t in zip(vein, (0, .25, .5, .75, 1))]
+        return first, second, sketch(vein, .8)
 
     b = []
     rows = [(3, 22, 190, 34), (2, 28, 152, 38), (1, 38, 112, 34)]     # (half-count, spread per petal in degrees, length, half-width)
     for half, sp, L, w in rows:
         for k in range(-half, half + 1):
-            d, vein = petal(L - abs(k) * 4, w)
+            first, second, vein = petal(L - abs(k) * 4, w)
             tilt = rng.uniform(-3.5, 3.5)
-            g = f'<g transform="rotate({tilt:.1f} {cx} {cy})"><path d="{d}" fill="#fff" stroke-width="{rng.uniform(2.3, 2.9):.1f}"/>'
+            g = f'<g transform="rotate({tilt:.1f} {cx} {cy})"><path d="{first}" fill="#fff" stroke-width="{rng.uniform(2.3, 2.9):.1f}"/>'
+            g += f'<path d="{second}" stroke-width="1.2" opacity=".6"/>'
             g += f'<path d="{vein}" stroke-width="{rng.uniform(1.0, 1.5):.1f}"/></g>'
             b.append(f'<g class="petal" style="--k:{k};--sp:{sp}deg">{g}</g>')
     wob = lambda x0, x1, y, amp: [(x0 + (x1 - x0) * t / 12, y + amp * math.sin(t * .9 + 1) + rng.uniform(-1.6, 1.6)) for t in range(13)]
