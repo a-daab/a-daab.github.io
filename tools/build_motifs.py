@@ -1594,9 +1594,8 @@ def village():
     b.append(house(170, 120, 92, 30, 2))
     b.append(house_thatch(316, 92, 46))
     b.append(house_stone(430, 104, 86))
-    b.append(house_thatch(566, 74, 38))
-    b.append(house(670, 112, 124, 30, 3))
-    b.append(house_stone(806, 80, 66))
+    b.append(house(566, 112, 124, 30, 3))
+    b.append(house_stone(702, 80, 66))
     # clothesline between two poles in the yard
     b.append(line(20, 186, 20, 52, w=2.6)); b.append(line(150, 186, 150, 58, w=2.6))
     line_pts = [(20, 56), (85, 70), (150, 60)]
