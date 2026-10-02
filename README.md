@@ -36,7 +36,7 @@ One template renders any batch. To publish a batch: copy `data/batches/B-2026-04
 
 ## Going live — checklist
 
-1. **Domain/Pages:** `CNAME` is `www.yogamaty.com`. Point DNS at GitHub Pages, enable *Enforce HTTPS*, turn on registrar privacy and auto-renew.
+1. **Domain/Pages:** add a `CNAME` file containing `www.yogamaty.com` (or set the custom domain in Settings → Pages). Point DNS at GitHub Pages, enable *Enforce HTTPS*, turn on registrar privacy and auto-renew.
 2. **Stripe:** create the product ($38, inventory limit), a Payment Link collecting only name, email and shipping address (no phone, no pre-ticked marketing box), enable Stripe Tax with Connecticut registered, set the success URL to `https://www.yogamaty.com/en/shop/thank-you/`. Paste the link into `stripe_payment_link` in `src/site.json`. Ask Stripe about nonprofit rates; confirm tax treatment with an accountant.
 3. **Forms Worker:** follow `worker/README.md` (D1 database, `RESEND_API_KEY`, `TURNSTILE_SECRET`, `api.yogamaty.com`). Then set `api_base` and `turnstile_site_key` in `src/site.json`. Fill `WHOLESALE_TO` and confirm `ALLIES_TO` in `worker/wrangler.toml`. Back up the petition (`wrangler d1 export`).
 4. **Fill the placeholders:** `python3 tools/check-placeholders.py` lists them all.

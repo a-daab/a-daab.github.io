@@ -4,11 +4,7 @@
 {% set title = "Sign the petition" %}
 {% set description = "Sign the TransparaTrade petition demanding mandatory supply chain transparency labeling laws, hand your device to the next person, and share it to end modern slavery." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px)">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('rosette', 'md', 'bg', 'right:-6%;top:-10%', rot=60, mobile=False) }}
-    {{ motif('spool', 'sm', 'accent', 'right:36%;bottom:-14%', rot=180, mobile=False) }}
-  </div>
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px))">
   <div class="wrap">
     <span class="eyebrow">{{ t('petition.eyebrow') }}</span>
     <h1 class="display">Sign the<br>petition.</h1>
@@ -18,10 +14,6 @@
 </section>
 
 <section class="sec sec--white" id="sign">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hank', 'sm', 'bg', 'right:3%;top:3%', mobile=False) }}
-    {{ motif('leaves', 'md', 'bg', 'left:-8%;bottom:-6%', rot=30, mobile=False) }}
-  </div>
   <div class="wrap grid grid--split" style="align-items:start">
     <div>
       <form class="form kiosk" data-form="petition" novalidate autocomplete="off" aria-labelledby="pet-h">

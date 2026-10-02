@@ -5,6 +5,8 @@
   var d = document, app = d.getElementById('pp-app');
   if (!app) return;
   var LANG = (window.YM && window.YM.lang) || 'en';
+  var ROOT = (window.YM && window.YM.root !== undefined) ? window.YM.root : '/';   /* a relative root is used only by the static preview */
+  var IDX = (window.YM && window.YM.idx) || '';
   var T = function (k) { return window.YM_T('passport.' + k, k); };
   var q = new URLSearchParams(location.search);
   var SAFE = /^[A-Za-z0-9_-]{1,40}$/;
@@ -41,14 +43,14 @@
   }
 
   Promise.all([
-    getJSON('/data/tiers.json'),
-    getJSON('/data/standards.json').catch(function () { return null; }),
-    getJSON('/data/media.json').catch(function () { return {}; }),
-    getJSON('/data/serials.json').catch(function () { return null; })
+    getJSON(ROOT + 'data/tiers.json'),
+    getJSON(ROOT + 'data/standards.json').catch(function () { return null; }),
+    getJSON(ROOT + 'data/media.json').catch(function () { return {}; }),
+    getJSON(ROOT + 'data/serials.json').catch(function () { return null; })
   ]).then(function (r) {
     var tiers = r[0], standards = r[1], media = r[2], serials = r[3];
     var id = resolveBatch(serials);
-    return getJSON('/data/batches/' + id + '.json').then(function (batch) { render(tiers, standards, media, batch); },
+    return getJSON(ROOT + 'data/batches/' + id + '.json').then(function (batch) { render(tiers, standards, media, batch); },
       function () { app.innerHTML = '<section class="sec sec--white"><div class="wrap wrap--narrow"><p class="lede">' + esc(T('not_found')) + ' <strong>' + esc(id) + '</strong>.</p></div></section>'; });
   }).catch(function () {
     app.innerHTML = '<section class="sec sec--white"><div class="wrap wrap--narrow"><p class="lede">' + esc(T('load_error')) + '</p></div></section>';
@@ -105,7 +107,7 @@
     html.push('<section class="sec sec--white sec--pp" id="how-collected"><div class="wrap grid grid--split"><div>' +
       '<span class="eyebrow">' + esc(T('how_collected_eyebrow')) + '</span><h2 class="h1">' + esc(T('how_collected_title')) + '</h2>' +
       '<p>' + esc(T('how_collected_1')) + '</p><p>' + esc(T('how_collected_2')) + '</p>' +
-      '<p><a href="/' + LANG + '/transparatrade/">' + esc(T('how_collected_link')) + '</a></p></div>' +
+      '<p><a href="' + ROOT + LANG + '/transparatrade/' + IDX + '">' + esc(T('how_collected_link')) + '</a></p></div>' +
       '<div style="background:var(--orange-tint);padding:clamp(22px,3vw,36px)"><h3>' + esc(T('this_batch')) + '</h3>' +
       '<dl class="tier" style="display:grid;border:0;padding:0;grid-template-columns:minmax(120px,40%) 1fr;gap:10px 16px;margin:0">' +
       '<dt>' + esc(T('entered_by')) + '</dt><dd>' + val(b.entered_by, T('entered_by')) + '</dd>' +
@@ -190,12 +192,31 @@
 
     /* ---- bridge to TransparaTrade ---- */
     html.push('<section class="sec sec--orange sec--tight"><div class="wrap"><p class="statement">' + esc(T('bridge')) + '</p>' +
-      '<div class="btn-row"><a class="btn" href="/' + LANG + '/transparatrade/">' + esc(T('bridge_cta')) + '</a>' +
-      '<a class="btn btn--ghost" href="/' + LANG + '/petition/">' + esc(T('bridge_petition')) + '</a></div></div></section>');
+      '<div class="btn-row"><a class="btn" href="' + ROOT + LANG + '/transparatrade/' + IDX + '">' + esc(T('bridge_cta')) + '</a>' +
+      '<a class="btn btn--ghost" href="' + ROOT + LANG + '/petition/' + IDX + '">' + esc(T('bridge_petition')) + '</a></div></div></section>');
 
     app.innerHTML = html.join('');
+    stitchDividers();
     lazyVideos();
     if (location.hash) { var el = d.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView(); }
+  }
+
+  /* Stitched dividers between the passport's sections (the static pages get theirs at build time) */
+  function stitchDividers() {
+    var secs = [].slice.call(app.querySelectorAll('section.sec'));
+    var kinds = [3, 2, 7, 4, 6, 8, 1, 5];
+    Promise.all(kinds.map(function (n) {
+      return fetch(ROOT + 'assets/motifs/stitch-' + n + '.svg').then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; });
+    })).then(function (svgs) {
+      secs.forEach(function (sec, i) {
+        var svg = svgs[i % svgs.length];
+        if (!svg || i === secs.length - 1) return;
+        var d = document.createElement('div');
+        d.className = 'stitchdiv'; d.setAttribute('aria-hidden', 'true'); d.setAttribute('data-progress', 'self');
+        d.innerHTML = svg; sec.appendChild(d);
+      });
+      if (window.YM_motion) window.YM_motion.refresh();
+    });
   }
 
   function metric(shown, label, raw, howText) {

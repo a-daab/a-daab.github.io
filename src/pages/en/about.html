@@ -4,10 +4,6 @@
 {% set description = "YogaMaty and TransparaTrade are being developed by Empowerment Collective, a 100% survivor-led nonprofit that trains and employs the women artisans who weave every mat in the Kathmandu Valley." %}
 {% block main %}
 <section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hands', 'lg', 'mid', 'right:-4%;bottom:-8%', speed=0.8) }}
-    {{ motif('rosette', 'md', 'bg', 'left:-6%;top:-8%', rot=50, mobile=False) }}
-  </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('about.eyebrow') }}</span>
     <h1 class="display">Made by<br>Empowerment<br>Collective.</h1>
@@ -16,7 +12,6 @@
 </section>
 
 <section class="sec sec--white">
-  <div class="motifs" aria-hidden="true">{{ motif('border', 'xl', 'content', 'top:0', cls='motif--border', inline=True) }}</div>
   <div class="wrap grid grid--split">
     <div>
       <span class="eyebrow">The organization</span>
@@ -35,7 +30,6 @@
 </section>
 
 <section class="sec sec--white" style="padding-top:0">
-  <div class="motifs" aria-hidden="true">{{ motif('loom', 'lg', 'mid', 'right:-8%;top:10%', inline=True, mobile=False) }}</div>
   <div class="wrap grid grid--2">
     <div>
       <span class="eyebrow">The workshop</span>
