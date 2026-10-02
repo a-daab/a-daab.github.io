@@ -1417,20 +1417,21 @@ def rain():
 
 # ---------------------------------------------------------------- lotus that blooms from the bottom centre
 def lotus_bloom():
-    b = []
+    """A clean lotus: three rows of single-outline petals (7, 5 and 3), each filled white so the front row hides the one behind,
+    with one centre vein per petal. Rows spread apart as the page scrolls (see .petal in site.css)."""
     cx, cy = 250, 250
-    rows = [(9, 17, 190, 24, "back"), (7, 23, 150, 28, "mid"), (5, 31, 112, 32, "front")]
-    for n, sp, L, w, name in rows:
-        half = n // 2
+    def petal(L, w):
+        return (f"M{cx} {cy}C{cx - w} {cy - L * .35:.1f} {cx - w * .55:.1f} {cy - L * .86:.1f} {cx} {cy - L}"
+                f"C{cx + w * .55:.1f} {cy - L * .86:.1f} {cx + w} {cy - L * .35:.1f} {cx} {cy}Z")
+    b = []
+    rows = [(3, 22, 190, 34), (2, 28, 152, 38), (1, 38, 112, 34)]     # (half-count, spread per petal in degrees, length, half-width)
+    for half, sp, L, w in rows:
         for k in range(-half, half + 1):
-            g = leaf(cx, cy, math.radians(-90), L - abs(k) * 4, w, veins=False)
-            g += line(cx, cy - 20, cx, cy - L * .8, w=1.1)
-            g += dotpath([(cx, cy - L * (.3 + q * .13)) for q in range(4)], w=2.2)
+            g = f'<path d="{petal(L - abs(k) * 4, w)}" fill="#fff" stroke-width="2.6"/>'
+            g += f'<path d="M{cx} {cy - 14}L{cx} {cy - (L - abs(k) * 4) * .72:.1f}" stroke-width="1.3"/>'
             b.append(f'<g class="petal" style="--k:{k};--sp:{sp}deg">{g}</g>')
     b.append(path([(60, 262), (250, 274), (440, 262)], w=3.2, a=.5))
     b.append(path([(110, 286), (250, 296), (390, 286)], w=2.2, a=.5))
-    b.append(path([(160, 308), (250, 316), (340, 308)], w=1.4, a=.5))
-    b.append(dotpath([(86 + i * 17, 276 + 4 * math.sin(i)) for i in range(21)], w=2.4))
     write("lotus-bloom", (500, 330), "".join(b))
 
 
