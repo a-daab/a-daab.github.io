@@ -1568,7 +1568,7 @@ def node(i, cx, cy, vertical=False):
             f'{hit}<g class="pic">{pic}</g>{label}</a>')
 
 
-def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-2.2, .3, 2.1), n=44, skew=1.0, wob=0.0, phase=0.0):
+def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-2.2, .3, 2.1), n=44, skew=1.0, wob=0.0, phase=0.0, freq=3.1):
     """A straight, taut thread made of three strands that lie almost on top of each other (they drift a little apart and together).
     The thread sags a little between its ends, along bow_dir; the same slack is used everywhere so the tension looks even."""
     L = math.hypot(p1[0] - p0[0], p1[1] - p0[1]) or 1
@@ -1582,7 +1582,7 @@ def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-2.2, .3, 2.1), n=44, skew
         for i in range(n + 1):
             t = i / n
             tt = t ** skew                                           # skew moves the lowest point of the sag off-centre
-            bow = sag * (1 - (2 * tt - 1) ** 2) + wob * math.sin(math.pi * t) * math.sin(3.1 * math.pi * t + phase + k * .5)
+            bow = sag * (1 - (2 * tt - 1) ** 2) + wob * math.sin(math.pi * t) * math.sin(freq * math.pi * t + phase + k * .5)
             o = off * (1 + .35 * math.sin(t * math.pi * 2 + k * 1.7))
             q.append((p0[0] + (p1[0] - p0[0]) * t + nx * (bow + o), p0[1] + (p1[1] - p0[1]) * t + ny * (bow + o)))
         out.append(f'<path d="{smooth2(q[::2] + [q[-1]])}" stroke-width="1.9"/>')
@@ -1615,8 +1615,8 @@ def flow():
     xs = [118, 330, 542, 754, 966]
     R_ = 58
     # left run-in: from far off the page to the first circle
-    p0, p1 = (-900, cy), (xs[0] - R_, cy)
-    b.append(st(thread_strands(p0, p1, 6, skew=1.15, wob=2.4, phase=.6), 0))
+    p0, p1 = (-760, cy), (xs[0] - R_, cy)
+    b.append(st(thread_strands(p0, p1, 24, skew=1.3, wob=7.0, phase=1.1, freq=8.5, n=160), 0))
     VAR = [(1.0, .82, 2.2, 0.3), (.72, 1.2, 1.6, 2.1), (1.3, .9, 2.6, 4.0), (.88, 1.12, 1.9, 5.2)]     # (sag scale, skew, wobble, phase) per span
     for i in range(4):
         p0, p1 = (xs[i] + R_, cy), (xs[i + 1] - R_, cy)
