@@ -976,22 +976,44 @@ def dividers():
     PITCH = 34
 
     def ring(cx, cy, seed):
+        """One chain link as a lino-block print: a solid, slightly ragged ink band with carved gouge cuts, a clean paper-coloured gap round it
+        where it passes over its neighbour, and a few specks where the block did not take the ink."""
         rng = random.Random(seed)
+        n = 40
+
+        def edge(rx, ry, j, rev=False):
+            pts = []
+            for k in range(n):
+                t = 2 * math.pi * k / n
+                pts.append((cx + (rx + rng.uniform(-j, j)) * math.cos(t), cy + (ry + rng.uniform(-j, j)) * math.sin(t)))
+            if rev:
+                pts.reverse()
+            return "M" + "L".join(f"{x:.1f} {y:.1f}" for x, y in pts) + "Z"
         o = f"M{cx - RX} {cy}a{RX} {RY} 0 1 0 {2 * RX} 0a{RX} {RY} 0 1 0 {-2 * RX} 0z"
         h = f"M{cx - HX} {cy}a{HX} {HY} 0 1 0 {2 * HX} 0a{HX} {HY} 0 1 0 {-2 * HX} 0z"
-        d = ""
-        n = 30
-        for k in range(n):
-            ang = k * 2 * math.pi / n
-            if math.radians(205) < ang < math.radians(250):                  # sheen: stitches left out at the upper left
-                continue
-            ax, ay = cx + (HX - .5 + rng.uniform(-.4, .4)) * math.cos(ang), cy + (HY - .3) * math.sin(ang)
-            a2 = ang + .17
-            bx, by = cx + (RX + .4 + rng.uniform(-.5, .5)) * math.cos(a2), cy + (RY + .4) * math.sin(a2)
-            if abs(by - ay) < 0.4 * abs(bx - ax) or abs(bx - ax) < 0.55 * abs(by - ay):   # no near-horizontal or near-vertical stitches
-                continue
-            d += f"M{ax:.1f} {ay:.1f}L{bx:.1f} {by:.1f}"
-        return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/><path d="{o}" stroke-width="1.6"/><path d="{h}" stroke-width="1.6"/>')
+        ink = edge(RX, RY, .55) + edge(HX, HY, .45, rev=True)
+        g = f'<path d="{o}{h}" fill-rule="evenodd" stroke-width="3" style="fill:var(--divbg,#fff);stroke:var(--divbg,#fff)"/>'
+        g += f'<path d="{ink}" fill="currentColor" stroke="none"/>'
+        mrx, mry = (RX + HX) / 2, (RY + HY) / 2                              # carved with a gouge: tapered cuts that follow the band
+        cuts = ""
+        for k in range(9):
+            t = rng.uniform(0, 2 * math.pi)
+            if k == 0:
+                t = math.radians(228)                                        # the long highlight cut at the upper left
+            ln = .5 if k == 0 else rng.uniform(.22, .38)
+            wd = 2.0 if k == 0 else rng.uniform(1.1, 1.7)
+            p0 = (cx + mrx * math.cos(t - ln / 2), cy + mry * math.sin(t - ln / 2))
+            p1 = (cx + mrx * math.cos(t + ln / 2), cy + mry * math.sin(t + ln / 2))
+            m = (cx + (mrx + wd) * math.cos(t), cy + (mry + wd * .8) * math.sin(t))
+            m2 = (cx + (mrx - wd) * math.cos(t), cy + (mry - wd * .8) * math.sin(t))
+            cuts += f"M{p0[0]:.1f} {p0[1]:.1f}Q{m[0]:.1f} {m[1]:.1f} {p1[0]:.1f} {p1[1]:.1f}Q{m2[0]:.1f} {m2[1]:.1f} {p0[0]:.1f} {p0[1]:.1f}Z"
+        for _ in range(7):                                                   # specks where the ink did not take
+            t = rng.uniform(0, 2 * math.pi)
+            rr = rng.uniform(-.28, .28)
+            sx, sy = cx + (mrx + (RX - HX) * rr) * math.cos(t), cy + (mry + (RY - HY) * rr) * math.sin(t)
+            cuts += f"M{sx - .6:.1f} {sy:.1f}a.6 .5 0 1 0 1.2 0a.6 .5 0 1 0 -1.2 0z"
+        g += f'<path d="{cuts}" stroke="none" style="fill:var(--divbg,#fff)"/>'
+        return g
 
     b = []
     cy = 36
