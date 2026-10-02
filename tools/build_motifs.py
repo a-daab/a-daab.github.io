@@ -1420,18 +1420,32 @@ def lotus_bloom():
     """A clean lotus: three rows of single-outline petals (7, 5 and 3), each filled white so the front row hides the one behind,
     with one centre vein per petal. Rows spread apart as the page scrolls (see .petal in site.css)."""
     cx, cy = 250, 250
+    rng = random.Random(14)
+
     def petal(L, w):
-        return (f"M{cx} {cy}C{cx - w} {cy - L * .35:.1f} {cx - w * .55:.1f} {cy - L * .86:.1f} {cx} {cy - L}"
-                f"C{cx + w * .55:.1f} {cy - L * .86:.1f} {cx + w} {cy - L * .35:.1f} {cx} {cy}Z")
+        """One petal, drawn a little differently each time: its own length, a tip that leans, a fuller side and a flatter side."""
+        wl, wr = w * rng.uniform(.82, 1.15), w * rng.uniform(.82, 1.15)
+        tx = cx + rng.uniform(-6, 6)
+        L = L * rng.uniform(.93, 1.06)
+        h1, h2 = rng.uniform(.28, .42), rng.uniform(.78, .92)
+        k1, k2 = rng.uniform(.4, .65), rng.uniform(.4, .65)
+        d = (f"M{cx} {cy}C{cx - wl:.1f} {cy - L * h1:.1f} {cx - wl * k1:.1f} {cy - L * h2:.1f} {tx:.1f} {cy - L:.1f}"
+             f"C{cx + wr * k2:.1f} {cy - L * (h2 + rng.uniform(-.05, .05)):.1f} {cx + wr:.1f} {cy - L * (h1 + rng.uniform(-.05, .05)):.1f} {cx} {cy}Z")
+        vein = (f"M{cx} {cy - 14}Q{cx + rng.uniform(-4, 4):.1f} {cy - L * .45:.1f} {tx - (tx - cx) * .2:.1f} {cy - L * rng.uniform(.62, .78):.1f}")
+        return d, vein
+
     b = []
     rows = [(3, 22, 190, 34), (2, 28, 152, 38), (1, 38, 112, 34)]     # (half-count, spread per petal in degrees, length, half-width)
     for half, sp, L, w in rows:
         for k in range(-half, half + 1):
-            g = f'<path d="{petal(L - abs(k) * 4, w)}" fill="#fff" stroke-width="2.6"/>'
-            g += f'<path d="M{cx} {cy - 14}L{cx} {cy - (L - abs(k) * 4) * .72:.1f}" stroke-width="1.3"/>'
+            d, vein = petal(L - abs(k) * 4, w)
+            tilt = rng.uniform(-3.5, 3.5)
+            g = f'<g transform="rotate({tilt:.1f} {cx} {cy})"><path d="{d}" fill="#fff" stroke-width="{rng.uniform(2.3, 2.9):.1f}"/>'
+            g += f'<path d="{vein}" stroke-width="{rng.uniform(1.0, 1.5):.1f}"/></g>'
             b.append(f'<g class="petal" style="--k:{k};--sp:{sp}deg">{g}</g>')
-    b.append(path([(60, 262), (250, 274), (440, 262)], w=3.2, a=.5))
-    b.append(path([(110, 286), (250, 296), (390, 286)], w=2.2, a=.5))
+    wob = lambda x0, x1, y, amp: [(x0 + (x1 - x0) * t / 12, y + amp * math.sin(t * .9 + 1) + rng.uniform(-1.6, 1.6)) for t in range(13)]
+    b.append(path(wob(58, 442, 264, 4), w=3.2, a=.5))
+    b.append(path(wob(108, 392, 288, 3), w=2.2, a=.5))
     write("lotus-bloom", (500, 330), "".join(b))
 
 
