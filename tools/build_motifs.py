@@ -1701,7 +1701,13 @@ def village():
     # pegs
     for px in (33, 43, 62, 88, 101, 109, 128, 138):
         b.append(dotpath([(px, ly(px) - 1)], w=2.4))
-    write("village", (900, 210), "".join(b))
+    # hand-sketched: the drawing is laid down twice, each pass wobbled differently (a pencil going over its own lines)
+    body = "".join(b)
+    defs = ('<defs><filter id="sk1" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="3" result="n"/>'
+            '<feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter>'
+            '<filter id="sk2" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="9" result="n"/>'
+            '<feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter></defs>')
+    write("village", (900, 210), defs + f'<g filter="url(#sk1)">{body}</g><g filter="url(#sk2)" opacity=".5" transform="translate(.6 .5)">{body}</g>')
 
 
 # ---------------------------------------------------------------- the passport flow (A-E): interactive Mithila-style piece
