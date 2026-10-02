@@ -1130,23 +1130,17 @@ def weave():
         b.append(line(x, top, x, bot, w=1.3))
     y = 44
     j = 0
-    inv_rng = random.Random(23)                                   # which strips are orange-with-white (fixed, not changing per page load)
-    prev_inv = False
+    n_strips = len([1 for yy in range(44, int(bot - 6), 30) if yy + 24 < bot - 6])
+    flags = [True] * (n_strips // 2) + [False] * (n_strips - n_strips // 2)     # exactly half the strips have an orange ground...
+    random.Random(23).shuffle(flags)                                            # ...scattered at random (fixed, not changing per page load)
     shade_rng = random.Random(41)
-    n_inv = -1
     while y + 24 < bot - 6:
         h = 24
-        inv = inv_rng.random() < 0.4
-        if inv and prev_inv and inv_rng.random() < 0.6:           # avoid long runs of the same colourway
-            inv = False
-        prev_inv = inv
+        inv = flags[j]
         if inv:
             import colorsys                                       # every orange strip gets its own shade, from deep burnt orange to light apricot
-            n_inv += 1
-            if n_inv % 5 in (0, 2, 3):                            # some strips are fully saturated, vivid orange (the rest keep the deeper and paler shades)
-                rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(20, 29) / 360, shade_rng.uniform(.47, .53), 1.0)
-            else:
-                rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(16, 31) / 360, shade_rng.uniform(.30, .60), shade_rng.uniform(.85, 1.0))
+            # every orange ground has its own vibrancy and darkness: from soft burnt tones to fully saturated orange
+            rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(16, 30) / 360, shade_rng.uniform(.32, .58), shade_rng.uniform(.5, 1.0))
             shade = f"#{round(rr * 255):02X}{round(gg * 255):02X}{round(bb * 255):02X}"
             g = [f'<rect x="30" y="{y}" width="500" height="{h}" style="fill:{shade};stroke:{shade}" stroke-width="2.4"/>',
                  f'<g stroke="#fff">{sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h)}</g>']
