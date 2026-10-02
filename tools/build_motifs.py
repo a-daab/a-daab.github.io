@@ -1100,14 +1100,26 @@ def weave():
         b.append(line(x, top, x, bot, w=1.3))
     y = 44
     j = 0
+    inv_rng = random.Random(23)                                   # which strips are orange-with-white (fixed, not changing per page load)
+    prev_inv = False
     while y + 24 < bot - 6:
         h = 24
-        g = [f'<rect x="30" y="{y}" width="500" height="{h}" fill="#fff" stroke-width="2.4"/>']
-        g.append(sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h))
+        inv = inv_rng.random() < 0.4
+        if inv and prev_inv and inv_rng.random() < 0.6:           # avoid long runs of the same colourway
+            inv = False
+        prev_inv = inv
+        if inv:
+            g = [f'<rect x="30" y="{y}" width="500" height="{h}" style="fill:var(--orange)" stroke-width="2.4"/>',
+                 f'<g stroke="#fff">{sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h)}</g>']
+        else:
+            g = [f'<rect x="30" y="{y}" width="500" height="{h}" fill="#fff" stroke-width="2.4"/>',
+                 sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h)]
         b.append(f'<g class="weft" style="--j:{j};--dir:{1 if j % 2 == 0 else -1}">{"".join(g)}</g>')
         for k, x in enumerate(xs):                                # the thread passes over the strip here
             if (j + k) % 2 == 1:
-                b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke="#fff" stroke-width="3.6"/><line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke-width="1.3"/>')
+                halo, core = ("var(--orange)", "#fff") if inv else ("#fff", "currentColor")
+                b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" style="stroke:{halo}" stroke-width="3.6"/>'
+                         f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" style="stroke:{core}" stroke-width="1.3"/>')
         y += 30
         j += 1
     write("weave", (W, H), "".join(b), extra=' preserveAspectRatio="none"')
