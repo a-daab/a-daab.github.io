@@ -1131,8 +1131,12 @@ def weave():
     y = 44
     j = 0
     n_strips = len([1 for yy in range(44, int(bot - 6), 30) if yy + 24 < bot - 6])
-    flags = [True] * (n_strips // 2) + [False] * (n_strips - n_strips // 2)     # exactly half the strips have an orange ground...
-    random.Random(23).shuffle(flags)                                            # ...scattered at random (fixed, not changing per page load)
+    fr = random.Random(23)                                                      # fixed, not changing per page load
+    flags = []
+    for _ in range(n_strips // 2):                                              # each neighbouring pair holds one orange and one white strip, in random order:
+        flags += fr.sample([True, False], 2)                                    # scattered, but never more than two of a kind in a row
+    if n_strips % 2:
+        flags.append(not flags[-1])
     shade_rng = random.Random(41)
     while y + 24 < bot - 6:
         h = 24
