@@ -981,8 +981,7 @@ def dividers():
             if abs(by - ay) < 0.4 * abs(bx - ax) or abs(bx - ax) < 0.55 * abs(by - ay):   # no near-horizontal or near-vertical stitches
                 continue
             d += f"M{ax:.1f} {ay:.1f}L{bx:.1f} {by:.1f}"
-        return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/><path d="{d}" stroke-width="1.5"/>'
-                f'<path d="{o}" stroke-width="1.2"/><path d="{h}" stroke-width="1.2"/>')
+        return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/><path d="{o}" stroke-width="1.6"/><path d="{h}" stroke-width="1.6"/>')
 
     b = []
     cy = 36
