@@ -1203,82 +1203,6 @@ def sspiral(cx, cy, r, turns=2.2, dirn=1, start=0.0, n=48, w=2, inner=.06, rot=0
 # Cloud in the style of the supplied reference: a big round swirl at the centre, a mound behind it, and several different
 # ribbons that sweep out and curl into spirals. Parts are painted back to front so they flow into one another.
 # ---------------------------------------------------------------------------------------------------------------
-def poly_pts_band(center, w0, w1):
-    n = len(center)
-    left, right = [], []
-    for i, (x, y) in enumerate(center):
-        a, c = center[max(0, i - 1)], center[min(n - 1, i + 1)]
-        dx, dy = c[0] - a[0], c[1] - a[1]
-        L = math.hypot(dx, dy) or 1
-        nx, ny = -dy / L, dx / L
-        t = i / (n - 1)
-        w = (w0 + (w1 - w0) * t) / 2
-        left.append((x + nx * w, y + ny * w))
-        right.append((x - nx * w, y - ny * w))
-    return left + right[::-1]
-
-
-def curl_center(A, c1, C, R, a0, dirn, turns, r_end, lead=14, n_sp=46, lead_len=34):
-    a0r = math.radians(a0)
-    S0 = (C[0] + R * math.cos(a0r), C[1] + R * math.sin(a0r))
-    tx, ty = -math.sin(a0r) * dirn, math.cos(a0r) * dirn
-    c2 = (S0[0] - tx * lead_len, S0[1] - ty * lead_len)
-    pts = bez(A, c1, c2, S0, n=lead)[:-1]
-    for k in range(n_sp + 1):
-        t = k / n_sp
-        ang = a0r + dirn * turns * 2 * math.pi * t
-        rr = R + (r_end - R) * t
-        pts.append((C[0] + rr * math.cos(ang), C[1] + rr * math.sin(ang)))
-    return pts
-
-
-CLOUD_SHAPES = []     # per cloud: list of ('ell', cx, cy, rx, ry) and ('poly', pts) in local coords; used to know where drops can hide
-
-
-def cloud_parts():
-    """Returns [(kind, data)] back to front, in local coords (cloud ~300 wide, hanging from y=0)."""
-    parts = []
-    parts.append(("ell", (150, 40, 82, 47)))                                            # mound behind
-    cap = curl_center((146, 14), (170, -14), (208, 14), 21, -90, 1, 1.4, 5, lead_len=30)
-    parts.append(("band", (cap, 16, 8)))                                                 # top-right curl
-    low_l = curl_center((140, 70), (112, 104), (86, 82), 14, 90, 1, 1.5, 4, lead_len=40)
-    parts.append(("band", (low_l, 20, 8)))                                               # lower-left curl, swinging down and round
-    low_r = curl_center((160, 72), (190, 108), (232, 86), 13, 90, -1, 1.5, 4, lead_len=40)
-    parts.append(("band", (low_r, 20, 8)))                                               # lower-right curl
-    big_l = curl_center((144, 50), (112, 2), (34, 56), 18, -90, -1, 1.55, 5, lead_len=46)
-    parts.append(("band", (big_l, 28, 9)))                                               # long left wave, rising then curling down
-    rt = curl_center((158, 52), (186, 10), (266, 56), 15, -90, 1, 1.5, 4, lead_len=42)
-    parts.append(("band", (rt, 24, 9)))                                                  # right ribbon
-    parts.append(("circ", (150, 44, 39)))                                                # big round swirl in front
-    return parts
-
-
-def render_cloud_parts():
-    out = []
-    shapes = []
-    for kind, data in cloud_parts():
-        if kind == "ell":
-            cx, cy, rx, ry = data
-            out.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="#fff" stroke-width="2.8"/>')
-            out.append(f'<ellipse cx="{cx}" cy="{cy}" rx="{rx - 9}" ry="{ry - 8}" stroke-width="1.2"/>')
-            shapes.append(("ell", data))
-        elif kind == "circ":
-            cx, cy, r = data
-            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="#fff" stroke-width="2.8"/>')
-            out.append(f'<circle cx="{cx}" cy="{cy}" r="{r - 7}" stroke-width="1.2"/>')
-            out.append(sspiral(cx, cy, r - 12, turns=1.7, dirn=-1, start=2.2, w=2.6, n=70, inner=.1))
-            shapes.append(("ell", (cx, cy, r, r)))
-        else:
-            center, w0, w1 = data
-            poly = poly_pts_band(center, w0, w1)
-            sm = poly[::2] if len(poly) > 60 else poly
-            out.append(f'<path d="{smooth2(sm, closed=True)}" fill="#fff" stroke-width="2.6"/>')
-            k0 = int(len(center) * .55)
-            out.append(f'<path d="{smooth2(center[k0::2])}" stroke-width="1.5"/>')       # the thin swirl line inside the curl
-            shapes.append(("poly", poly))
-    return "".join(out), shapes
-
-
 def point_in_poly(x, y, poly):
     inside = False
     n = len(poly)
@@ -1294,50 +1218,92 @@ def point_in_poly(x, y, poly):
 
 def covered(x, y, shapes):
     for kind, d in shapes:
-        if kind == "ell":
-            cx, cy, rx, ry = d
-            if ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1:
+        if kind == "circ":
+            cx, cy, r = d
+            if (x - cx) ** 2 + (y - cy) ** 2 <= r * r:
                 return True
         elif point_in_poly(x, y, d):
             return True
     return False
 
 
-CLOUD_PLACE = [(0, 1.0, 1), (306, 0.97, -1)]    # (x offset, scale, mirror) of the two clouds across the right half (600 wide)
+# ---------------------------------------------------------------------------------------------------------------
+# One wide cloud in the style of a traditional auspicious cloud: a crown of overlapping spiral-coil lobes, each ribbed like a
+# shell, with a pointed tail sweeping out at each end. Lobes are painted back to front. The top is cut by the section edge.
+# ---------------------------------------------------------------------------------------------------------------
+CLOUD_SHIFT = 55          # units of the cloud's top that sit above the section edge
+CLOUD_H = 198             # visible height in units
 
 
-def to_view(x, y, place):
-    ox, sc, mir = place
-    lx = (x if mir > 0 else 300 - x) * sc
-    return ox + lx, y * sc
+def coil_lobe(cx, cy, R, dirn, start, turns=1.55):
+    """A round lobe: white-filled outline holding a spiral coil; the outer turn is ribbed with short ticks, like a shell."""
+    out = [f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="#fff" stroke-width="3.2"/>']
+    n = 64
+    pts = []
+    for k in range(n + 1):
+        t = k / n
+        ang = start + dirn * turns * 2 * math.pi * t
+        rr = R * (.86 - .78 * t)
+        pts.append((cx + rr * math.cos(ang), cy + rr * math.sin(ang)))
+    out.append(f'<path d="{smooth2(pts)}" stroke-width="2.6"/>')
+    ticks = ""
+    step = 24
+    for deg in range(20, int(360 * .8), step):                 # ribs across the outer band between this turn and the next
+        t0 = deg / (360 * turns)
+        t1 = t0 + 1 / turns
+        if t1 > 1:
+            break
+        ang = start + dirn * turns * 2 * math.pi * t0
+        r0, r1 = R * (.86 - .78 * t0), R * (.86 - .78 * t1)
+        ticks += f"M{f2(cx + (r0 - 2) * math.cos(ang))} {f2(cy + (r0 - 2) * math.sin(ang))}L{f2(cx + (r1 + 2) * math.cos(ang))} {f2(cy + (r1 + 2) * math.sin(ang))}"
+    out.append(f'<path d="{ticks}" stroke-width="1.2"/>')
+    return "".join(out)
 
 
-def view_covered(x, y):
-    ox, sc, mir = None, None, None
-    _, shapes = CLOUD_CACHE
-    for place in CLOUD_PLACE:
-        ox, sc, mir = place
-        lx = (x - ox) / sc
-        if mir < 0:
-            lx = 300 - lx
-        ly = y / sc
-        if covered(lx, ly, shapes):
-            return True
-    return False
+def cloud_tail(mirror):
+    def X(x):
+        return 600 - x if mirror else x
+    outer = (f"M{X(172)} 194C{X(110)} 182 {X(46)} 196 {X(2)} 232C{X(50)} 220 {X(112)} 224 {X(172)} 228Z")
+    parts = [f'<path d="{outer}" fill="#fff" stroke-width="3"/>']
+    parts.append(f'<path d="M{X(150)} 204C{X(100)} 196 {X(54)} 208 {X(16)} 230" stroke-width="1.3"/>')
+    parts.append(f'<path d="M{X(150)} 216C{X(104)} 214 {X(66)} 222 {X(30)} 232" stroke-width="1.2"/>')
+    pts = (bez((X(172), 194), (X(110), 182), (X(46), 196), (X(2), 232), n=12) +
+           bez((X(2), 232), (X(50), 220), (X(112), 224), (X(172), 228), n=12))
+    return "".join(parts), ("poly", pts)
+
+
+LOBES = [   # (cx, cy, R, dirn, start angle): back to front
+    (300, 62, 62, 1, 0.3), (212, 98, 52, -1, 2.6), (394, 98, 50, 1, 4.2), (150, 152, 40, -1, 1.0), (456, 150, 42, 1, 3.4),
+    (240, 146, 50, 1, 5.0), (380, 150, 52, -1, 0.9), (306, 138, 44, 1, 3.9),
+    (150, 200, 36, 1, 2.2), (452, 198, 38, -1, 5.6), (214, 198, 48, -1, 4.4), (392, 202, 48, 1, 1.6), (303, 194, 54, -1, 0.2),
+]
+
+
+def cloud_build():
+    out = []
+    shapes = []
+    for mirror in (False, True):
+        svg, sh = cloud_tail(mirror)
+        out.append(svg)
+        shapes.append(sh)
+    for (cx, cy, R, d, st_) in LOBES:
+        out.append(coil_lobe(cx, cy, R, d, st_))
+        shapes.append(("circ", (cx, cy, R)))
+    return "".join(out), shapes
 
 
 CLOUD_CACHE = (None, None)
 
 
+def view_covered(x, y):
+    return covered(x, y + CLOUD_SHIFT, CLOUD_CACHE[1])
+
+
 def clouds_band():
     global CLOUD_CACHE
-    inner, shapes = render_cloud_parts()
+    inner, shapes = cloud_build()
     CLOUD_CACHE = (inner, shapes)
-    g = ""
-    for (ox, sc, mir) in CLOUD_PLACE:
-        tr = f"translate({ox + (0 if mir > 0 else 300 * sc)} 0) scale({sc * mir} {sc})"
-        g += f'<g transform="{tr}">{inner}</g>'
-    write("clouds", (600, 112), g)
+    write("clouds", (600, CLOUD_H), f'<g transform="translate(0 {-CLOUD_SHIFT})">{inner}</g>')
 
 
 def teardrop2(cx, cy, r):
@@ -1364,7 +1330,7 @@ def rain():
         pick = None
         for attempt in range(60):                                # find an x, inside this column, where a whole drop can start hidden
             x = 22 + (c + rng.uniform(.1, .9)) * (556 / cols)
-            for y0 in range(70, 4, -2):
+            for y0 in range(150, 4, -2):
                 pts = [(x, y0 - h), (x - r, y0), (x + r, y0), (x, y0 + r), (x - r * .6, y0 - h * .5), (x + r * .6, y0 - h * .5), (x, y0 - h * .5)]
                 if all(py < 0 or view_covered(px, py) for px, py in pts):
                     pick = (x, y0)
