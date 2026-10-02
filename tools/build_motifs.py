@@ -884,14 +884,28 @@ def dividers():
     def wave_y(x):
         return 36 + 11 * math.sin(x / 60.0 * math.pi)
     x = 10.0
-    while x < 1138:
+    while x < 1128:                                                             # the last stitch before the X has been dropped
         pts = [(x + t * 3.2, wave_y(x + t * 3.2)) for t in range(0, 6)]       # each stitch is ~16 units long and follows the wave
         b.append(st(f'<path d="{smooth2(pts)}" stroke-width="2.8"/>', x))
         x += 25
-    # the wave ends in an embroidered X, like X marks the spot: two crossing diagonals, each a pair of thick parallel threads
-    cx, cy, r = 1166, wave_y(1166), 17
+    # the wave ends in an embroidered X, like X marks the spot: two crossing arms worked as hollow bars with thread edges,
+    # ladder stitches across them, a dot at each arm end and a button at the centre
+    cx, cy, r = 1150, wave_y(1150) + 9, 19
+    HOLLOW = "var(--divbg,#fff)"
     xm = f"M{cx - r} {cy - r}L{cx + r} {cy + r}M{cx + r} {cy - r}L{cx - r} {cy + r}"
-    b.append(st(f'<path d="{xm}" stroke-width="5.2"/>', 1166))
+    g = f'<path d="{xm}" stroke-width="10.5"/><path d="{xm}" style="stroke:{HOLLOW}" stroke-width="5.2"/>'
+    tk = ""
+    for sgn in (1, -1):
+        for k in range(-7, 8):
+            t = k * 2.5
+            px, py = cx + t, cy + sgn * t
+            tk += f"M{px - 3.1 * sgn:.1f} {py - 3.1:.1f}L{px + 3.1 * sgn:.1f} {py + 3.1:.1f}"
+    g += f'<path d="{tk}" stroke-width="1.5"/>'
+    for sgx in (-1, 1):
+        for sgy in (-1, 1):
+            g += f'<circle cx="{cx + sgx * (r + 7)}" cy="{cy + sgy * (r + 7)}" r="2.6" stroke-width="1.8"/>'
+    g += f'<circle cx="{cx}" cy="{cy}" r="6.2" style="fill:{HOLLOW}" stroke-width="2.4"/><circle cx="{cx}" cy="{cy}" r="1.9" stroke-width="1.6"/>'
+    b.append(st(g, 1150))
     write_div(3, "".join(b))
     # 4 Mithila teeth: triangles with dots over a zig baseline
     b = []
