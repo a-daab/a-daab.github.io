@@ -1451,13 +1451,13 @@ def lotus_bloom():
         left = bez((cx, cy), (cx - wl, cy - L * h1), (cx - wl * k1, cy - L * h2), (tx, cy - L))
         right = bez((tx, cy - L), (cx + wr * k2, cy - L * (h2 + rng.uniform(-.05, .05))), (cx + wr, cy - L * (h1 + rng.uniform(-.05, .05))), (cx, cy))
         pts = left + right[1:]
-        first = sketch(pts, 1.1, closed=True)
+        first = sketch(pts, .4, closed=True)
         # second pass: starts a little off the base, wanders, and crosses past the tip
         i0 = rng.randint(1, 3)
-        second = sketch(pts[i0:] + pts[1:i0 + 2], 1.9)
+        second = sketch(pts[i0:] + pts[1:i0 + 2], .85)
         vein = [(cx + rng.uniform(-1, 1), cy - 14 - t * (L * .62)) for t in (0, .25, .5, .75, 1)]
-        vein = [(x + (tx - cx) * t * .5 + 2.5 * math.sin(t * 3), y) for (x, y), t in zip(vein, (0, .25, .5, .75, 1))]
-        return first, second, sketch(vein, .8)
+        vein = [(x + (tx - cx) * t * .5 + 1.2 * math.sin(t * 3), y) for (x, y), t in zip(vein, (0, .25, .5, .75, 1))]
+        return first, second, sketch(vein, .3)
 
     b = []
     rows = [(3, 22, 190, 34), (2, 28, 152, 38), (1, 38, 112, 34)]     # (half-count, spread per petal in degrees, length, half-width)
@@ -1466,10 +1466,10 @@ def lotus_bloom():
             first, second, vein = petal(L - abs(k) * 4, w)
             tilt = rng.uniform(-3.5, 3.5)
             g = f'<g transform="rotate({tilt:.1f} {cx} {cy})"><path d="{first}" fill="#fff" stroke-width="{rng.uniform(2.3, 2.9):.1f}"/>'
-            g += f'<path d="{second}" stroke-width="1.2" opacity=".6"/>'
+            g += f'<path d="{second}" stroke-width="1.2" opacity=".75"/>'
             g += f'<path d="{vein}" stroke-width="{rng.uniform(1.0, 1.5):.1f}"/></g>'
             b.append(f'<g class="petal" style="--k:{k};--sp:{sp}deg">{g}</g>')
-    wob = lambda x0, x1, y, amp: [(x0 + (x1 - x0) * t / 12, y + amp * math.sin(t * .9 + 1) + rng.uniform(-1.6, 1.6)) for t in range(13)]
+    wob = lambda x0, x1, y, amp: [(x0 + (x1 - x0) * t / 12, y + amp * math.sin(t * .9 + 1) + rng.uniform(-.7, .7)) for t in range(13)]
     b.append(path(wob(58, 442, 264, 4), w=3.2, a=.5))
     b.append(path(wob(108, 392, 288, 3), w=2.2, a=.5))
     write("lotus-bloom", (500, 330), "".join(b))
