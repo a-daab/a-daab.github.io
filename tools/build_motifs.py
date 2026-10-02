@@ -1558,13 +1558,13 @@ def node(i, cx, cy, vertical=False):
     pic = (circle(cx, cy, 54, w=3) + circle(cx, cy, 46, w=1.3) + picto(i, cx, cy) +
            dotpath([(cx + 62 * math.cos(k * math.pi / 8), cy + 62 * math.sin(k * math.pi / 8)) for k in range(16)], w=2.6))
     if vertical:
-        label = f'<text x="{cx + 92}" y="{cy - 4}" class="fl-letter">{letter}</text><text x="{cx + 92}" y="{cy + 32}" class="fl-name">{name}</text>'
+        label = f'<text x="{cx + 92}" y="{cy + 10}" class="fl-name">{name}</text>'
     else:
-        label = f'<text x="{cx}" y="{cy + 112}" text-anchor="middle" class="fl-name"><tspan class="fl-letter">{letter}</tspan> {name}</text>'
+        label = f'<text x="{cx}" y="{cy + 112}" text-anchor="middle" class="fl-name">{name}</text>'
     hit = (f'<circle cx="{cx}" cy="{cy}" r="68" fill="transparent" stroke="none"/>' +
            (f'<rect x="{cx + 80}" y="{cy - 40}" width="270" height="84" fill="transparent" stroke="none"/>' if vertical else
             f'<rect x="{cx - 110}" y="{cy + 84}" width="220" height="40" fill="transparent" stroke="none"/>'))
-    return (f'<a class="flow-node" href="__{letter}__" aria-label="{letter}: {name} — see this stage in the passport">'
+    return (f'<a class="flow-node" href="__{letter}__" aria-label="{name} — see this stage in the passport">'
             f'{hit}<g class="pic">{pic}</g>{label}</a>')
 
 
