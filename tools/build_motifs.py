@@ -993,7 +993,7 @@ def dividers():
         h = f"M{cx - HX} {cy}a{HX} {HY} 0 1 0 {2 * HX} 0a{HX} {HY} 0 1 0 {-2 * HX} 0z"
         g = f'<path d="{o}{h}" fill-rule="evenodd" stroke-width="3" style="fill:var(--divbg,#fff);stroke:var(--divbg,#fff)"/>'
         # the link is a line drawing: two bold, slightly ragged carved lines (outer and inner edge) with the middle of the band left open
-        g += f'<path d="{edge(RX - 1, RY - 1, .5)}{edge(HX + 1, HY + 1, .4)}" fill="none" stroke="currentColor" stroke-width="3.1"/>'
+        g += f'<path d="{edge(RX - 1, RY - 1, .12)}{edge(HX + 1, HY + 1, .1)}" fill="none" stroke="currentColor" stroke-width="3.1"/>'
         mrx, mry = (RX + HX) / 2, (RY + HY) / 2
         cuts = ""
         for _ in range(9):                                                   # nicks where the knife slipped or the ink did not take, on the lines
