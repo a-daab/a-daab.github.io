@@ -1140,7 +1140,7 @@ def weave():
         if inv:
             import colorsys                                       # every orange strip gets its own shade, from deep burnt orange to light apricot
             # every orange ground has its own vibrancy and darkness: from soft burnt tones to fully saturated orange
-            rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(16, 30) / 360, shade_rng.uniform(.32, .58), shade_rng.uniform(.5, 1.0))
+            rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(20, 30) / 360, shade_rng.uniform(.47, .59), shade_rng.uniform(.88, 1.0))
             shade = f"#{round(rr * 255):02X}{round(gg * 255):02X}{round(bb * 255):02X}"
             g = [f'<rect x="30" y="{y}" width="500" height="{h}" style="fill:{shade};stroke:{shade}" stroke-width="2.4"/>',
                  f'<g stroke="#fff">{sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h)}</g>']
