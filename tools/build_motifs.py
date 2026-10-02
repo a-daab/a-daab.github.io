@@ -1629,7 +1629,7 @@ def flow():
     b.append(st(front, 1080))
     b.append(st(thread_strands(p0, eye, sag_for(eye[0] - p0[0]) * 1.15, skew=.9, wob=2.0, phase=3.3), xs[4] + 70))      # in front of the needle, ending in its eye
     for i in range(5):
-        b.append(st(node(i, xs[i], cy), xs[i] - 60))
+        b.append(node(i, xs[i], cy))
     write("flow-h", (1200, 262), "".join(b))
     # vertical (phones): thread runs down through the circles into a tilted needle below
     b = []
@@ -1649,7 +1649,7 @@ def flow():
     b.append(stv(front, 1000))
     b.append(stv(thread_strands((X, ys[4] + 60), eye, sag_for(abs(eye[1] - ys[4] - 60)), bow_dir=(1, 0)), ys[4] + 60))
     for i in range(5):
-        b.append(stv(node(i, X, ys[i], vertical=True), ys[i] - 60))
+        b.append(node(i, X, ys[i], vertical=True))
     write("flow-v", (400, 1150), "".join(b))
 
 
