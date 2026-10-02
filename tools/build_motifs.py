@@ -979,18 +979,22 @@ def dividers():
         """One chain link as a lino-block print: a solid, slightly ragged ink band with carved gouge cuts, a clean paper-coloured gap round it
         where it passes over its neighbour, and a few specks where the block did not take the ink."""
         rng = random.Random(seed)
-        n = 40
+        n = 64
+
+        E = 2.4                                                              # superellipse exponent: 2 is an oval, large is a rectangle
 
         def edge(rx, ry, j, rev=False):
             pts = []
             for k in range(n):
                 t = 2 * math.pi * k / n
-                pts.append((cx + (rx + rng.uniform(-j, j)) * math.cos(t), cy + (ry + rng.uniform(-j, j)) * math.sin(t)))
+                c, sn = math.cos(t), math.sin(t)
+                pts.append((cx + (rx + rng.uniform(-j, j)) * math.copysign(abs(c) ** (2 / E), c),
+                            cy + (ry + rng.uniform(-j, j)) * math.copysign(abs(sn) ** (2 / E), sn)))
             if rev:
                 pts.reverse()
             return "M" + "L".join(f"{x:.1f} {y:.1f}" for x, y in pts) + "Z"
-        o = f"M{cx - RX} {cy}a{RX} {RY} 0 1 0 {2 * RX} 0a{RX} {RY} 0 1 0 {-2 * RX} 0z"
-        h = f"M{cx - HX} {cy}a{HX} {HY} 0 1 0 {2 * HX} 0a{HX} {HY} 0 1 0 {-2 * HX} 0z"
+        o = edge(RX, RY, 0)
+        h = edge(HX, HY, 0, rev=True)
         g = f'<path d="{o}{h}" fill-rule="evenodd" stroke-width="3" style="fill:var(--divbg,#fff);stroke:var(--divbg,#fff)"/>'
         # the link is a line drawing: two bold, slightly ragged carved lines (outer and inner edge) with the middle of the band left open
         g += f'<path d="{edge(RX - 1, RY - 1, .12)}{edge(HX + 1, HY + 1, .1)}" fill="none" stroke="currentColor" stroke-width="3.1"/>'
