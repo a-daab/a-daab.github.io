@@ -1,0 +1,37 @@
+{
+ "_doc": "Measured once, reused until something changes. The passport shows when each was last checked.",
+ "last_checked": null,
+ "items": [
+  {
+   "label": "Construction",
+   "value": "Face: hemp warp with weft strips cut from reclaimed post-consumer sari fabric. Backing: handwoven hemp cloth, no artificial dyes. Bound edge with knotted fringe at both ends."
+  },
+  {
+   "label": "Looms",
+   "value": "Two hundred-year-old looms (one for the mat face, one for the hemp backing), neither using electricity."
+  },
+  {
+   "label": "Dimensions",
+   "value": "68 in (L) × 24 in (W)  ·  173 × 61 cm"
+  },
+  {
+   "label": "Weight",
+   "value": "260 g"
+  },
+  {
+   "label": "Thickness",
+   "value": null,
+   "ph": "ADD THICKNESS IN MILLIMETERS"
+  },
+  {
+   "label": "Care instructions",
+   "value": null,
+   "ph": "ADD CARE INSTRUCTIONS"
+  },
+  {
+   "label": "Packaging",
+   "value": null,
+   "ph": "ADD PACKAGING SPECIFICATION"
+  }
+ ]
+}

@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% set path = "about" %}
+{% set title = "About" %}
+{% set description = "YogaMaty and TransparaTrade are being developed by Empowerment Collective, a 100% survivor-led nonprofit that trains and employs the women artisans who weave every mat in the Kathmandu Valley." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('hands', 'lg', 'mid', 'right:-4%;bottom:-8%', speed=0.8) }}
+    {{ motif('rosette', 'md', 'bg', 'left:-6%;top:-8%', rot=50, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('about.eyebrow') }}</span>
+    <h1 class="display">Made by<br>Empowerment<br>Collective.</h1>
+    <p class="statement">YogaMaty and TransparaTrade are being developed by Empowerment Collective.</p>
+  </div>
+</section>
+
+<section class="sec sec--white">
+  <div class="motifs" aria-hidden="true">{{ motif('border', 'xl', 'content', 'top:0', cls='motif--border', inline=True) }}</div>
+  <div class="wrap grid grid--split">
+    <div>
+      <span class="eyebrow">The organization</span>
+      <h2 class="h1">A 100% survivor-led nonprofit.</h2>
+      <p>Empowerment Collective is a 100% survivor-led nonprofit dedicated to ending modern slavery, based in New Haven, Connecticut, and working in Nepal. It trains and employs the women artisans who make every YogaMaty.</p>
+      <p>The organization works from the understanding that systemic vulnerability, gendered expectation, and increasing climate risk put women in Nepal at risk of extreme poverty, forced marriage, forced labor and other forms of exploitation. The transparency and human-rights protections woven into the YogaMaty supply chain mean that making this product is itself an opportunity for economic empowerment, through a living income, for every woman involved.</p>
+      <p><a href="{{ site.ec_site }}" rel="noopener">Visit empowermentcollective.org</a></p>
+    </div>
+    <div>
+      <blockquote class="quote" style="margin:0 0 1rem">
+        {{ ph('ARTISAN TESTIMONY — ADD ONLY WITH OFFICIAL DOCUMENTED CONSENT') }}
+        <cite class="quote-by">{{ ph('ATTRIBUTION BY ROLE, NEVER A LEGAL NAME') }}</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" style="padding-top:0">
+  <div class="motifs" aria-hidden="true">{{ motif('loom', 'lg', 'mid', 'right:-8%;top:10%', inline=True, mobile=False) }}</div>
+  <div class="wrap grid grid--2">
+    <div>
+      <span class="eyebrow">The workshop</span>
+      <h2 class="h1">Where every mat is woven.</h2>
+      <p>All mats are woven and sewn at a workshop in the Kathmandu Valley.</p>
+      <table class="facts"><tbody>
+        <tr><th scope="row">Workshop</th><td>Empowerment Collective Artisan Workshop/Center {{ ph('PLACEHOLDER — OFFICIAL NAME AWAITING PROJECT LEAD') }}</td></tr>
+        <tr><th scope="row">Location</th><td>Goldhunga, a village and former Village Development Committee, now part of Tarakeshwar Municipality, Kathmandu District, Bagmati Province (formerly Province No. 3), central Nepal</td></tr>
+        <tr><th scope="row">Artisans employed</th><td>{{ ph('72 WOMEN — HEADCOUNT AWAITING PROJECT LEAD') }}</td></tr>
+      </tbody></table>
+      <p class="small" style="margin-top:1rem">Artisans remain anonymous. If any detail is withheld to protect the women, the passport says so and gives the reason.</p>
+    </div>
+    <div>
+      <span class="eyebrow">How the pieces fit</span>
+      <h2 class="h1">Three names, one effort.</h2>
+      <dl class="tier" style="display:block;border:0;padding:0">
+        <dt style="margin-top:0">Empowerment Collective</dt><dd style="margin-bottom:1.2rem">The nonprofit that trains and employs the artisans, and builds public support for TransparaTrade.</dd>
+        <dt>TransparaTrade</dt><dd style="margin-bottom:1.2rem">The system Empowerment Collective is building support for: technology that collects transparent, immutable data at every tier. <a href="{{ url('transparatrade') }}">Learn more</a>.</dd>
+        <dt>YogaMaty</dt><dd>The first product carrying a deliberately rudimentary prototype of the TransparaTrade labeling system. <a href="{{ url('shop') }}">Shop YogaMaty</a>.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--orange sec--tight">
+  <div class="wrap">
+    <p class="statement">Who grows the hemp? A known grower — not Empowerment Collective. Their details appear in tier A1 of the passport.</p>
+    <div class="btn-row"><a class="btn" href="{{ url('supply-chain') }}#chain-a">{{ t('about.see_a1') }}</a></div>
+  </div>
+</section>
+{% endblock %}

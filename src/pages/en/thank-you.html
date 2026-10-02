@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set path = "shop/thank-you" %}
+{% set title = "Thank you" %}
+{% set indexable = false %}
+{% block main %}
+<section class="sec sec--orange sec--hero">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('bloom', 'lg', 'bg', 'right:-10%;top:0', rot=60, mobile=False) }}
+    {{ motif('spool', 'sm', 'accent', 'left:4%;bottom:6%', rot=160) }}
+  </div>
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">{{ t('shop.thanks_eyebrow') }}</span>
+    <h1 class="display">Thank you.</h1>
+    <p class="statement">Your YogaMaty is on its way from New Haven, Connecticut. A confirmation goes to the email you entered at checkout.</p>
+    <p class="statement">When it arrives, scan the label to open the passport for your mat.</p>
+    <div class="btn-row"><a class="btn" href="{{ url('supply-chain') }}">{{ t('home.open_passport') }}</a><a class="btn btn--ghost" href="{{ url('petition') }}">{{ t('home.sign_petition') }}</a></div>
+  </div>
+</section>
+{% endblock %}

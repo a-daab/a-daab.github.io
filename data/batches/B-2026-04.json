@@ -1,0 +1,158 @@
+{
+ "_doc": "Batch record. One file per batch in /data/batches/. null = not yet entered (shows as [ADD ...]). Strings beginning with '[' also render as placeholders. A value may be {\"v\":\"..\",\"estimate\":true,\"method\":\"..\"} to label an estimate and say how it was arrived at.",
+ "batch_id": "B-2026-04",
+ "product_id": "YogaMaty",
+ "status": "template",
+ "opened": null,
+ "closed": null,
+ "published": null,
+ "mats": {
+  "count": null,
+  "first_serial": "0001",
+  "last_serial": null
+ },
+ "entered_by": null,
+ "entered_on": null,
+ "verified_by": null,
+ "verification_note": null,
+ "headcount": {
+  "artisans": null,
+  "withheld": false,
+  "withheld_reason": null
+ },
+ "stages": {
+  "A1": {
+   "grower": null,
+   "location": null,
+   "season": null,
+   "inputs": null,
+   "water": null,
+   "data_source": null
+  },
+  "A2": {
+   "water_source": null,
+   "duration": null,
+   "volume": null
+  },
+  "A3": {
+   "worker": null,
+   "hours": null,
+   "method": "Fiber drawn across a fixed blade, by hand"
+  },
+  "A4": {
+   "worker": null,
+   "hours": null,
+   "yield": null
+  },
+  "A5": {
+   "location": null,
+   "duration": null,
+   "weather": null
+  },
+  "A6": {
+   "worker": null,
+   "hours": null,
+   "energy_kwh": null
+  },
+  "B1": {
+   "source": null,
+   "quantity_kg": null,
+   "date": null,
+   "fiber_content": null
+  },
+  "B2": {
+   "worker": null,
+   "hours": null,
+   "rejected": null
+  },
+  "B3": {
+   "worker": null,
+   "hours": null,
+   "method": "Measured and cut by hand against a straightedge"
+  },
+  "B4": {
+   "worker": null,
+   "hours": null,
+   "energy_kwh": null
+  },
+  "C1": {
+   "worker": null,
+   "hours": null
+  },
+  "C2": {
+   "worker": null,
+   "hours": null,
+   "materials": "Hemp warp with reclaimed-sari weft"
+  },
+  "C3": {
+   "worker": null,
+   "hours": null
+  },
+  "C4": {
+   "water_use": null,
+   "location": null,
+   "duration": null
+  },
+  "D1": {
+   "worker": null,
+   "hours": null
+  },
+  "D2": {
+   "worker": null,
+   "hours": null,
+   "energy_kwh": null,
+   "note": "Industrial sewing machine"
+  },
+  "D3": {
+   "inspector": null,
+   "date": null,
+   "batch_id": null
+  },
+  "E1": {
+   "verified_by": null,
+   "date": null
+  },
+  "E2": {
+   "carrier": null,
+   "shipment": null,
+   "date": null
+  },
+  "E3": {
+   "entry_date": null,
+   "port": null,
+   "duty_paid": null,
+   "clearance": null
+  },
+  "E4": {
+   "received_by": null,
+   "date": null,
+   "count": null,
+   "condition": null
+  },
+  "E5": {}
+ },
+ "wage": {
+  "npr_per_hour": null,
+  "benchmark_name": null,
+  "benchmark_value_npr": null,
+  "benchmark_source": null,
+  "benchmark_date": null,
+  "percent_of_benchmark": null,
+  "how_set": null,
+  "verified_by": null
+ },
+ "metrics": {
+  "recycled_content_pct": null,
+  "electricity_kwh_per_mat": null,
+  "water_l_per_mat": null,
+  "packaging_g_per_mat": null,
+  "packaging_materials": null,
+  "packaging_recyclable_or_compostable": null
+ },
+ "mat_records": {
+  "0137": {
+   "assembled": null,
+   "note": null
+  }
+ }
+}

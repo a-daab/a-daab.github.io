@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set path = "terms" %}
+{% set title = "Terms of sale" %}
+{% set description = "Terms of sale for YogaMaty: price and currency, handmade variation, shipping and delivery, duties, returns, and governing law." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Terms of sale</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> Not legal advice. Have a qualified attorney review before launch.</div>
+    <p class="small">Last updated: {{ ph('ADD DATE') }}</p>
+
+    <h2>Who is selling</h2>
+    <p>YogaMaty mats are sold by Empowerment Collective, New Haven, Connecticut {{ ph('CONFIRM SELLING ENTITY WITH PROJECT LEAD') }}. By placing an order you agree to these terms.</p>
+
+    <h2>Price and currency</h2>
+    <p>The price of a YogaMaty is $38.00 US dollars {{ ph('CONFIRM MATCHES ETSY') }}. Applicable sales tax is calculated and added at checkout by Stripe Tax. Shipping is added at checkout at standard postal rates.</p>
+
+    <h2>Handmade variation</h2>
+    <p>Each piece is unique and handmade by our women, so your product will resemble the image shown but have its own unique color palette. Variation in color, stripe pattern and small irregularities of weave is a feature of a handmade, reclaimed-fabric product and is not a defect.</p>
+
+    <h2>Shipping and delivery</h2>
+    <p>Mats ship from New Haven, Connecticut. Delivery within the United States typically takes a few days to a week. International delivery takes longer and is variable. Delivery times are estimates, not guarantees. Recipients outside the United States may owe import duties and taxes on delivery; these are not included in the price and are the recipient's responsibility. See <a href="{{ url('shipping-returns') }}">Shipping &amp; returns</a>.</p>
+
+    <h2>Returns and exchanges</h2>
+    <p>Returns are accepted within 30 days {{ ph('CONFIRM MATCHES ETSY') }}, under the conditions and with the postage rules set out in <a href="{{ url('shipping-returns') }}">Shipping &amp; returns</a>, which form part of these terms.</p>
+
+    <h2>Availability</h2>
+    <p>YogaMaty is made in small batches. We may limit quantities, and an order cannot be fulfilled when stock has run out; in that case we will refund you in full.</p>
+
+    <h2>Product information</h2>
+    <p>We aim to describe the product and its supply chain accurately, and label estimates as estimates. The supply chain passport is hand-entered by Empowerment Collective and reflects the information available when each batch record was published.</p>
+
+    <h2>Liability</h2>
+    <p>To the fullest extent permitted by law, our liability for any claim relating to an order is limited to the amount you paid for it. Nothing in these terms limits any right you have under mandatory consumer law that cannot be excluded.</p>
+
+    <h2>Governing law</h2>
+    <p>These terms are governed by the laws of the State of Connecticut, United States, without regard to conflict-of-law rules {{ ph('ATTORNEY TO CONFIRM GOVERNING LAW AND DISPUTE RESOLUTION') }}.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about these terms: see <a href="{{ url('contact') }}">Contact</a>.</p>
+  </div>
+</section>
+{% endblock %}

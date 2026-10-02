@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% from "macros.html" import field %}
+{% set path = "petition" %}
+{% set title = "Sign the petition" %}
+{% set description = "Sign the TransparaTrade petition demanding mandatory supply chain transparency labeling laws, hand your device to the next person, and share it to end modern slavery." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,7vw,90px));padding-bottom:clamp(48px,7vw,90px)">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('rosette', 'md', 'bg', 'right:-6%;top:-10%', rot=60, mobile=False) }}
+    {{ motif('spool', 'sm', 'accent', 'right:36%;bottom:-14%', rot=180, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('petition.eyebrow') }}</span>
+    <h1 class="display">Sign the<br>petition.</h1>
+    <p class="statement">Demand mandatory supply chain transparency labeling laws — and join the movement to end modern slavery.</p>
+    <p class="count-badge" id="pet-count" hidden style="color:#fff"></p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="sign">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('hank', 'sm', 'bg', 'right:3%;top:3%', mobile=False) }}
+    {{ motif('leaves', 'md', 'bg', 'left:-8%;bottom:-6%', rot=30, mobile=False) }}
+  </div>
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <form class="form kiosk" data-form="petition" novalidate autocomplete="off" aria-labelledby="pet-h">
+        <h2 id="pet-h" class="h1">1. Sign</h2>
+        <div class="form-live">
+          {{ field('name', 'Name', required=True, maxlength=120) }}
+          {{ field('email', 'Email', type='email', required=True, maxlength=200, hint='Signing does not subscribe you to anything.') }}
+          {{ field('location', 'Location', required=True, maxlength=120, hint='City and country, or postal code.') }}
+          <label class="check"><input type="checkbox" name="consent" required aria-required="true"><span>I confirm my demand for mandatory supply chain transparency labeling laws. I understand that my signature may be presented publicly or to legislators (see the <a href="{{ url('privacy') }}">privacy policy</a>).</span></label>
+          <div class="field" data-field="consent" style="margin-top:-1rem"><div class="err" role="alert"></div></div>
+          <input type="text" class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="hidden" name="t" value="">
+          <div class="cf-turnstile-mount"></div>
+          <button class="btn btn-xl" type="submit">{{ t('petition.sign') }}</button>
+          <p class="form-status" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="form-done" tabindex="-1" aria-live="polite">
+          <h2 class="h1">Thank you for signing.</h2>
+          <p class="lede" data-done-msg>Your voice counts.</p>
+          <button class="btn btn-xl" type="button" data-reset>{{ t('petition.sign_someone_else') }}</button>
+
+          <h3 style="margin-top:3rem">3. Share</h3>
+          <p>Post about the petition using #EndModernSlaveryNow and #TransparaTrade, and tag people directly.</p>
+          <div class="share-box" id="share-text">I signed the TransparaTrade petition and joined the End Modern Slavery Now! movement to demand mandatory supply chain transparency and end labor exploitation and environmental destruction at the root. Join me at https://www.endmodernslaverynow.org/ #EndModernSlaveryNow #TransparaTrade</div>
+          <div class="share-links">
+            <button class="btn btn--ghost" type="button" data-copy="#share-text">{{ t('petition.copy_text') }}</button>
+            <a data-share="x" href="#" rel="noopener" target="_blank">Post on X</a>
+            <a data-share="facebook" href="#" rel="noopener" target="_blank">Facebook</a>
+            <a data-share="whatsapp" href="#" rel="noopener" target="_blank">WhatsApp</a>
+            <a data-share="linkedin" href="#" rel="noopener" target="_blank">LinkedIn</a>
+          </div>
+          <p class="small" style="margin-top:2rem">Want updates? Signing does not subscribe you to anything. Updates are shared through <a href="{{ site.ec_newsletter }}" rel="noopener">Empowerment Collective's newsletter</a>, where you can sign up if you'd like.</p>
+        </div>
+      </form>
+    </div>
+
+    <aside>
+      <h2 class="h1" style="margin-top:0">2. Sign others up in person</h2>
+      <p>Gathering with friends, family or colleagues? Hand your phone or tablet to the next person and walk them through it — explain why it matters.</p>
+      <p>After each signature, tap <strong>Sign someone else</strong>. Every field is cleared and nothing is carried over to the next signer.</p>
+      <h2 class="h1" style="margin-top:2.4rem">What we're asking for</h2>
+      <p>That every product entering the market carries supply chain transparency labeling, so consumers can see — and companies can no longer hide — how things are made. <a href="{{ url('transparatrade') }}#argument">Read the argument</a>.</p>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/forms.js?v={{ year }}-1" defer></script>{% endblock %}

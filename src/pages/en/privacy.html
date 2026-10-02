@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% set path = "privacy" %}
+{% set title = "Privacy policy" %}
+{% set description = "What YogaMaty collects when you buy, sign the petition, apply to join the TransparaTrade team or send a wholesale inquiry — and how long it is kept." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy policy</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> This is a scope-complete draft built from the project specification. It is not legal advice and should be reviewed by a qualified attorney before launch.</div>
+    <p class="small">Last updated: {{ ph('ADD DATE') }}</p>
+
+    <h2>Who is responsible for your data</h2>
+    <p>Empowerment Collective, a nonprofit organization based in New Haven, Connecticut, operates this website and is the controller of the personal data described here. To ask a question or make a request about your data, write to {{ ph('ADD DATA-REQUEST EMAIL') }} or {{ ph('ADD POSTAL ADDRESS') }}.</p>
+
+    <h2>Cookies</h2>
+    <p>This site sets no cookies. Stripe's hosted checkout sets its own on Stripe's domain.</p>
+
+    <h2>What we collect, why, and for how long</h2>
+    <h3>Buying a mat</h3>
+    <p>Checkout is handled by Stripe. We never see or store your card details. Stripe collects your name, email address, shipping address and payment details, and shares your order, name, email and shipping address with us so we can ship your mat and respond to you. Stripe is an independent processor and has its own privacy policy. We keep order records as long as needed for fulfillment, returns, accounting and tax obligations.</p>
+    <p><em>Basis:</em> performing the sale (contract); legal obligations.</p>
+
+    <h3>Signing the petition</h3>
+    <p>We store your name, email address, location, the time you signed, and that you confirmed the petition's demand. The petition list is kept in a database on Cloudflare's infrastructure. We use your email address only to prevent duplicate signatures and to count signatures. Signing does not subscribe you to a mailing list.</p>
+    <p>Signatures are retained for the foreseeable future; Empowerment Collective leadership decides whether and when they are deleted. <strong>The list may be presented publicly or to legislators.</strong> You can ask us to remove your signature at any time (see below).</p>
+    <p><em>Basis:</em> your consent, which you can withdraw.</p>
+
+    <h3>Applying to join the TransparaTrade team</h3>
+    <p>The application form sends what you enter (name, email, company or job title, skills, statement, and any optional link or location) by email to the Empowerment Collective team. <strong>The website itself does not store your application.</strong> A copy remains in the team's email inbox, where it is retained for the foreseeable future; Empowerment Collective leadership decides on deletion. We will ask for a résumé only if we would like to take your application further.</p>
+    <p><em>Basis:</em> your consent; our interest in considering applicants.</p>
+
+    <h3>Wholesale and studio inquiries</h3>
+    <p>The inquiry form emails your name, phone number, email, business name and note to our team. The website does not store it. A copy remains in the team's email inbox.</p>
+    <p><em>Basis:</em> your consent; steps you ask us to take before entering a contract.</p>
+
+    <h3>Technical data</h3>
+    <p>To protect the forms from abuse we use Cloudflare Turnstile, which runs a short check in your browser without cookies or tracking for advertising, and we briefly use your IP address to limit how fast a single device can submit a form. IP addresses are not kept in our petition database. Our hosting provider, GitHub Pages, may keep its own server logs, including IP addresses. {{ ph('IF ANALYTICS ARE ADDED, DESCRIBE THEM HERE — currently none') }}</p>
+
+    <h2>Who we share data with</h2>
+    <ul>
+      <li><strong>Stripe</strong> — payment processing and checkout.</li>
+      <li><strong>Cloudflare</strong> — runs the form endpoint, the petition database and Turnstile spam protection.</li>
+      <li><strong>{{ ph('RESEND OR POSTMARK — CONFIRM EMAIL PROVIDER') }}</strong> — delivers form submissions to our team by email.</li>
+      <li><strong>GitHub</strong> — hosts the website.</li>
+      <li>Legislators and the public — only for the petition list, as described above.</li>
+    </ul>
+    <p>We do not sell your personal data.</p>
+
+    <h2>Your rights</h2>
+    <p>Depending on where you live, you may have the right to access the personal data we hold about you, correct it, have it deleted, restrict or object to its use, receive a copy in a portable format, and withdraw consent at any time. If you are in the European Economic Area or the United Kingdom, you may also complain to your data-protection authority. Residents of Connecticut and California have rights under the Connecticut Data Privacy Act and the California Consumer Privacy Act, to the extent those laws apply to us; we do not sell or share personal data for advertising. To exercise any right, contact {{ ph('ADD DATA-REQUEST EMAIL') }}.</p>
+
+    <h2>International transfers</h2>
+    <p>We are based in the United States, so data you give us is processed there. Where GDPR or UK GDPR applies, we rely on appropriate safeguards offered by our processors for these transfers.</p>
+
+    <h2>Children</h2>
+    <p>This site is not directed at children under 13 and we do not knowingly collect their data.</p>
+
+    <h2>Changes</h2>
+    <p>If we change this policy, we will update the date above.</p>
+  </div>
+</section>
+{% endblock %}

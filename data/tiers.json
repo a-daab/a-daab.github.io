@@ -1,0 +1,732 @@
+{
+ "_doc": "Stage definitions shared by every batch. powered: true | false | 'confirm'. 'confirm' stages are kept here but their powered/unpowered claim is NOT published until answered (Spec §4.1, §4.6).",
+ "chains": [
+  {
+   "id": "A",
+   "name": {
+    "en": "Hemp"
+   },
+   "intro": {
+    "en": "Hemp is grown, retted, scraped by hand, spun, sun-dried and wound onto bobbins."
+   },
+   "tiers": [
+    {
+     "id": "A1",
+     "subject": "cultivation",
+     "name": {
+      "en": "Cultivation and harvest"
+     },
+     "records": {
+      "en": "Grower, location, season, agricultural inputs and water used to grow."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "grower",
+       "label": {
+        "en": "Grower"
+       }
+      },
+      {
+       "key": "location",
+       "label": {
+        "en": "Location"
+       }
+      },
+      {
+       "key": "season",
+       "label": {
+        "en": "Season"
+       }
+      },
+      {
+       "key": "inputs",
+       "label": {
+        "en": "Pesticide and fertilizer use"
+       }
+      },
+      {
+       "key": "water",
+       "label": {
+        "en": "Water used to grow"
+       }
+      },
+      {
+       "key": "data_source",
+       "label": {
+        "en": "How this data was collected"
+       }
+      }
+     ]
+    },
+    {
+     "id": "A2",
+     "subject": "retting",
+     "name": {
+      "en": "Retting / soaking"
+     },
+     "records": {
+      "en": "Water source, duration and volume."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "water_source",
+       "label": {
+        "en": "Water source"
+       }
+      },
+      {
+       "key": "duration",
+       "label": {
+        "en": "Duration"
+       }
+      },
+      {
+       "key": "volume",
+       "label": {
+        "en": "Volume"
+       }
+      }
+     ]
+    },
+    {
+     "id": "A3",
+     "subject": "scraping",
+     "name": {
+      "en": "Hand processing (scraping)"
+     },
+     "records": {
+      "en": "Worker, hours and method — fiber drawn across a fixed blade."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "method",
+       "label": {
+        "en": "Method"
+       }
+      }
+     ]
+    },
+    {
+     "id": "A4",
+     "subject": "spinning",
+     "name": {
+      "en": "Spinning into thread"
+     },
+     "records": {
+      "en": "Worker, hours and yield."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "yield",
+       "label": {
+        "en": "Yield"
+       }
+      }
+     ]
+    },
+    {
+     "id": "A5",
+     "subject": "drying",
+     "name": {
+      "en": "Sun drying"
+     },
+     "records": {
+      "en": "Open-air location, duration and weather."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "location",
+       "label": {
+        "en": "Location"
+       }
+      },
+      {
+       "key": "duration",
+       "label": {
+        "en": "Duration"
+       }
+      },
+      {
+       "key": "weather",
+       "label": {
+        "en": "Weather"
+       }
+      }
+     ]
+    },
+    {
+     "id": "A6",
+     "subject": "winding",
+     "name": {
+      "en": "Bobbin winding"
+     },
+     "records": {
+      "en": "Worker, hours and energy used."
+     },
+     "powered": "confirm",
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "energy_kwh",
+       "label": {
+        "en": "Energy used (kWh)"
+       }
+      }
+     ],
+     "powered_note": "Appears motorized — awaiting confirmation"
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "name": {
+    "en": "Reclaimed saris"
+   },
+   "intro": {
+    "en": "Post-consumer saris are collected, sorted, cut into strips by hand and wound onto bobbins."
+   },
+   "tiers": [
+    {
+     "id": "B1",
+     "subject": "collection",
+     "name": {
+      "en": "Collection of post-consumer saris"
+     },
+     "records": {
+      "en": "Source, quantity by weight, date and fiber content."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "source",
+       "label": {
+        "en": "Source"
+       }
+      },
+      {
+       "key": "quantity_kg",
+       "label": {
+        "en": "Quantity (kg)"
+       }
+      },
+      {
+       "key": "date",
+       "label": {
+        "en": "Date"
+       }
+      },
+      {
+       "key": "fiber_content",
+       "label": {
+        "en": "Fiber content"
+       }
+      }
+     ]
+    },
+    {
+     "id": "B2",
+     "subject": "sorting",
+     "name": {
+      "en": "Sorting"
+     },
+     "records": {
+      "en": "Worker, hours, and what is rejected and where it goes."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "rejected",
+       "label": {
+        "en": "What is rejected, and where it goes"
+       }
+      }
+     ]
+    },
+    {
+     "id": "B3",
+     "subject": "cutting",
+     "name": {
+      "en": "Cutting into strips"
+     },
+     "records": {
+      "en": "Worker and hours — measured and cut by hand against a straightedge."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      }
+     ]
+    },
+    {
+     "id": "B4",
+     "subject": "bobbins",
+     "name": {
+      "en": "Bobbin winding (tuki bobbins)"
+     },
+     "records": {
+      "en": "Worker, hours and energy used if powered."
+     },
+     "powered": "confirm",
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "energy_kwh",
+       "label": {
+        "en": "Energy used (kWh)"
+       }
+      }
+     ],
+     "powered_note": "Awaiting confirmation"
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "name": {
+    "en": "Weaving"
+   },
+   "intro": {
+    "en": "The two chains converge at the loom. Both looms are hundred-year-old machines that run on no electricity."
+   },
+   "tiers": [
+    {
+     "id": "C1",
+     "subject": "warping",
+     "name": {
+      "en": "Warping the loom"
+     },
+     "records": {
+      "en": "Hemp warp, worker and hours."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      }
+     ]
+    },
+    {
+     "id": "C2",
+     "subject": "weaving-face",
+     "name": {
+      "en": "Weaving the mat face"
+     },
+     "records": {
+      "en": "Hemp warp with reclaimed-sari weft, on a hundred-year-old loom."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "materials",
+       "label": {
+        "en": "Materials"
+       }
+      }
+     ]
+    },
+    {
+     "id": "C3",
+     "subject": "weaving-backing",
+     "name": {
+      "en": "Weaving the hemp backing cloth"
+     },
+     "records": {
+      "en": "A separate hundred-year-old loom."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      }
+     ]
+    },
+    {
+     "id": "C4",
+     "subject": "washing",
+     "name": {
+      "en": "Washing and sun-drying the hemp cloth"
+     },
+     "records": {
+      "en": "Water use, drying location and duration."
+     },
+     "powered": "confirm",
+     "fields": [
+      {
+       "key": "water_use",
+       "label": {
+        "en": "Water use"
+       }
+      },
+      {
+       "key": "location",
+       "label": {
+        "en": "Drying location"
+       }
+      },
+      {
+       "key": "duration",
+       "label": {
+        "en": "Duration"
+       }
+      }
+     ],
+     "powered_note": "Awaiting confirmation"
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "name": {
+    "en": "Finishing"
+   },
+   "intro": {
+    "en": "Hand quality check, assembly on an industrial sewing machine, and final inspection."
+   },
+   "tiers": [
+    {
+     "id": "D1",
+     "subject": "quality-check",
+     "name": {
+      "en": "Quality check and hand trimming"
+     },
+     "records": {
+      "en": "Worker and hours — protruding knots trimmed with scissors."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      }
+     ]
+    },
+    {
+     "id": "D2",
+     "subject": "sewing",
+     "name": {
+      "en": "Assembly: backing, binding and fringe"
+     },
+     "records": {
+      "en": "Worker, hours and energy used. Sewn on an industrial sewing machine."
+     },
+     "powered": true,
+     "fields": [
+      {
+       "key": "worker",
+       "label": {
+        "en": "Worker (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "hours",
+       "label": {
+        "en": "Hours worked"
+       }
+      },
+      {
+       "key": "energy_kwh",
+       "label": {
+        "en": "Energy used (kWh)"
+       }
+      }
+     ]
+    },
+    {
+     "id": "D3",
+     "subject": "inspection",
+     "name": {
+      "en": "Final inspection and batch ID"
+     },
+     "records": {
+      "en": "Inspector, date, and the batch ID assigned."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "inspector",
+       "label": {
+        "en": "Inspector (pseudonymous ID)"
+       }
+      },
+      {
+       "key": "date",
+       "label": {
+        "en": "Date"
+       }
+      },
+      {
+       "key": "batch_id",
+       "label": {
+        "en": "Batch ID assigned"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "E",
+   "name": {
+    "en": "Distribution"
+   },
+   "intro": {
+    "en": "From the artisan center in the Kathmandu Valley to the customer, including the bulk shipment to New Haven."
+   },
+   "tiers": [
+    {
+     "id": "E1",
+     "subject": "artisan-center",
+     "name": {
+      "en": "Empowerment Collective Artisan Center, Goldhunga, Kathmandu Valley"
+     },
+     "records": {
+      "en": "Verifies the batch, adds data, signs and passes forward."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "verified_by",
+       "label": {
+        "en": "Verified by"
+       }
+      },
+      {
+       "key": "date",
+       "label": {
+        "en": "Date"
+       }
+      }
+     ]
+    },
+    {
+     "id": "E2",
+     "subject": "export",
+     "name": {
+      "en": "Exporter / shipper, Nepal"
+     },
+     "records": {
+      "en": "Confirms shipment details and carrier, signs and forwards."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "carrier",
+       "label": {
+        "en": "Carrier"
+       }
+      },
+      {
+       "key": "shipment",
+       "label": {
+        "en": "Shipment details"
+       }
+      },
+      {
+       "key": "date",
+       "label": {
+        "en": "Date"
+       }
+      }
+     ]
+    },
+    {
+     "id": "E3",
+     "subject": "customs",
+     "name": {
+      "en": "US customs and import clearance"
+     },
+     "records": {
+      "en": "Entry date, port of entry, duty paid and clearance."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "entry_date",
+       "label": {
+        "en": "Entry date"
+       }
+      },
+      {
+       "key": "port",
+       "label": {
+        "en": "Port of entry"
+       }
+      },
+      {
+       "key": "duty_paid",
+       "label": {
+        "en": "Duty paid (by Empowerment Collective)"
+       }
+      },
+      {
+       "key": "clearance",
+       "label": {
+        "en": "Clearance"
+       }
+      }
+     ]
+    },
+    {
+     "id": "E4",
+     "subject": "new-haven",
+     "name": {
+      "en": "Empowerment Collective, New Haven, CT"
+     },
+     "records": {
+      "en": "Receives the batch, verifies count and condition, signs receipt; fulfills individual orders from here."
+     },
+     "powered": false,
+     "fields": [
+      {
+       "key": "received_by",
+       "label": {
+        "en": "Received by"
+       }
+      },
+      {
+       "key": "date",
+       "label": {
+        "en": "Date received"
+       }
+      },
+      {
+       "key": "count",
+       "label": {
+        "en": "Count"
+       }
+      },
+      {
+       "key": "condition",
+       "label": {
+        "en": "Condition"
+       }
+      }
+     ]
+    },
+    {
+     "id": "E5",
+     "subject": "customer",
+     "name": {
+      "en": "Customer"
+     },
+     "records": {
+      "en": "Scans the transparency passport and verifies the full journey."
+     },
+     "powered": false,
+     "fields": []
+    }
+   ]
+  }
+ ]
+}

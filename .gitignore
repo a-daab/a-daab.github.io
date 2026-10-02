@@ -1,0 +1,5 @@
+node_modules/
+.wrangler/
+*.arw
+*.ARW
+__pycache__/

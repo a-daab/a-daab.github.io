@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% set full_title = (title ~ " — YogaMaty") if title is defined and title else t('meta.home_title') %}
+{% set desc = description if description is defined and description else t('meta.default_description') %}
+{% set canon = BASE ~ (url(page_path) if page_path != '404' else '/') %}
+<title>{{ full_title }}</title>
+<meta name="description" content="{{ desc }}">
+{% if site.noindex or (indexable is defined and indexable == false) %}<meta name="robots" content="noindex">{% endif %}
+
+<link rel="canonical" href="{{ canon }}">
+{% if site.languages|length > 1 %}{% for l in site.languages %}<link rel="alternate" hreflang="{{ l }}" href="{{ BASE }}/{{ l }}/{{ page_path ~ '/' if page_path else '' }}">{% endfor %}{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="YogaMaty">
+<meta property="og:title" content="{{ full_title }}">
+<meta property="og:description" content="{{ desc }}">
+<meta property="og:url" content="{{ canon }}">
+<meta name="theme-color" content="#CC5500">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/fonts/mulish-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/site.css?v={{ year }}-1">
+{% block head %}{% endblock %}
+</head>
+<body class="motifs-pending page-{{ (page_path or 'home')|replace('/', '-') }}">
+<a class="skip" href="#main">{{ t('a11y.skip') }}</a>
+
+<header class="site-header" id="site-header">
+  <div class="bar">
+    <a class="wordmark" href="{{ url() }}" aria-label="YogaMaty — {{ t('nav.home') }}">YOGAMATY</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="{{ t('a11y.menu') }}"><span></span></button>
+    <nav aria-label="{{ t('a11y.primary_nav') }}">
+    <ul class="nav" id="nav">
+      <li><a href="{{ url() }}"{% if current == '' %} aria-current="page"{% endif %}>{{ t('nav.home') }}</a></li>
+      <li><a href="{{ url('supply-chain') }}"{% if current == 'supply-chain' %} aria-current="page"{% endif %}>{{ t('nav.supply_chain') }}</a></li>
+      <li><a href="{{ url('transparatrade') }}"{% if current == 'transparatrade' %} aria-current="page"{% endif %}>{{ t('nav.transparatrade') }}</a></li>
+      <li><a href="{{ url('petition') }}"{% if current == 'petition' %} aria-current="page"{% endif %}>{{ t('nav.petition') }}</a></li>
+      <li><a href="{{ url('about') }}"{% if current == 'about' %} aria-current="page"{% endif %}>{{ t('nav.about') }}</a></li>
+      <li class="has-drop" id="shop-menu">
+        <button type="button" class="nav-btn" id="shop-btn" aria-expanded="false" aria-haspopup="true" aria-controls="shop-drop">{{ t('nav.shop') }}<span class="caret" aria-hidden="true"></span></button>
+        <ul class="drop" id="shop-drop">
+          <li><a href="{{ url('shop') }}"{% if current == 'shop' %} aria-current="page"{% endif %}>{{ t('nav.shop_yogamaty') }}</a></li>
+          <li><a href="{{ url('shop/wholesale') }}"{% if current == 'shop/wholesale' %} aria-current="page"{% endif %}>{{ t('nav.wholesale') }}</a></li>
+        </ul>
+      </li>
+    </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>
+      <div class="wm">YOGAMATY</div>
+      <p class="small" style="color:#444;margin-top:8px">{{ t('footer.tagline') }}</p>
+    </div>
+    <nav aria-label="{{ t('a11y.footer_nav') }}">
+      <ul>
+        <li><a href="{{ url('contact') }}">{{ t('footer.contact') }}</a></li>
+        <li><a href="{{ url('privacy') }}">{{ t('footer.privacy') }}</a></li>
+        <li><a href="{{ url('terms') }}">{{ t('footer.terms') }}</a></li>
+        <li><a href="{{ url('shipping-returns') }}">{{ t('footer.shipping') }}</a></li>
+      </ul>
+    </nav>
+    <p class="fine">© {{ year }} Empowerment Collective. {{ t('footer.fine') }}{% if site.test_build %} <strong>{{ t('footer.test_build') }}</strong>{% endif %}</p>
+  </div>
+</footer>
+
+<script type="application/json" id="i18n">{{ js_strings|tojson }}</script>
+<script>window.YM={api:{{ site.api_base|tojson }},turnstile:{{ site.turnstile_site_key|tojson }},lang:{{ lang|tojson }},defaultBatch:{{ site.default_batch|tojson }},shareUrl:{{ site.petition_share_url|tojson }}};</script>
+<script src="/assets/js/site.js?v={{ year }}-1" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

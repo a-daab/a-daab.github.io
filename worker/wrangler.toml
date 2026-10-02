@@ -1,0 +1,30 @@
+# Deploy:  cd worker && npx wrangler deploy
+# See worker/README.md for one-time setup (D1 database, secrets, custom domain api.yogamaty.com).
+name = "yogamaty-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Custom domain (add the route in the Cloudflare dashboard, or uncomment once the zone is on Cloudflare):
+# routes = [{ pattern = "api.yogamaty.com", custom_domain = true }]
+
+[vars]
+ALLOWED_ORIGINS = "https://www.yogamaty.com,https://yogamaty.com"
+ALLIES_TO = "allies@empowermentcollective.org"     # to be confirmed by the project lead
+WHOLESALE_TO = ""                                   # [ADD WHOLESALE INBOX ADDRESS]
+MAIL_FROM = "YogaMaty <forms@yogamaty.com>"         # a sender on a domain verified with Resend/Postmark
+PETITION_THRESHOLD = "500"                          # the live count is shown only at/above this many signatures
+MIN_FILL_SECONDS = "3"                              # submissions faster than this are treated as bots
+
+[[d1_databases]]
+binding = "DB"
+database_name = "yogamaty-petition"
+database_id = "REPLACE_WITH_ID_FROM_wrangler_d1_create"
+
+# Per-IP, per-minute rate limit (Workers Rate Limiting binding). The IP is used transiently and never stored.
+[[unsafe.bindings]]
+name = "RL"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 6, period = 60 }
+
+# Secrets (set with `npx wrangler secret put <NAME>`):  RESEND_API_KEY   TURNSTILE_SECRET

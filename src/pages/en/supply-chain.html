@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set path = "supply-chain" %}
+{% set title = "Supply chain passport" %}
+{% set description = "The tier-by-tier record of how a YogaMaty was made — hemp and reclaimed saris to loom, finishing and delivery — with hours, wages, electricity and environmental data, each labeled as measured or estimated." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:clamp(56px,9vw,120px)">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('hank', 'md', 'bg', 'right:4%;top:-2%', rot=-12, mobile=False) }}
+    {{ motif('spin', 'sm', 'mid', 'right:30%;bottom:-18%', rot=90, mobile=False) }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('passport_page.eyebrow') }}</span>
+    <h1 class="display">Supply chain<br>passport.</h1>
+    <p class="statement">Every stage of this mat's life, in the order it happened — and exactly how each record was entered.</p>
+  </div>
+</section>
+
+<div id="pp-app" aria-live="polite">
+  <section class="sec sec--white"><div class="wrap wrap--narrow">
+    <p class="lede" id="pp-loading">{{ t('passport_page.loading') }}</p>
+    <noscript><p class="lede">{{ t('passport_page.noscript') }}</p></noscript>
+  </div></section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/passport.js?v={{ year }}-1" defer></script>{% endblock %}

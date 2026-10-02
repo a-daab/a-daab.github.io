@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set title = t('notfound.title') %}
+{% set indexable = false %}
+{% block main %}
+<section class="sec sec--white sec--hero"><div class="wrap wrap--narrow">
+  <span class="eyebrow">404</span>
+  <h1>{{ t('notfound.heading') }}</h1>
+  <p class="lede">{{ t('notfound.body') }}</p>
+  <div class="btn-row"><a class="btn" href="{{ url() }}">{{ t('notfound.home') }}</a><a class="btn btn--ghost" href="{{ url('supply-chain') }}">{{ t('nav.supply_chain') }}</a></div>
+</div></section>
+<script>
+/* GitHub Pages serves this file for unknown paths. QR codes encode /passport/<batch>?mat=<serial>,
+   which is not a real file, so hand it to the passport page. */
+(function(){var m=location.pathname.match(/^\/passport\/([^\/]+)\/?$/);
+if(m){var q=new URLSearchParams(location.search);q.set("batch",decodeURIComponent(m[1]));
+location.replace("/en/supply-chain/?"+q.toString())}})();
+</script>
+{% endblock %}

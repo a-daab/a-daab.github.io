@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% set path = "shop" %}
+{% set title = "Shop YogaMaty" %}
+{% set description = "Buy the YogaMaty: a hemp and reclaimed-sari yoga mat, 68 × 24 in, handwoven in Nepal and shipped from New Haven, Connecticut. $38. Scan the label to open its full supply chain passport." %}
+{% block head %}
+<script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "YogaMaty",
+  "description": "Hemp and reclaimed-sari yoga mat, 68 in × 24 in, woven by women artisans in the Kathmandu Valley on hundred-year-old electricity-free looms. Ships with a supply chain passport.",
+  "brand": {"@type": "Brand", "name": "YogaMaty"},
+  "weight": {"@type": "QuantitativeValue", "value": 260, "unitCode": "GRM"},
+  "offers": {
+    "@type": "Offer",
+    "url": BASE ~ url('shop'),
+    "price": site.price,
+    "priceCurrency": site.currency,
+    "availability": "https://schema.org/OutOfStock" if sold_out() else "https://schema.org/InStock",
+    "seller": {"@type": "Organization", "name": "Empowerment Collective"}
+  }
+}|tojson }}
+</script>
+{% endblock %}
+{% block main %}
+<section class="sec sec--white sec--head" style="padding-top:calc(var(--header-h) + clamp(32px,5vw,70px))">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <figure class="media" style="--ar:68/34">
+        <div class="media-ph" role="img" aria-label="Product photograph placeholder: flat overhead, full length" style="aspect-ratio:68/34"><b>Product — flat overhead, full length</b></div>
+      </figure>
+      <div class="grid grid--3" style="gap:12px;margin-top:12px">
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: rolled three-quarter"><b>Rolled</b></div>
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: partially rolled overhead"><b>Partly rolled</b></div>
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: weave detail"><b>Weave detail</b></div>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">{{ t('shop.eyebrow') }}</span>
+      <h1>YogaMaty</h1>
+      <p class="h2" style="margin:0;color:var(--ink)"><span class="count-badge" style="font-size:2.4rem">$38.00</span> <span class="small" style="color:#444">USD</span> {{ ph('CONFIRM PRICE MATCHES ETSY LISTING') }}</p>
+      <p class="quote" style="font-size:1.35rem;margin:.8rem 0 1.6rem;max-width:36ch">Each piece is unique and handmade by our women, so your product will resemble the image shown but have its own unique color palette.</p>
+
+      {% if sold_out() %}
+        <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.sold_out') }}</span>
+        <p class="small" style="margin-top:10px;color:#444">{{ t('shop.sold_out_note') }}</p>
+      {% elif site.stripe_payment_link %}
+        <a class="btn btn-xl" href="{{ site.stripe_payment_link }}" rel="noopener">{{ t('shop.buy') }}</a>
+        <p class="small" style="margin-top:10px;color:#444">{{ t('shop.secure') }}</p>
+      {% else %}
+        <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.opens_at_launch') }}</span>
+        <p class="small" style="margin-top:10px">{{ ph('ADD STRIPE PAYMENT LINK — set stripe_payment_link in src/site.json') }}</p>
+      {% endif %}
+
+      <div class="callout" style="margin-top:2rem">
+        <p><strong>Ships from New Haven, Connecticut.</strong> Within the US, expect a few days to a week. International delivery takes longer and varies. Recipients outside the US may owe import duties and taxes on delivery; these are not included in the price.</p>
+        <p><strong>Returns.</strong> Accepted within 30 days {{ ph('CONFIRM MATCHES ETSY') }} if unused, as sold. You pay return postage unless the mat has serious quality issues or is significantly different from what was described. <a href="{{ url('shipping-returns') }}">Full shipping &amp; returns policy</a>.</p>
+      </div>
+      <p class="small" style="color:#444">Small batch, handmade — when a batch is gone, it is gone.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" style="padding-top:0" id="details">
+  <div class="motifs" aria-hidden="true">{{ motif('hemp', 'sm', 'bg', 'right:-2%;bottom:-6%', rise=100, mobile=False) }}</div>
+  <div class="wrap grid grid--2">
+    <div>
+      <span class="eyebrow">{{ t('shop.details') }}</span>
+      <h2 class="h1">What it is.</h2>
+      <table class="facts"><tbody>
+        <tr><th scope="row">Dimensions</th><td>68 in (L) × 24 in (W) <span class="small" style="color:#444">· 173 × 61 cm</span></td></tr>
+        <tr><th scope="row">Thickness</th><td>{{ ph('ADD THICKNESS IN MILLIMETERS') }}</td></tr>
+        <tr><th scope="row">Weight</th><td>260 g</td></tr>
+        <tr><th scope="row">Face</th><td>Hemp warp with weft strips cut from reclaimed post-consumer sari fabric</td></tr>
+        <tr><th scope="row">Backing</th><td>Handwoven hemp cloth, no artificial dyes</td></tr>
+        <tr><th scope="row">Finish</th><td>Bound edge with knotted fringe at both ends</td></tr>
+        <tr><th scope="row">Recycled content</th><td>{{ ph('ADD % OF FINISHED WEIGHT FROM RECLAIMED SARI') }}</td></tr>
+        <tr><th scope="row">Care</th><td>{{ ph('ADD CARE INSTRUCTIONS — machine-wash or hand-wash') }}</td></tr>
+        <tr><th scope="row">Best used</th><td>{{ ph('ADD — alone, over a conventional mat, or under one') }}</td></tr>
+        <tr><th scope="row">Made</th><td>By women artisans in the Kathmandu Valley, Nepal, on hundred-year-old looms that use no electricity</td></tr>
+      </tbody></table>
+    </div>
+    <div>
+      <p>The face of the mat is hemp thread and strips cut from reclaimed post-consumer saris, woven together on a hundred-year-old loom. It is backed with a separate handwoven hemp cloth — a genuine feature of the mat, and one that keeps it from being just a surface. The bound edge and knotted fringe are sewn on after every piece is checked by hand.</p>
+      <p>Because the weft comes from reclaimed saris, no two mats are alike: the stripes, the colors and the rhythm of the weave differ from piece to piece. That is the imperfection that proves it was made by hand.</p>
+      <p><a href="{{ url('supply-chain') }}">Open the supply chain passport</a> to see every stage of how a YogaMaty is made — or scan the label on the mat when it arrives.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--orange" id="appeals">
+  <div class="motifs" aria-hidden="true">{{ motif('bloom', 'lg', 'bg', 'right:-10%;bottom:-30%', rot=40, mobile=False) }}</div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
+    <div class="grid grid--3" style="margin-top:2rem">
+      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Ethics and transparency.</strong> The supply chain is fully visible to consumers, revealing that human dignity, sustainability, and living wages are prioritized at every stage.</p></div>
+      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Energy.</strong> The energy that flows through your yoga practice should not be grounded on a mat that holds the energy of suffering, extraction, and toxic materials. YogaMaty allows yogis to weave their practice with the energy of empowerment and environmental protection.</p></div>
+      <div data-pending="sari-fiber-content"><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Health.</strong> YogaMaty is woven with natural fibers and recycled cotton saris for safe and healthy interaction with skin.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white sec--tight">
+  <div class="wrap grid grid--split">
+    <div><h2 class="h1" style="margin:0">Buying for a studio?</h2><p style="margin-top:.6rem">Request a meeting about a wholesale or studio partnership.</p></div>
+    <div class="btn-row" style="margin-top:0"><a class="btn btn--ghost btn--lg" href="{{ url('shop/wholesale') }}">{{ t('nav.wholesale') }}</a></div>
+  </div>
+</section>
+{% endblock %}

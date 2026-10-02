@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% set path = "contact" %}
+{% set title = "Contact" %}
+{% set description = "How to reach the YogaMaty team for orders, wholesale, press and data requests." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Contact</h1>
+    <table class="facts"><tbody>
+      <tr><th scope="row">Orders and returns</th><td>{{ ph('ADD CONTACT EMAIL') }}</td></tr>
+      <tr><th scope="row">Wholesale &amp; studios</th><td>Use the <a href="{{ url('shop/wholesale') }}">wholesale form</a>{% if false %}{% endif %} {{ ph('ADD WHOLESALE INBOX ADDRESS') }}</td></tr>
+      <tr><th scope="row">Privacy and data requests</th><td>{{ ph('ADD DATA-REQUEST EMAIL') }}</td></tr>
+      <tr><th scope="row">Allies and TransparaTrade</th><td>Use the <a href="{{ url('transparatrade') }}#apply">application form</a>.</td></tr>
+      <tr><th scope="row">Postal address</th><td>Empowerment Collective<br>{{ ph('ADD POSTAL ADDRESS') }}<br>New Haven, Connecticut, USA</td></tr>
+    </tbody></table>
+    <p style="margin-top:2rem"><a href="{{ site.ec_site }}" rel="noopener">empowermentcollective.org</a></p>
+  </div>
+</section>
+{% endblock %}
