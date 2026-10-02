@@ -1235,57 +1235,63 @@ CLOUD_SHIFT = 55          # units of the cloud's top that sit above the section 
 CLOUD_H = 198             # visible height in units
 
 
-def coil_lobe(cx, cy, R, dirn, start, turns=1.55):
-    """A round lobe: white-filled outline holding a spiral coil; the outer turn is ribbed with short ticks, like a shell."""
-    out = [f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="#fff" stroke-width="3.2"/>']
-    n = 64
+def coil_lobe(cx, cy, R, dirn, start, turns=2.05):
+    """A round lobe: white-filled outline holding a two-turn spiral coil. The bands between turns are ribbed with ticks, a thin ring
+    runs just inside the outline, and the core ends in a dot."""
+    big = R >= 22
+    ow = 3.2 if big else max(1.6, R * .13)
+    out = [f'<circle cx="{cx}" cy="{cy}" r="{R}" fill="#fff" stroke-width="{ow:.2f}"/>']
+    if R >= 14:
+        out.append(f'<circle cx="{cx}" cy="{cy}" r="{f2(R * .92)}" stroke-width="{1.0 if big else .8}"/>')
+    n = 90 if big else 48
+    r_out, r_in = R * .85, R * .09
+    def rad(t):
+        return r_out + (r_in - r_out) * t
     pts = []
     for k in range(n + 1):
         t = k / n
         ang = start + dirn * turns * 2 * math.pi * t
-        rr = R * (.86 - .78 * t)
-        pts.append((cx + rr * math.cos(ang), cy + rr * math.sin(ang)))
-    out.append(f'<path d="{smooth2(pts)}" stroke-width="2.6"/>')
+        pts.append((cx + rad(t) * math.cos(ang), cy + rad(t) * math.sin(ang)))
+    out.append(f'<path d="{smooth2(pts)}" stroke-width="{2.5 if big else max(1.1, R * .09):.2f}"/>')
+    step = 13 if big else 22
     ticks = ""
-    step = 24
-    for deg in range(20, int(360 * .8), step):                 # ribs across the outer band between this turn and the next
+    for deg in range(0, int(360 * turns) - 20, step):               # ribs across every band between one turn and the next
         t0 = deg / (360 * turns)
         t1 = t0 + 1 / turns
         if t1 > 1:
             break
         ang = start + dirn * turns * 2 * math.pi * t0
-        r0, r1 = R * (.86 - .78 * t0), R * (.86 - .78 * t1)
-        ticks += f"M{f2(cx + (r0 - 2) * math.cos(ang))} {f2(cy + (r0 - 2) * math.sin(ang))}L{f2(cx + (r1 + 2) * math.cos(ang))} {f2(cy + (r1 + 2) * math.sin(ang))}"
-    out.append(f'<path d="{ticks}" stroke-width="1.2"/>')
+        r0, r1 = rad(t0), rad(t1)
+        if abs(r0 - r1) < 3.2:
+            continue
+        ticks += f"M{f2(cx + (r0 - 1.6) * math.cos(ang))} {f2(cy + (r0 - 1.6) * math.sin(ang))}L{f2(cx + (r1 + 1.6) * math.cos(ang))} {f2(cy + (r1 + 1.6) * math.sin(ang))}"
+    out.append(f'<path d="{ticks}" stroke-width="{1.1 if big else .8}"/>')
+    if big:
+        out.append(dotpath([(cx + R * .1 * math.cos(start), cy + R * .1 * math.sin(start))], w=3.2))
     return "".join(out)
-
-
-def cloud_tail(mirror):
-    def X(x):
-        return 600 - x if mirror else x
-    outer = (f"M{X(172)} 194C{X(110)} 182 {X(46)} 196 {X(2)} 232C{X(50)} 220 {X(112)} 224 {X(172)} 228Z")
-    parts = [f'<path d="{outer}" fill="#fff" stroke-width="3"/>']
-    parts.append(f'<path d="M{X(150)} 204C{X(100)} 196 {X(54)} 208 {X(16)} 230" stroke-width="1.3"/>')
-    parts.append(f'<path d="M{X(150)} 216C{X(104)} 214 {X(66)} 222 {X(30)} 232" stroke-width="1.2"/>')
-    pts = (bez((X(172), 194), (X(110), 182), (X(46), 196), (X(2), 232), n=12) +
-           bez((X(2), 232), (X(50), 220), (X(112), 224), (X(172), 228), n=12))
-    return "".join(parts), ("poly", pts)
 
 
 LOBES = [   # (cx, cy, R, dirn, start angle): back to front
     (300, 62, 62, 1, 0.3), (212, 98, 52, -1, 2.6), (394, 98, 50, 1, 4.2), (150, 152, 40, -1, 1.0), (456, 150, 42, 1, 3.4),
+    (268, 88, 30, -1, 1.7), (346, 96, 28, 1, 5.3), (176, 122, 26, 1, 0.5), (432, 118, 27, -1, 2.9),
     (240, 146, 50, 1, 5.0), (380, 150, 52, -1, 0.9), (306, 138, 44, 1, 3.9),
-    (150, 200, 36, 1, 2.2), (452, 198, 38, -1, 5.6), (214, 198, 48, -1, 4.4), (392, 202, 48, 1, 1.6), (303, 194, 54, -1, 0.2),
+    (112, 186, 28, 1, 4.1), (492, 184, 29, -1, 1.3),
+    (150, 204, 36, 1, 2.2), (452, 202, 38, -1, 5.6), (214, 200, 48, -1, 4.4), (392, 204, 48, 1, 1.6), (303, 196, 54, -1, 0.2),
+    (268, 134, 22, -1, 3.1), (344, 150, 20, 1, 0.4),
 ]
+
+# tapering chains of smaller and smaller lobes running out along the bottom to the left and right (listed from the body outwards)
+TAIL_LOBES = [(88, 214, 21), (66, 221, 16), (48, 226, 12), (34, 230, 9), (23, 233, 7), (14, 235, 5.2), (7, 236, 3.8)]
 
 
 def cloud_build():
     out = []
     shapes = []
-    for mirror in (False, True):
-        svg, sh = cloud_tail(mirror)
-        out.append(svg)
-        shapes.append(sh)
+    for mirror in (False, True):                       # small lobes first so the body overlaps them
+        for i, (x, y, R) in enumerate(reversed(TAIL_LOBES)):
+            xx = 600 - x if mirror else x
+            out.append(coil_lobe(xx, y, R, 1 if (i % 2) ^ mirror else -1, i * 1.3))
+            shapes.append(("circ", (xx, y, R)))
     for (cx, cy, R, d, st_) in LOBES:
         out.append(coil_lobe(cx, cy, R, d, st_))
         shapes.append(("circ", (cx, cy, R)))
