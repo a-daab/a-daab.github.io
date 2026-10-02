@@ -77,7 +77,7 @@
     var motifs = [].slice.call(d.querySelectorAll('.motif'));
     motifs.forEach(function (m) {                       /* artwork loads after first paint */
       var u = m.getAttribute('data-mask');
-      if (u) m.style.setProperty('--mask', 'url(' + u + ')');
+      if (u) m.style.setProperty('--mask', 'url("' + new URL(u, document.baseURI).href + '")');
     });
     body.classList.remove('motifs-pending');
     if (reduce || !('IntersectionObserver' in window)) return;
