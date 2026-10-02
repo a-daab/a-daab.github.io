@@ -348,97 +348,121 @@ def sewing():
 # ---------------------------------------------------------------- the mat (hero unroll, vertical)
 # Two pieces: a horizontal roll that spans the right half of the hero, and the sheet that hangs from it.
 # The page slides the sheet down out of the roll as the visitor scrolls (translateY only).
-def mat_roll():
-    W, H = 600, 92
-    b = []
-    x0, x1, yt, yb = 40, 566, 12, 80
-    b.append(path([(x0, yt), (300, yt - 2), (x1, yt)], w=3.4, a=.5))
-    b.append(path([(x0, yb), (300, yb + 2), (x1, yb)], w=3.4, a=.5))
-    b.append(path([(x0, yt + 7), (300, yt + 5), (x1, yt + 7)], w=1.2, a=.4))      # cream binding, doubled line
-    b.append(path([(x0, yb - 7), (300, yb - 5), (x1, yb - 7)], w=1.2, a=.4))
-    # left end face with the spiral of the binding
-    cy, ry, rx = (yt + yb) / 2, (yb - yt) / 2, 26
-    b.append(ellipse(x0, cy, rx, ry, w=3.4, n=16))
-    sp = []
-    for k in range(0, 60):
-        t = k * .42
-        rr = .10 + t * .062
-        if rr < .93:
-            sp.append((x0 + rx * rr * math.cos(t) * .9, cy + ry * rr * math.sin(t)))
-    b.append(path(sp, w=2.2, a=.3))
-    # right end: the curve of the cylinder
-    b.append(path([(x1, yt), (x1 + 22, cy), (x1, yb)], w=3.4, a=.5))
-    b.append(path([(x1, yt + 7), (x1 + 13, cy), (x1, yb - 7)], w=1.2, a=.4))
-    # stripes seen along the rolled body: bands of changing rhythm
-    x = x0 + 40
+def stripe_band(x0, x1, y, h, kind, w_hint=1.1):
+    """One weft-faced stripe running across the mat, drawn as a line rhythm (block-print translation of colour)."""
+    out = []
+    mid = y + h / 2
+    if kind == "hatch":                                    # dense ribbing
+        yy = y + 1.2
+        while yy < y + h:
+            out.append(path([(x0, yy), ((x0 + x1) / 2, yy + R.uniform(-.5, .5)), (x1, yy)], w=w_hint, a=.2)); yy += 3.6
+    elif kind == "open":                                   # open spacing: two firm lines, nothing between
+        for yy in (y + 1.5, y + h - 1.5):
+            out.append(path([(x0, yy), ((x0 + x1) / 2, yy + R.uniform(-.7, .7)), (x1, yy)], w=2.2, a=.2))
+    elif kind == "dots":                                   # dotted runs
+        rows = max(1, int(h // 9))
+        for r in range(rows):
+            yy = y + (r + .5) * h / rows
+            out.append(dotpath([(xx + (5 if r % 2 else 0), yy) for xx in range(int(x0) + 6, int(x1) - 4, 10)], w=2.6))
+    elif kind == "dash":                                   # dashed runs
+        rows = max(1, int(h // 8))
+        for r in range(rows):
+            yy = y + (r + .5) * h / rows
+            d = "".join(f"M{xx + (7 if r % 2 else 0)} {f(yy)}h9" for xx in range(int(x0) + 4, int(x1) - 14, 19))
+            out.append(f'<path d="{d}" stroke-width="1.7"/>')
+    elif kind == "zig":                                    # zig-zag
+        amp = max(2.5, h / 2 - 2)
+        out.append(path([(xx, mid + (amp if (k % 2) else -amp)) for k, xx in enumerate(range(int(x0) + 4, int(x1), 11))], w=1.5, a=.2))
+    elif kind == "wave":
+        amp = max(2.2, h / 2 - 2)
+        out.append(path([(xx, mid + amp * math.sin(xx / 9.0)) for xx in range(int(x0) + 4, int(x1), 6)], w=1.6, a=.2))
+    else:                                                  # double line with a dotted centre
+        for yy in (y + 1.5, y + h - 1.5):
+            out.append(line(x0, yy, x1, yy, w=1.4))
+        out.append(dotpath([(xx, mid) for xx in range(int(x0) + 6, int(x1) - 4, 8)], w=2.4))
+    out.append(line(x0, y + h + 1.5, x1, y + h + 1.5, w=0.9))   # fine seam between stripes
+    return "".join(out)
+
+
+def stripe_run(x0, x1, y_start, y_end, seed_kinds=None):
+    kinds = ["hatch", "open", "dots", "dash", "hatch", "wave", "zig", "double", "hatch", "dots", "open", "dash"]
+    out = []
+    y = y_start
     i = 0
-    while x < x1 - 20:
-        wb = R.choice([10, 16, 24, 34])
-        kind = i % 4
-        if kind == 0:
-            for q in range(int(wb / 5)):
-                b.append(line(x + q * 5, yt + 14, x + q * 5 + R.uniform(-.8, .8), yb - 14, w=1.1))
-        elif kind == 1:
-            b.append(line(x + 2, yt + 14, x + 2, yb - 14, w=2.2)); b.append(line(x + wb - 2, yt + 14, x + wb - 2, yb - 14, w=2.2))
-        elif kind == 2:
-            for q in range(int(wb / 9) + 1):
-                for yy in range(int(yt + 20), int(yb - 14), 10):
-                    b.append(f'<path d="M{f(x + q * 9)} {f(yy)}h0" stroke-width="3"/>')
-        else:
-            for q in range(int(wb / 8) + 1):
-                for yy in range(int(yt + 16), int(yb - 18), 16):
-                    b.append(line(x + q * 8, yy, x + q * 8, yy + 8, w=1.6))
-        x += wb + 10
+    while y < y_end - 8:
+        h = R.choice([7, 9, 11, 14, 18, 24, 32])
+        h = min(h, y_end - y - 3)
+        kind = kinds[(i * 5 + R.randint(0, 2)) % len(kinds)]
+        if kind in ("dots", "dash") and h < 9:
+            h = 10
+        out.append(stripe_band(x0, x1, y, h, kind))
+        y += h + 3
         i += 1
+    return "".join(out)
+
+
+def mat_roll():
+    """The rolled mat seen from the side: a thick cylinder whose stripes run along its length, the plain binding
+    spiralling visibly at the open (left) end."""
+    W, H = 600, 124
+    b = []
+    x0, x1, yt, yb = 48, 566, 8, 116
+    b.append(path([(x0, yt), (300, yt - 2), (x1, yt)], w=3.4, a=.4))
+    b.append(path([(x0, yb), (300, yb + 2), (x1, yb)], w=3.4, a=.4))
+    # stripes along the roll body
+    b.append(stripe_run(x0 + 26, x1 - 8, yt + 8, yb - 6))
+    # right end: curve of the cylinder with the binding's edge
+    b.append(path([(x1, yt), (x1 + 20, (yt + yb) / 2), (x1, yb)], w=3.4, a=.4))
+    b.append(path([(x1 - 9, yt + 9), (x1 + 8, (yt + yb) / 2), (x1 - 9, yb - 9)], w=1.4, a=.3))
+    # left end face: an ellipse; the cream binding spirals inwards as a plain double band between striped layers
+    cy = (yt + yb) / 2
+    rx, ry = 34, (yb - yt) / 2
+    b.append(f'<ellipse cx="{x0}" cy="{f(cy)}" rx="{rx}" ry="{f(ry)}" style="fill:var(--orange)" stroke-width="3.4"/>')
+    for k in range(0, 3):                                   # binding: two parallel spiral edges = a plain band
+        pts_a, pts_b = [], []
+        for n in range(0, 90):
+            t = n / 89
+            ang = t * 3.3 * 2 * math.pi
+            rr = 1 - t * .92
+            pts_a.append((x0 + rx * rr * math.cos(ang), cy + ry * rr * math.sin(ang)))
+            rr2 = rr - .055
+            pts_b.append((x0 + rx * rr2 * math.cos(ang), cy + ry * rr2 * math.sin(ang)))
+        if k == 0:
+            b.append(path(pts_a, w=2.4, a=.2)); b.append(path(pts_b, w=2.4, a=.2))
+    for n in range(40):                                     # the striped layers between the turns, as short dashes
+        t = n / 40
+        ang = t * 3.3 * 2 * math.pi + .26
+        rr = (1 - t * .92) - .03
+        px, py = x0 + rx * rr * math.cos(ang), cy + ry * rr * math.sin(ang)
+        b.append(dotpath([(px, py)], w=2.2))
     write("mat-roll", (W, H), "".join(b))
 
 
 def mat_sheet():
+    """The unrolled mat: weft-faced stripes across the short way, plain cream binding on every side, knotted fringe at the free end."""
     W, H = 600, 640
     b = []
-    x0, x1, y1 = 40, 566, 596
-    # binding down both long edges (doubled lines)
-    for xx in (x0, x1):
-        b.append(path([(xx, -4), (xx + R.uniform(-1, 1), 300), (xx, y1)], w=3.4, a=.5))
-    for xx in (x0 + 7, x1 - 7):
-        b.append(path([(xx, -4), (xx + R.uniform(-1, 1), 300), (xx, y1)], w=1.2, a=.4))
-    b.append(path([(x0, y1), (300, y1 + 2), (x1, y1)], w=3.4, a=.5))
-    b.append(path([(x0, y1 - 7), (300, y1 - 5), (x1, y1 - 7)], w=1.2, a=.4))
-    # stripes run the short way across the mat; each band has its own rhythm
-    y = 10
-    i = 0
-    while y < y1 - 30:
-        hb = R.choice([14, 22, 30, 44, 60])
-        kind = i % 5
-        top, bot = y, min(y + hb, y1 - 22)
-        if kind == 0:                       # dense hatching
-            yy = top
-            while yy < bot:
-                b.append(path([(x0 + 14, yy), (300, yy + R.uniform(-.8, .8)), (x1 - 14, yy)], w=1.1, a=.3)); yy += 5
-        elif kind == 1:                     # open spacing, two heavy lines
-            for yy in (top + 3, bot - 3):
-                b.append(path([(x0 + 14, yy), (300, yy + R.uniform(-1, 1)), (x1 - 14, yy)], w=2.4, a=.4))
-        elif kind == 2:                     # dotted runs
-            yy = top + 6
-            while yy < bot:
-                d = "".join(f"M{f(xx)} {f(yy)}h0" for xx in range(x0 + 20, x1 - 14, 11))
-                b.append(f'<path d="{d}" stroke-width="3"/>'); yy += 11
-        elif kind == 3:                     # dashed runs
-            yy = top + 6
-            while yy < bot:
-                d = "".join(f"M{f(xx)} {f(yy)}h8" for xx in range(x0 + 16, x1 - 24, 16))
-                b.append(f'<path d="{d}" stroke-width="1.8"/>'); yy += 10
-        else:                               # zig-zag
-            yy = top + 4
-            pts = [(xx, yy + (hb - 8 if (k % 2) else 0) * .5) for k, xx in enumerate(range(x0 + 16, x1 - 10, 14))]
-            b.append(path(pts, w=1.6, a=.3))
-        y = bot + 8
-        i += 1
-    # knotted fringe at the free end
-    for k in range(27):
-        xx = x0 + 6 + k * (x1 - x0 - 12) / 26
-        b.append(path([(xx, y1), (xx + R.uniform(-3, 3), y1 + 18), (xx + R.uniform(-4, 4), y1 + 34)], w=1.6, a=.4))
-        b.append(f'<path d="M{f(xx)} {f(y1 + 14)}h0" stroke-width="4"/>')
+    xo0, xo1 = 34, 566            # outer edge of the binding
+    bw = 15                       # binding width
+    xi0, xi1 = xo0 + bw, xo1 - bw
+    yb0, yb1 = 570, 586           # bottom binding
+    # binding on both long edges and the free end: plain band (outer line, inner line, a fine stitch line down the middle)
+    for xo, xi in ((xo0, xi0), (xo1, xi1)):
+        b.append(path([(xo, -4), (xo + R.uniform(-1, 1), 300), (xo, yb1)], w=3.4, a=.5))
+        b.append(path([(xi, -4), (xi + R.uniform(-1, 1), 300), (xi, yb0)], w=1.6, a=.4))
+        xm = (xo + xi) / 2
+        b.append(f'<path d="' + "".join(f"M{f(xm)} {y}v6" for y in range(0, yb1 - 8, 14)) + '" stroke-width="1"/>')
+    b.append(path([(xo0, yb1), (300, yb1 + 2), (xo1, yb1)], w=3.4, a=.5))
+    b.append(path([(xi0, yb0), (300, yb0 + 1), (xi1, yb0)], w=1.6, a=.4))
+    b.append(f'<path d="' + "".join(f"M{x} {f((yb0 + yb1) / 2)}h6" for x in range(int(xi0) + 6, int(xi1) - 6, 14)) + '" stroke-width="1"/>')
+    # the stripe field
+    b.append(stripe_run(xi0 + 3, xi1 - 3, 4, yb0 - 4))
+    # knotted fringe: strands gathered into small knots
+    for k in range(18):
+        cx = xo0 + 12 + k * (xo1 - xo0 - 24) / 17
+        for d in (-4, 0, 4):
+            b.append(path([(cx + d, yb1), (cx + d * 1.6 + R.uniform(-1, 1), yb1 + 22), (cx + d * 2.2 + R.uniform(-2, 2), yb1 + 40)], w=1.5, a=.4))
+        b.append(f'<path d="M{f(cx - 5)} {yb1 + 8}q5 7 10 0" stroke-width="2.2"/>' + dotpath([(cx, yb1 + 12)], w=4))
     write("mat-sheet", (W, H), "".join(b), extra=' preserveAspectRatio="none"')
 
 
