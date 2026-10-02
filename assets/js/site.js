@@ -69,6 +69,21 @@
     }
   }
 
+  /* Hero: pinned for the unroll only when its text block fits one screen; otherwise it flows so nothing slides under the nav */
+  function fitHero() {
+    var h = d.querySelector('.hero-tall');
+    if (!h || !header) return;
+    var tx = h.querySelector('.hero-text');
+    if (!tx) return;
+    h.classList.remove('hero-flow');
+    var need = tx.offsetHeight + header.offsetHeight + 24 + 48;
+    h.classList.toggle('hero-flow', need > window.innerHeight);
+  }
+  fitHero();
+  window.addEventListener('resize', fitHero, { passive: true });
+  window.addEventListener('load', fitHero);
+  if (d.fonts && d.fonts.ready) d.fonts.ready.then(fitHero);
+
   /* ---------------- Motif layer ----------------
      Rules (Design §6): only artwork moves; text never does. Motion is caused by scroll. CSS transforms/opacity only.
      IntersectionObserver decides which motifs are on screen; a single rAF-throttled passive listener updates just those.
@@ -121,6 +136,7 @@
         if (o.mode === 'hero') {                                           /* the mat unrolls as the pinned hero scrolls past */
           var stick = o.host.querySelector('.hero-stick');
           if (stick && getComputedStyle(stick).position === 'sticky') p = clamp(sy / Math.max(1, r.height - vh));
+          else if (getComputedStyle(o.host.querySelector('.hero-mat')).position === 'absolute') p = clamp(sy / Math.max(1, r.height * 0.6));   /* wide but short window: unroll over the first part of the hero */
           else { var mr = m.getBoundingClientRect(); p = clamp((vh - mr.top) / (vh * 0.8)); }
         } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to mid-screen */
           var sr = m.getBoundingClientRect();

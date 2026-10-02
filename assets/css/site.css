@@ -78,7 +78,7 @@ h3{margin-bottom:.6em}
 .site-header{position:fixed;inset:0 0 auto 0;height:var(--header-h);z-index:100;
   transition:box-shadow .25s}
 /* the translucent bar is a pseudo-element: backdrop-filter on the header itself would trap the fixed mobile panel */
-.site-header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(204,85,0,.88);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.site-header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(204,85,0,.65);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
 .site-header.is-scrolled{box-shadow:0 2px 18px rgba(17,17,17,.22)}
 .site-header .bar{height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gutter);max-width:none}
 .wordmark{display:flex;align-items:center;min-width:160px;height:32px;color:#fff;text-decoration:none;
@@ -318,8 +318,8 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 /* ---------- Home hero: horizontal mat across the right half, unrolling downward from just below the nav ---------- */
 .motif--static{position:relative;width:100%;opacity:.5;will-change:auto}
 .hero-tall{padding:0;overflow:clip}
-.hero-stick{position:relative;display:flex;align-items:center;min-height:100svh;padding:calc(var(--header-h) + 24px) 0 48px var(--gutter)}
-.hero-text{position:relative;z-index:2;width:50%;padding-right:clamp(20px,3.5vw,56px)}
+.hero-stick{position:relative;display:flex;align-items:flex-start;min-height:100svh;padding:calc(var(--header-h) + 24px) 0 48px var(--gutter)}
+.hero-text{position:relative;z-index:2;width:50%;padding-right:clamp(20px,3.5vw,56px);margin-block:auto}   /* auto margins centre it when it fits and never push it above the nav when it doesn't */
 .hero-mat{position:absolute;z-index:1;right:0;top:var(--header-h);width:50%;height:calc(100% - var(--header-h));display:flex;flex-direction:column}
 .hero-roll{flex:none}
 .hero-clip{flex:1;min-height:0;overflow:hidden;margin-top:-2px}
@@ -392,4 +392,15 @@ details.how p{margin:.6em 0 0;max-width:58ch}
   .motif.sun-art{width:104px;top:-1%;right:-4%;opacity:.5}
   .motif.hands-cup{width:64vw;opacity:.32}
   .motif.village-art{width:60%}
+}
+
+/* Short windows: when the headline block cannot fit inside one pinned screen, the hero flows normally (js sets .hero-flow) */
+@media (prefers-reduced-motion:no-preference){
+  .hero-tall.hero-flow{height:auto}
+  .hero-tall.hero-flow .hero-stick{position:relative;height:auto;min-height:0}
+}
+@media (max-height:820px) and (min-width:821px){
+  .hero-text .display{font-size:clamp(2.2rem,9.6vh,4.4rem)}
+  .hero-text .eyebrow{margin-bottom:.8em}
+  .hero-text .btn-row{margin-top:1.3rem}
 }
