@@ -28,7 +28,7 @@
   --orange-tint:#FBF1EA;
   --white:#FFFFFF;
   --ink:#111111;
-  --btn-bg:var(--orange);               /* swap to --orange-deep if AA on 13px button text is required */
+  --btn-bg:var(--orange-deep);          /* #A34400 on white text = 6.2:1, passes AA for 13px button text */
   --font-brand:"Mulish",system-ui,-apple-system,"Segoe UI",sans-serif;
   --font-human:"Cormorant Garamond",Georgia,serif;
   --header-h:clamp(52px,8.33vh,68px);

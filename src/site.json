@@ -1,27 +1,24 @@
 {
   "origin": "https://www.yogamaty.com",
-  "languages": ["en"],
+  "languages": [
+    "en"
+  ],
   "default_language": "en",
-
   "noindex": true,
   "test_build": true,
-
   "api_base": "",
   "turnstile_site_key": "",
-
   "stripe_payment_link": "",
   "sold_out": false,
   "price": "38.00",
   "currency": "USD",
-
   "whitepaper_url": "",
   "petition_share_url": "https://www.endmodernslaverynow.org/",
   "ec_site": "https://www.empowermentcollective.org",
   "ec_newsletter": "https://www.empowermentcollective.org",
-  "walkfree_gsi_2023": "https://www.walkfree.org/global-slavery-index/",
+  "walkfree_gsi_2023": "https://cdn.walkfree.org/content/uploads/2023/05/17114737/Global-Slavery-Index-2023.pdf",
   "mspec_scoping_study": "https://www.modernslaverypec.org/",
   "default_batch": "B-2026-04",
-
   "_notes": {
     "noindex": "true while this is a test build. Run `python3 tools/set-indexing.py index` at launch.",
     "api_base": "URL of the Cloudflare Worker, e.g. https://api.yogamaty.com. Empty = forms show a 'not live yet' message.",
@@ -29,7 +26,6 @@
     "stripe_payment_link": "The Stripe Payment Link URL (https://buy.stripe.com/...). Empty = the buy button shows a disabled 'opens at launch' state.",
     "sold_out": "Flip to true when stock is gone (also set the inventory limit on the Stripe Payment Link).",
     "whitepaper_url": "Path or URL of the whitepaper PDF, e.g. /assets/docs/transparatrade-whitepaper.pdf. Empty = 'coming shortly' state.",
-    "walkfree_gsi_2023": "Landing page used until the exact PDF link is confirmed; replace with the direct Global-Slavery-Index-2023.pdf URL.",
     "mspec_scoping_study": "Landing page used until the exact Global-Commission-Scoping-Study-Report.pdf link is confirmed."
   }
 }

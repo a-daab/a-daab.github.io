@@ -46,9 +46,9 @@ One template renders any batch. To publish a batch: copy `data/batches/B-2026-04
 
 ## Decisions made while building (flagged for the project lead)
 
-- Header label is **“Petition”** (the confirmed nav); header bar uses the recommended **88% opacity + blur** (Design §2.2, still marked Open).
-- The **health appeal** keeps the approved “recycled cotton saris” wording and is marked `data-pending="sari-fiber-content"` in the templates; reword if any saris are synthetic.
+- Header label is **“Petition”** and the header bar uses **88% opacity + blur** — both approved.
+- The **health appeal** no longer says "cotton" (now "natural hemp fibers and reclaimed sari fabric") until the sari fiber content is confirmed.
 - Share text points to **endmodernslaverynow.org**, as written; that is a setting (`petition_share_url`).
-- Source links for the two statistics point to the publishers' landing pages until the exact PDF URLs are confirmed (`src/site.json`).
+- The Global Slavery Index link is the direct PDF; the Global Commission scoping study link is still the publisher's landing page (`mspec_scoping_study` in `src/site.json`).
 - The TransparaTrade whitepaper summary is a draft written from the Concept document, marked for confirmation.
-- Buttons use `#CC5500` fill with 13px white text per the Design doc; that pair measures 4.31:1 (just under AA 4.5:1 for small text). One-line fix if wanted: set `--btn-bg` to `#A34400` in `assets/css/site.css`. Orange sections therefore carry only large type.
+- Buttons use the deeper orange `#A34400` fill (6.2:1) so 13px white text passes AA; change `--btn-bg` in `assets/css/site.css` to revert to `#CC5500`.
