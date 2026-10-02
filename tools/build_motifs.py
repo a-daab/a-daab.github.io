@@ -1453,23 +1453,81 @@ def sun_spiral():
 
 
 # ---------------------------------------------------------------- Nepali village, clothesline with clothes and a YogaMaty
+def newari_window(cx, top, ww, hh):
+    """A carved wooden window with an arched head, lattice and a ring of dots, in the style of Newari houses."""
+    l, r, bt = cx - ww / 2, cx + ww / 2, top + hh
+    k = ww / 2
+    g = [f'<path d="M{l:.1f} {bt:.1f}V{top + k:.1f}A{k:.1f} {k:.1f} 0 0 1 {r:.1f} {top + k:.1f}V{bt:.1f}Z" stroke-width="1.9"/>']
+    g.append(f'<path d="M{l + 3:.1f} {bt - 3:.1f}V{top + k:.1f}A{k - 3:.1f} {k - 3:.1f} 0 0 1 {r - 3:.1f} {top + k:.1f}V{bt - 3:.1f}Z" stroke-width="1"/>')
+    g.append(f'<path d="M{cx - k / 2:.1f} {top + k:.1f}V{bt - 3:.1f}M{cx:.1f} {top + 3:.1f}V{bt - 3:.1f}M{cx + k / 2:.1f} {top + k:.1f}V{bt - 3:.1f}M{l + 3:.1f} {top + k + (hh - k) / 2:.1f}H{r - 3:.1f}" stroke-width="1"/>')
+    g.append(dotpath([(cx + (k + 5) * math.cos(math.pi * (1 + j / 6)), top + k + (k + 5) * math.sin(math.pi * (1 + j / 6))) for j in range(1, 6)], w=2))
+    return "".join(g)
+
+
+def mithila_band(xl, xr, y):
+    """A narrow painted border: two rules with a zigzag and a dot in each point."""
+    n = max(2, int((xr - xl) / 9))
+    st_ = (xr - xl) / n
+    pts = [(xl + i * st_, y + (3 if i % 2 else -3)) for i in range(n + 1)]
+    return (line(xl, y - 5, xr, y - 5, w=1) + line(xl, y + 5, xr, y + 5, w=1) + path(pts, w=1.1) +
+            dotpath([(xl + (i + .5) * st_ * 2, y + (0)) for i in range(int(n / 2))], w=1.8))
+
+
+def lotus_motif(cx, cy, r):
+    return (f'<path d="M{cx - r} {cy}Q{cx - r * .5} {cy - r * 1.3} {cx} {cy - r * 1.4}Q{cx + r * .5} {cy - r * 1.3} {cx + r} {cy}Q{cx} {cy + r * .5} {cx - r} {cy}" stroke-width="1.3"/>'
+            f'<path d="M{cx} {cy - r * 1.4}V{cy + r * .15}M{cx - r * .55} {cy - r * .6}Q{cx - r * .2} {cy - r * .1} {cx} {cy + r * .15}M{cx + r * .55} {cy - r * .6}Q{cx + r * .2} {cy - r * .1} {cx} {cy + r * .15}" stroke-width="1"/>')
+
+
 def house(x, w, h, roof, tiers=1):
+    """A Newari-style house: brick walls with painted Mithila bands, carved arched windows, a tiered pagoda roof with upturned eaves, hanging fringe and a pinnacle."""
     b = []
     y1 = 186
-    y0 = y1 - h
-    b.append(f'<path d="M{x} {y1}V{y0}H{x + w}V{y1}" stroke-width="2.4"/>')
-    b.append(clipped("v", [(x, y0), (x + w, y0), (x + w, y1), (x, y1)], hatch_lines(x, y0, x + w, y1, 0, 5, .8) + hatch_lines(x, y0, x + w, y1, 90, 14, .6)))
-    for t in range(tiers):                                        # tiered pitched roof
-        ry = y0 - t * roof * .62
-        ov = 8 + t * 5
-        b.append(f'<path d="M{x - ov} {ry}L{x + ov + 4} {ry - roof * .62}H{x + w - ov - 4}L{x + w + ov} {ry}Z" stroke-width="2.4"/>')
-        b.append(f'<path d="M' + "".join(f"{x - ov + 6 + i * 9} {ry - 2}l5 -{roof * .5:.0f}M" for i in range(int((w + 2 * ov) / 9) - 1)).rstrip("M") + '" stroke-width="1"/>')
-    dw = max(10, w * .2)
-    b.append(f'<path d="M{x + w / 2 - dw / 2} {y1}v-{h * .38:.0f}h{dw}v{h * .38:.0f}" stroke-width="2"/>')
-    for wx in (x + w * .16, x + w * .66):                          # carved windows
-        wy = y0 + h * .2
-        b.append(f'<rect x="{wx:.0f}" y="{wy:.0f}" width="{w * .18:.0f}" height="{h * .28:.0f}" stroke-width="1.8"/>')
-        b.append(f'<path d="M{wx + w * .09:.0f} {wy:.0f}v{h * .28:.0f}M{wx:.0f} {wy + h * .14:.0f}h{w * .18:.0f}" stroke-width="1"/>')
+    sh = h / tiers
+    r = roof * .55
+    for i in range(tiers):
+        inset = i * w * .1
+        xl, xr = x + inset, x + w - inset
+        wy1 = y1 - i * (sh + r)
+        wy0 = wy1 - sh
+        ww = xr - xl
+        b.append(f'<path d="M{xl:.1f} {wy1:.1f}V{wy0:.1f}H{xr:.1f}V{wy1:.1f}" stroke-width="2.4"/>')
+        b.append(mithila_band(xl + 5, xr - 5, wy0 + 9))
+        top = wy0 + 18
+        if i == 0:                                                   # ground storey: arched door, lotus above, a window each side
+            dw = max(12, ww * .22)
+            dh = min(sh * .5, 30)
+            b.append(f'<path d="M{(xl + xr) / 2 - dw / 2:.1f} {wy1:.1f}V{wy1 - dh + dw / 2:.1f}A{dw / 2:.1f} {dw / 2:.1f} 0 0 1 {(xl + xr) / 2 + dw / 2:.1f} {wy1 - dh + dw / 2:.1f}V{wy1:.1f}" stroke-width="2"/>')
+            b.append(dotpath([((xl + xr) / 2, wy1 - dh * .45)], w=2.6))
+            if wy1 - dh - top > 12:
+                b.append(lotus_motif((xl + xr) / 2, wy1 - dh - 7, 6))
+            for fx in (.17, .83):
+                wwid = ww * .15
+                hh = max(14, sh * .36)
+                b.append(newari_window(xl + ww * fx, wy1 - hh - sh * .14, wwid, hh))
+            b.append(dotpath([(xl + 7 + j * 11, wy1 - 5) for j in range(int((ww - 14) / 11) + 1)], w=1.6))
+        else:                                                        # upper storeys: a row of three carved windows (the tikijhya in the middle)
+            for fx, k in ((.2, .7), (.5, 1.0), (.8, .7)):
+                wwid = ww * .17 * (1.25 if k == 1.0 else 1)
+                hh = max(14, sh * .52)
+                b.append(newari_window(xl + ww * fx, top - 1, wwid, min(hh, wy1 - top - 4)))
+        # roof of this storey: upswept eaves, tile strokes, hanging fringe
+        ov = 9 + (tiers - i) * 3
+        ex0, ex1 = xl - ov, xr + ov
+        ry = wy0
+        b.append(f'<path d="M{ex0:.1f} {ry - 4:.1f}Q{xl - 2:.1f} {ry + 3:.1f} {xl + ov * .7:.1f} {ry - r * .45:.1f}L{xl + ov + 5:.1f} {ry - r:.1f}H{xr - ov - 5:.1f}L{xr - ov * .7:.1f} {ry - r * .45:.1f}Q{xr + 2:.1f} {ry + 3:.1f} {ex1:.1f} {ry - 4:.1f}Z" stroke-width="2.4"/>')
+        n = int((ex1 - ex0) / 8)
+        for j in range(1, n):
+            tx = ex0 + (ex1 - ex0) * j / n
+            u = (tx - (ex0 + ex1) / 2) / ((ex1 - ex0) / 2)
+            top_y = ry - r + max(0, abs(u) - .62) * r * 1.6
+            b.append(f'<path d="M{tx:.1f} {top_y:.1f}V{ry - 1:.1f}" stroke-width=".9"/>')
+        b.append(dotpath([(ex0 + 6 + j * 8, ry + 6) for j in range(int((ex1 - ex0 - 12) / 8) + 1)], w=1.5))
+    # pinnacle (gajur)
+    cx = x + w / 2
+    ty = y1 - tiers * (sh + r)
+    b.append(line(cx, ty, cx, ty - 12, w=1.8))
+    b.append(f'<path d="M{cx - 5:.1f} {ty - 5:.1f}h10M{cx - 3.5:.1f} {ty - 9:.1f}h7" stroke-width="1.6"/>')
+    b.append(f'<path d="M{cx - 2.5:.1f} {ty - 12:.1f}L{cx:.1f} {ty - 21:.1f}L{cx + 2.5:.1f} {ty - 12:.1f}Z" stroke-width="1.4"/>')
     return "".join(b)
 
 
@@ -1483,11 +1541,11 @@ def village():
         b.append(line(x, 186, x, 164, w=1.6))
     b.append(line(6, 172, 148, 172, w=1.4)); b.append(line(6, 180, 148, 180, w=1.2))
     # leftmost house, then neighbours
-    b.append(house(160, 120, 74, 36, 2))
-    b.append(house(306, 96, 94, 40, 3))
-    b.append(house(424, 130, 66, 32, 2))
-    b.append(house(582, 110, 86, 38, 3))
-    b.append(house(722, 84, 60, 28, 1))
+    b.append(house(170, 120, 92, 30, 2))
+    b.append(house(318, 100, 106, 32, 2))
+    b.append(house(442, 136, 84, 28, 2))
+    b.append(house(612, 112, 124, 30, 3))
+    b.append(house(760, 92, 76, 26, 2))
     # clothesline between two poles in the yard
     b.append(line(20, 186, 20, 52, w=2.6)); b.append(line(150, 186, 150, 58, w=2.6))
     line_pts = [(20, 56), (85, 70), (150, 60)]
