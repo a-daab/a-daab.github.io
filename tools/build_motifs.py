@@ -1531,6 +1531,56 @@ def house(x, w, h, roof, tiers=1):
     return "".join(b)
 
 
+def house_thatch(x, w, h):
+    """A simple village hut: plain mud walls with an ochre-painted base, a small door and window, a thick thatched roof and a curl of cooking smoke."""
+    y1 = 186
+    y0 = y1 - h
+    rise = h * .62
+    b = [f'<path d="M{x} {y1}V{y0}H{x + w}V{y1}" stroke-width="2.4"/>']
+    b.append(line(x, y1 - 12, x + w, y1 - 12, w=1.2))
+    b.append(dotpath([(x + 6 + j * 9, y1 - 6) for j in range(int((w - 12) / 9) + 1)], w=1.6))
+    dw = w * .22
+    b.append(f'<path d="M{x + w * .22:.1f} {y1}V{y0 + h * .3:.1f}H{x + w * .22 + dw:.1f}V{y1}" stroke-width="2"/>')
+    b.append(f'<rect x="{x + w * .62:.1f}" y="{y0 + h * .22:.1f}" width="{w * .17:.1f}" height="{h * .26:.1f}" stroke-width="1.8"/>')
+    b.append(f'<path d="M{x - 9} {y0 + 3}L{x + w * .2:.1f} {y0 - rise:.1f}H{x + w * .8:.1f}L{x + w + 9} {y0 + 3}Z" stroke-width="2.4"/>')
+    for j in range(1, 7):                                            # thatch: a few long soft strokes, a ragged fringe at the eaves
+        tx = x - 9 + (w + 18) * j / 7
+        b.append(f'<path d="M{tx:.1f} {y0 + 1:.1f}L{x + w * (.2 + .6 * j / 7):.1f} {y0 - rise + 3:.1f}" stroke-width="1"/>')
+    b.append(path([(x - 9 + (w + 18) * j / 14, y0 + 3 + (3 if j % 2 else 0)) for j in range(15)], w=1.2))
+    sx, sy = x + w * .72, y0 - rise - 2                              # smoke
+    pts = [(sx + 5 * math.sin(t * .9), sy - t * 3.6) for t in range(9)]
+    b.append(path(pts, w=1.2, a=.2))
+    return "".join(b)
+
+
+def house_stone(x, w, h):
+    """A hill-village house: two storeys of plain stone-and-mud wall, a wooden balcony across the upper floor, and a low tin roof."""
+    y1 = 186
+    sh = h / 2
+    ym = y1 - sh
+    y0 = y1 - h
+    b = [f'<path d="M{x} {y1}V{y0}H{x + w}V{y1}" stroke-width="2.4"/>']
+    b.append(line(x, ym, x + w, ym, w=1.4))
+    # ground floor: door and small window
+    b.append(f'<path d="M{x + w * .14:.1f} {y1}V{ym + sh * .3:.1f}H{x + w * .14 + w * .2:.1f}V{y1}" stroke-width="2"/>')
+    b.append(f'<rect x="{x + w * .58:.1f}" y="{ym + sh * .3:.1f}" width="{w * .16:.1f}" height="{sh * .3:.1f}" stroke-width="1.8"/>')
+    # balcony
+    by = ym - 2
+    b.append(f'<path d="M{x - 6} {by:.1f}H{x + w + 6}" stroke-width="2"/>')
+    b.append(f'<path d="M{x - 6} {by - 11:.1f}H{x + w + 6}" stroke-width="1.6"/>')
+    b.append(f'<path d="' + "".join(f"M{x - 4 + j * 8} {by:.1f}v-11" for j in range(int((w + 8) / 8) + 1)) + '" stroke-width="1.1"/>')
+    # upper floor: two small shuttered windows
+    for fx in (.2, .62):
+        b.append(f'<rect x="{x + w * fx:.1f}" y="{y0 + sh * .22:.1f}" width="{w * .18:.1f}" height="{sh * .38:.1f}" stroke-width="1.8"/>')
+    b.append(dotpath([(x + 7 + j * 10, y0 + 7) for j in range(int((w - 14) / 10) + 1)], w=1.6))
+    # low pitched tin roof
+    rise = sh * .48
+    b.append(f'<path d="M{x - 8} {y0}L{x + w / 2:.1f} {y0 - rise:.1f}L{x + w + 8} {y0}Z" stroke-width="2.4"/>')
+    b.append(path([(x + 6, y0 - 3), (x + w / 2, y0 - rise + 4), (x + w - 6, y0 - 3)], w=1.1, a=.0))
+    b.append(f'<path d="M{x + w * .3:.1f} {y0 - 1:.1f}L{x + w / 2:.1f} {y0 - rise + 9:.1f}L{x + w * .7:.1f} {y0 - 1:.1f}" stroke-width="1"/>')
+    return "".join(b)
+
+
 def village():
     b = []
     W = 900
@@ -1542,10 +1592,11 @@ def village():
     b.append(line(6, 172, 148, 172, w=1.4)); b.append(line(6, 180, 148, 180, w=1.2))
     # leftmost house, then neighbours
     b.append(house(170, 120, 92, 30, 2))
-    b.append(house(318, 100, 106, 32, 2))
-    b.append(house(442, 136, 84, 28, 2))
-    b.append(house(612, 112, 124, 30, 3))
-    b.append(house(760, 92, 76, 26, 2))
+    b.append(house_thatch(316, 92, 46))
+    b.append(house_stone(430, 104, 86))
+    b.append(house_thatch(566, 74, 38))
+    b.append(house(670, 112, 124, 30, 3))
+    b.append(house_stone(806, 80, 66))
     # clothesline between two poles in the yard
     b.append(line(20, 186, 20, 52, w=2.6)); b.append(line(150, 186, 150, 58, w=2.6))
     line_pts = [(20, 56), (85, 70), (150, 60)]
@@ -1571,10 +1622,6 @@ def village():
         kind += 1
     for x in range(mx0 + 2, mx1, 4):
         b.append(line(x, my1, x, my1 + 10, w=1.1))
-    # birds and a prayer-flag string over the rooftops
-    b.append(path([(300, 52), (450, 38), (600, 52)], w=1.1, a=.2))
-    for i, x in enumerate(range(318, 590, 28)):
-        b.append(f'<path d="M{x} {49 - 10 * math.sin((x - 300) / 285 * math.pi) * 0.0 + 0:.0f}l7 2l-1 9l-6 -1z" stroke-width="1"/>')
     write("village", (900, 210), "".join(b))
 
 
