@@ -1027,36 +1027,90 @@ def spiral(cx, cy, r, turns=2.4, start=0.0, dirn=1, n=70, w=1.6, a=.25, inner=2.
 
 
 # ---------------------------------------------------------------- loom: sari strips woven in as you scroll
+SARI_KINDS = ["paisley", "temple", "bandhani", "vine", "check", "ikat", "zari", "buti", "eye", "chevron"]
+
+
+def sari_pattern(kind, x0, x1, y, h):
+    """A strip cut from a sari, in a recognisable sari design (drawn as line work)."""
+    o = []
+    mid = y + h / 2
+    if kind == "paisley":                                   # classic paisley (ambi): round bulb, tail curling up and over
+        for i, x in enumerate(range(int(x0) + 14, int(x1) - 18, 30)):
+            fl = 1 if i % 2 == 0 else -1
+            pts = [(x + 14 * fl, y + 3), (x + 15 * fl, y + 10), (x + 9 * fl, y + h - 3), (x, y + h - 3), (x - 6 * fl, y + 14), (x - 2 * fl, y + 6), (x + 5 * fl, y + 5), (x + 9 * fl, y + 9)]
+            o.append(path(pts, w=1.6, a=.1, closed=True))
+            inner = [(x + 4 * fl + (px - x) * .45, y + 12 + (py - y - 12) * .45) for px, py in pts]
+            o.append(path(inner, w=1, a=.1, closed=True))
+            o.append(dotpath([(x + 3 * fl, y + 15), (x + 8 * fl, y + 11), (x - 1 * fl, y + 11)], w=2))
+    elif kind == "temple":                                  # temple (gopuram) border: stepped triangles over a zari line
+        o.append(line(x0, y + h - 3, x1, y + h - 3, w=1.4))
+        for x in range(int(x0) + 4, int(x1) - 14, 14):
+            o.append(f'<path d="M{x} {y + h - 3}l7 -{h - 8}l7 {h - 8}" stroke-width="1.5"/>')
+            o.append(dotpath([(x + 7, y + h - 9)], w=2))
+        o.append(line(x0, y + 2, x1, y + 2, w=1))
+    elif kind == "bandhani":                                # tie-dye dot clusters on a lattice
+        for r, yy in enumerate((y + h * .3, y + h * .72)):
+            for x in range(int(x0) + 8 + (11 if r else 0), int(x1) - 8, 22):
+                o.append(dotpath([(x, yy), (x - 3.5, yy - 3.5), (x + 3.5, yy - 3.5), (x - 3.5, yy + 3.5), (x + 3.5, yy + 3.5)], w=1.8))
+    elif kind == "vine":                                    # floral jaal: a flowing vine with leaves and small blooms
+        pts = [(x, mid + 5 * math.sin(x / 15.0)) for x in range(int(x0) + 4, int(x1) - 4, 8)]
+        o.append(path(pts, w=1.3, a=.1))
+        for i, x in enumerate(range(int(x0) + 14, int(x1) - 14, 24)):
+            yy = mid + 5 * math.sin(x / 15.0)
+            up = -1 if i % 2 == 0 else 1
+            o.append(leaf(x, yy, math.radians(-90 * up - 25), 11, 3.2, veins=False))
+            o.append(dotpath([(x + 12, yy + up * 5)], w=3))
+    elif kind == "check":                                   # kota-style check
+        for x in range(int(x0) + 4, int(x1) - 2, 8):
+            o.append(line(x, y + 1.5, x, y + h - 1.5, w=1.4 if (x // 8) % 3 == 0 else .8))
+        for yy in (y + 4, y + h / 2, y + h - 4):
+            o.append(line(x0 + 2, yy, x1 - 2, yy, w=1.4 if yy == y + h / 2 else .8))
+    elif kind == "ikat":                                    # ikat: feathered diamonds
+        for x in range(int(x0) + 14, int(x1) - 14, 26):
+            o.append(f'<path d="M{x - 11} {mid}l11 -{h / 2 - 3:.0f}l11 {h / 2 - 3:.0f}l-11 {h / 2 - 3:.0f}z" stroke-width="1.5"/><path d="M{x - 5} {mid}l5 -6l5 6l-5 6z" stroke-width="1.1"/>')
+            o.append(f'<path d="M{x - 17} {mid}h-5M{x + 17} {mid}h5M{x - 15} {mid - 4}l-4 -2M{x - 15} {mid + 4}l-4 2M{x + 15} {mid - 4}l4 -2M{x + 15} {mid + 4}l4 2" stroke-width="1"/>')
+    elif kind == "zari":                                    # zari stripes: a bold gold line flanked by fine ones, dotted between
+        for dy, w in ((-8, .9), (-5, 1.6), (0, 2.6), (5, 1.6), (8, .9)):
+            o.append(line(x0 + 2, mid + dy * (h / 24), x1 - 2, mid + dy * (h / 24), w=w))
+        o.append(dotpath([(x, mid - 2.5 * h / 24) for x in range(int(x0) + 8, int(x1) - 4, 10)], w=1.6))
+    elif kind == "buti":                                    # buti: small scattered flowers in offset rows
+        for r, yy in enumerate((y + h * .32, y + h * .7)):
+            for x in range(int(x0) + 10 + (13 if r else 0), int(x1) - 10, 26):
+                o.append(dotpath([(x + 3.6 * math.cos(a), yy + 3.6 * math.sin(a)) for a in [k * 2 * math.pi / 5 for k in range(5)]], w=2.2))
+                o.append(dotpath([(x, yy)], w=2.6))
+    elif kind == "eye":                                     # peacock-eye motif
+        for x in range(int(x0) + 14, int(x1) - 14, 28):
+            o.append(ellipse(x, mid, 11, h / 2 - 3, w=1.4, n=12)); o.append(circle(x, mid, 4.5, w=1.3)); o.append(dotpath([(x, mid)], w=2.4))
+            o.append(f'<path d="M{x - 14} {mid}h-4M{x + 14} {mid}h4" stroke-width="1"/>')
+    else:                                                   # chevron / kangura zigzag border
+        for yy in (y + 8, y + h - 8):
+            o.append(path([(x, yy + (5 if (k % 2) else -5)) for k, x in enumerate(range(int(x0) + 4, int(x1), 9))], w=1.4, a=.1))
+    return "".join(o)
+
+
 def weave():
-    W, H = 560, 440
+    W, H = 560, 760
     xs = [40 + i * 20 for i in range(25)]
+    top, bot = 24, H - 24
     b = []
-    for yy in (12, 22, 418, 428):
-        b.append(path([(18, yy), (280, yy + R.uniform(-1, 1)), (542, yy)], w=3.2 if yy in (12, 428) else 1.4, a=.4))
-    for x in (18, 542):
-        b.append(path([(x, 12), (x + R.uniform(-1, 1), 220), (x, 428)], w=3.4, a=.4))
+    # only a top and a bottom beam: the warp is tied to them, there are no side posts
+    for yy, ww in ((12, 3.4), (22, 1.4), (H - 22, 1.4), (H - 12, 3.4)):
+        b.append(path([(18, yy), (280, yy + R.uniform(-1, 1)), (542, yy)], w=ww, a=.4))
     for x in xs:                                                  # warp threads
-        b.append(line(x, 24, x, 418, w=1.3))
-    kinds = ["hatch", "dots", "zig", "bands", "diamond"]
-    for j in range(12):
-        y, h = 44 + j * 30, 24
+        b.append(line(x, top, x, bot, w=1.3))
+    y = 44
+    j = 0
+    while y + 24 < bot - 6:
+        h = 24
         g = [f'<rect x="30" y="{y}" width="500" height="{h}" fill="#fff" stroke-width="2.4"/>']
-        kind = kinds[j % 5]
-        if kind == "hatch":
-            g.append(f'<path d="' + "".join(f"M{x} {y + 4}v{h - 8}" for x in range(40, 520, 7)) + '" stroke-width="1"/>')
-        elif kind == "dots":
-            g.append(dotpath([(x, y + hh) for x in range(40, 524, 12) for hh in (7, 17)], w=2.4))
-        elif kind == "zig":
-            g.append(path([(x, y + (5 if (x // 12) % 2 else h - 5)) for x in range(36, 530, 12)], w=1.5, a=.2))
-        elif kind == "bands":
-            g.append(f'<path d="M34 {y + 7}h492M34 {y + h - 7}h492" stroke-width="1.2"/>' + dotpath([(x, y + h / 2) for x in range(46, 524, 16)], w=3))
-        else:
-            g.append("".join(f'<path d="M{x} {y + h / 2}l8 -8l8 8l-8 8z" stroke-width="1.4"/>' for x in range(40, 520, 24)))
+        g.append(sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h))
         b.append(f'<g class="weft" style="--j:{j};--dir:{1 if j % 2 == 0 else -1}">{"".join(g)}</g>')
-        for k, x in enumerate(xs):                                # thread passes over the strip here
+        for k, x in enumerate(xs):                                # the thread passes over the strip here
             if (j + k) % 2 == 1:
-                b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke="#fff" stroke-width="6"/><line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke-width="1.5"/>')
-    write("weave", (W, H), "".join(b))
+                b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke="#fff" stroke-width="3.6"/><line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" stroke-width="1.3"/>')
+        y += 30
+        j += 1
+    write("weave", (W, H), "".join(b), extra=' preserveAspectRatio="none"')
 
 
 # ---------------------------------------------------------------- hands, palms up, cupped; arms from the top right
