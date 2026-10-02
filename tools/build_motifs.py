@@ -1581,35 +1581,71 @@ def house_stone(x, w, h):
     return "".join(b)
 
 
-def pipal_tree(cx, base=186):
-    """A pipal (sacred fig) tree on a stone resting platform, the kind that shades a Nepali village crossing: scalloped crown of heart-shaped leaves, a flared trunk and surface roots."""
+def rhododendron_tree(cx, base=186, seed=5):
+    """A lali gurans (tree rhododendron), Nepal's national flower: a gnarled leaning trunk, forking branches, irregular clumps of leaves and clusters of blossom."""
+    rng = random.Random(seed)
     b = []
-    ccy, rx, ry = base - 100, 52, 40
-    n = 18
-    pts = [(cx + rx * math.cos(2 * math.pi * k / n - math.pi / 2), ccy + ry * math.sin(2 * math.pi * k / n - math.pi / 2)) for k in range(n + 1)]
-    d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
-    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
-        r = math.hypot(x1 - x0, y1 - y0) * .62
-        d += f"A{r:.1f} {r:.1f} 0 0 1 {x1:.1f} {y1:.1f}"
-    b.append(f'<path d="{d}Z" stroke-width="2.4"/>')
-    # heart-shaped leaves with the long drip tip of a pipal leaf, hung in staggered rows
-    for row, dy in enumerate((-24, -9, 6, 21)):
-        for k in range(-3, 4):
-            x = cx + k * 15 + (7 if row % 2 else 0)
-            y = ccy + dy
-            if ((x - cx) / (rx - 12)) ** 2 + ((y - ccy) / (ry - 9)) ** 2 > 1:
-                continue
-            sz = 5.2
-            b.append(f'<path d="M{x:.1f} {y + sz * 1.4:.1f}C{x - sz * 1.5:.1f} {y + sz * .1:.1f} {x - sz * .9:.1f} {y - sz:.1f} {x:.1f} {y - sz * .3:.1f}C{x + sz * .9:.1f} {y - sz:.1f} {x + sz * 1.5:.1f} {y + sz * .1:.1f} {x:.1f} {y + sz * 1.4:.1f}Z" stroke-width="1.2"/>')
-    # trunk, flaring into roots, standing on the platform
-    top = ccy + ry - 6
-    b.append(f'<path d="M{cx - 5} {top}C{cx - 5} {top + 22} {cx - 7} {base - 24} {cx - 15} {base - 12}M{cx + 5} {top}C{cx + 5} {top + 22} {cx + 7} {base - 24} {cx + 15} {base - 12}" stroke-width="2.2"/>')
-    b.append(f'<path d="M{cx - 1} {top + 6}C{cx - 3} {top + 20} {cx - 2} {base - 28} {cx - 4} {base - 14}M{cx + 2} {top + 14}C{cx + 3} {top + 26} {cx + 1} {base - 26} {cx + 3} {base - 14}" stroke-width="1"/>')
-    # the platform (chautara): two stone steps
-    b.append(f'<path d="M{cx - 40} {base}V{base - 10}H{cx + 40}V{base}" stroke-width="2.2"/>')
-    b.append(line(cx - 46, base - 10, cx + 46, base - 10, w=2.2))
-    b.append(dotpath([(cx - 34 + j * 11, base - 5) for j in range(7)], w=1.6))
-    return "".join(b)
+    clumps = []
+
+    def jit(v, k=1.0):
+        return v + rng.uniform(-k, k)
+
+    def limb(x, y, ang, ln, wid, depth):
+        ex, ey = x + ln * math.cos(ang), y + ln * math.sin(ang)
+        bend = rng.uniform(-.35, .35) * ln
+        mx, my = (x + ex) / 2 + bend * -math.sin(ang), (y + ey) / 2 + bend * math.cos(ang)
+        b.append(f'<path d="M{x:.1f} {y:.1f}Q{mx:.1f} {my:.1f} {ex:.1f} {ey:.1f}" stroke-width="{wid:.1f}"/>')
+        if depth == 0 or ln < 9:
+            clumps.append((ex, ey, ang))
+            return
+        n = 2 if depth > 1 or rng.random() < .5 else 3
+        spread = rng.uniform(.5, .8)
+        for k in range(n):
+            da = (k - (n - 1) / 2) * spread + rng.uniform(-.2, .2)
+            limb(ex, ey, ang + da, ln * rng.uniform(.62, .78), max(1.0, wid * .62), depth - 1)
+        if rng.random() < .7:                                          # a short side twig partway along
+            clumps.append((mx + rng.uniform(-3, 3), my + rng.uniform(-3, 3), ang))
+
+    # trunk: leans a little, wider at the base with roots, wrinkled bark
+    lean = rng.uniform(-.12, .1)
+    tx0, ty0 = cx, base
+    tx1, ty1 = cx + 8 * lean * 10 / 3 + 4, base - 60
+    for off, wid in ((-5.5, 2.2), (5.5, 2.2)):
+        b.append(f'<path d="M{tx0 + off * 1.9:.1f} {base}C{tx0 + off * .7:.1f} {base - 16} {tx0 + off * .9 - 2:.1f} {base - 34} {tx1 + off * .6:.1f} {ty1}" stroke-width="{wid}"/>')
+    b.append(f'<path d="M{tx0 - 16:.1f} {base}C{tx0 - 9:.1f} {base - 3} {tx0 - 8:.1f} {base - 8} {tx0 - 6:.1f} {base - 14}M{tx0 + 16:.1f} {base}C{tx0 + 9:.1f} {base - 3} {tx0 + 8:.1f} {base - 8} {tx0 + 6:.1f} {base - 14}" stroke-width="1.6"/>')
+    for k in range(7):                                                  # bark
+        yy = base - 10 - k * 7
+        xx = tx0 + rng.uniform(-3, 3) + (tx1 - tx0) * (k / 8)
+        b.append(f'<path d="M{xx - 2:.1f} {yy:.1f}q2 -3 {rng.uniform(-1, 3):.1f} -6" stroke-width="1"/>')
+    limb(tx1 - 1, ty1 + 2, -math.pi / 2 + lean - .5, 28, 3.4, 2)
+    limb(tx1 + 1, ty1 + 2, -math.pi / 2 + lean + .45, 30, 3.4, 2)
+    limb(tx1, ty1 + 4, -math.pi / 2 + lean + .02, 26, 3.0, 2)
+    # foliage clumps (irregular blobs) with leaves, and blossom on some
+    for i, (x, y, ang) in enumerate(clumps):
+        r = rng.uniform(10, 14)
+        n = 9
+        pts = [(x + r * rng.uniform(.75, 1.2) * math.cos(2 * math.pi * k / n), y - r * .2 + r * .8 * rng.uniform(.75, 1.2) * math.sin(2 * math.pi * k / n)) for k in range(n)]
+        d = ""
+        for k in range(n):
+            (x0, y0), (x1, y1) = pts[k], pts[(k + 1) % n]
+            m0 = ((pts[k - 1][0] + x0) / 2, (pts[k - 1][1] + y0) / 2)
+            if k == 0:
+                d += f"M{m0[0]:.1f} {m0[1]:.1f}"
+            d += f"Q{x0:.1f} {y0:.1f} {(x0 + x1) / 2:.1f} {(y0 + y1) / 2:.1f}"
+        b.append(f'<path d="{d}Z" stroke-width="1.8"/>')
+        for _ in range(3):                                              # leaves: small pointed ovals fanning outward
+            lx, ly_ = x + rng.uniform(-r * .6, r * .6), y - r * .2 + rng.uniform(-r * .4, r * .4)
+            la = rng.uniform(0, 2 * math.pi)
+            L = rng.uniform(5.5, 8)
+            ex, ey = lx + L * math.cos(la), ly_ + L * math.sin(la)
+            px_, py_ = -math.sin(la) * L * .28, math.cos(la) * L * .28
+            b.append(f'<path d="M{lx:.1f} {ly_:.1f}Q{(lx + ex) / 2 + px_:.1f} {(ly_ + ey) / 2 + py_:.1f} {ex:.1f} {ey:.1f}Q{(lx + ex) / 2 - px_:.1f} {(ly_ + ey) / 2 - py_:.1f} {lx:.1f} {ly_:.1f}Z" stroke-width="1"/>')
+        if i % 2 == 0:                                                  # a bunch of blossoms
+            for _ in range(2):
+                fx, fy = x + rng.uniform(-r * .45, r * .45), y - r * .25 + rng.uniform(-r * .3, r * .3)
+                b.append("".join(f'<circle cx="{fx + 2.2 * math.cos(q * 2 * math.pi / 5):.1f}" cy="{fy + 2.2 * math.sin(q * 2 * math.pi / 5):.1f}" r="1.6" stroke-width=".9"/>' for q in range(5)))
+    b.append(dotpath([(cx + rng.uniform(-34, 34), base + rng.uniform(-6, -1)) for _ in range(9)], w=1.8))   # fallen petals
+    return f'<g transform="translate({cx} {base}) scale(1.12) translate({-cx} {-base})">' + "".join(b) + "</g>"
 
 
 def village():
@@ -1627,7 +1663,7 @@ def village():
     b.append(house_stone(430, 104, 86))
     b.append(house(566, 112, 124, 30, 3))
     b.append(house_stone(702, 80, 66))
-    b.append(pipal_tree(842))
+    b.append(rhododendron_tree(822))
     # clothesline between two poles in the yard: smaller, with the clothes hanging from the line by their shoulders / waists
     px0, px1, pt = 14, 148, 104
     b.append(line(px0, 186, px0, pt, w=2.4)); b.append(line(px1, 186, px1, pt, w=2.4))
