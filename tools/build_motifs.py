@@ -1132,6 +1132,7 @@ def weave():
     j = 0
     inv_rng = random.Random(23)                                   # which strips are orange-with-white (fixed, not changing per page load)
     prev_inv = False
+    shade_rng = random.Random(41)
     while y + 24 < bot - 6:
         h = 24
         inv = inv_rng.random() < 0.4
@@ -1139,7 +1140,10 @@ def weave():
             inv = False
         prev_inv = inv
         if inv:
-            g = [f'<rect x="30" y="{y}" width="500" height="{h}" style="fill:#E35A00;stroke:#E35A00" stroke-width="2.4"/>',
+            import colorsys                                       # every orange strip gets its own shade, from deep burnt orange to light apricot
+            rr, gg, bb = colorsys.hls_to_rgb(shade_rng.uniform(16, 31) / 360, shade_rng.uniform(.30, .60), shade_rng.uniform(.85, 1.0))
+            shade = f"#{round(rr * 255):02X}{round(gg * 255):02X}{round(bb * 255):02X}"
+            g = [f'<rect x="30" y="{y}" width="500" height="{h}" style="fill:{shade};stroke:{shade}" stroke-width="2.4"/>',
                  f'<g stroke="#fff">{sari_pattern(SARI_KINDS[j % len(SARI_KINDS)], 36, 524, y, h)}</g>']
         else:
             g = [f'<rect x="30" y="{y}" width="500" height="{h}" fill="#fff" stroke-width="2.4"/>',
@@ -1147,7 +1151,7 @@ def weave():
         b.append(f'<g class="weft" style="--j:{j};--dir:{1 if j % 2 == 0 else -1}">{"".join(g)}</g>')
         for k, x in enumerate(xs):                                # the thread passes over the strip here
             if (j + k) % 2 == 1:
-                halo, core = ("#E35A00", "#fff") if inv else ("#fff", "currentColor")
+                halo, core = (shade, "#fff") if inv else ("#fff", "currentColor")
                 b.append(f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" style="stroke:{halo}" stroke-width="3.6"/>'
                          f'<line x1="{x}" y1="{y - 1}" x2="{x}" y2="{y + h + 1}" style="stroke:{core}" stroke-width="1.3"/>')
         y += 30
