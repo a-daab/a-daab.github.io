@@ -978,6 +978,8 @@ def dividers():
             ax, ay = cx + (HX - .5 + rng.uniform(-.4, .4)) * math.cos(ang), cy + (HY - .3) * math.sin(ang)
             a2 = ang + .17
             bx, by = cx + (RX + .4 + rng.uniform(-.5, .5)) * math.cos(a2), cy + (RY + .4) * math.sin(a2)
+            if abs(by - ay) < 0.4 * abs(bx - ax):                            # no near-horizontal stitches at the two ends of the ring
+                continue
             d += f"M{ax:.1f} {ay:.1f}L{bx:.1f} {by:.1f}"
         return (f'<path d="{o}{h}" fill-rule="evenodd" {BG} stroke="none"/><path d="{d}" stroke-width="1.5"/>'
                 f'<path d="{o}" stroke-width="1.2"/><path d="{h}" stroke-width="1.2"/>')
