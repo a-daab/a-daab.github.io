@@ -1282,8 +1282,8 @@ LOBES = [   # (cx, cy, R, dirn, start angle): back to front
 TAIL_LOBES = [(88, 214, 21), (66, 221, 16), (48, 226, 12)]
 CLOUD_SCALE = 1.12                 # widens the cloud so it fills the right half
 CLOUD_YMAX = 250                   # lowest point of the cloud in its own (upright) coordinates
-CLOUD_HIDE = 3                     # units of the (new) top edge tucked under the previous section: about a millimetre
-CLOUD_H = 280
+CLOUD_HIDE = 55                    # units of the cloud's top (about a fifth of it) tucked under the previous section
+CLOUD_H = 228
 
 
 def cloud_circles():
