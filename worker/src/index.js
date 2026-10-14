@@ -1,5 +1,5 @@
 /**
- * YogaMaty forms endpoint — one Cloudflare Worker for three forms (Specification §5.3, §6, §7).
+ * YOGAMATY forms endpoint — one Cloudflare Worker for three forms (Specification §8.3, §9, §10.2).
  *
  *   POST /allies      allies application      -> emailed to ALLIES_TO,    nothing stored
  *   POST /wholesale   wholesale inquiry       -> emailed to WHOLESALE_TO, nothing stored
@@ -12,9 +12,9 @@
 
 const JSON_HEADERS = { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' };
 
-const SKILLS = new Set([
-  'Software engineering', 'Security / cryptography', 'Distributed ledgers', 'Product / UX design', 'Data and analytics',
-  'Supply chain and logistics', 'Law and policy', 'Human rights / anti-trafficking', 'Partnerships and fundraising', 'Communications',
+const EXPERTISE = new Set([
+  'Software engineering', 'Programming-language design', 'Cybersecurity', 'Open-source development', 'Data architecture',
+  'Research', 'UX design', 'Technical writing', 'other',
 ]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -54,15 +54,15 @@ const oneLine = (s) => s.replace(/[\r\n]+/g, ' ');
 function validateAllies(b) {
   const errors = {};
   const v = {
-    first_name: str(b.first_name, 80), last_name: str(b.last_name, 80), email: str(b.email, 200), company: str(b.company, 160),
-    statement: str(b.statement, 4000), link: str(b.link, 300), country: str(b.country, 120), skills_other: str(b.skills_other, 200),
-    skills: Array.isArray(b.skills) ? b.skills.filter((s) => SKILLS.has(s)) : [],
+    full_name: str(b.full_name, 160), email: str(b.email, 200), organization: str(b.organization, 160),
+    expertise: str(b.expertise, 60), expertise_other: str(b.expertise_other, 160), statement: str(b.statement, 4000),
   };
-  for (const k of ['first_name', 'last_name', 'company', 'statement']) if (!v[k]) errors[k] = 'Required';
+  for (const k of ['full_name', 'statement']) if (!v[k]) errors[k] = 'Required';
   if (!EMAIL_RE.test(v.email)) errors.email = 'Valid email required';
+  if (!EXPERTISE.has(v.expertise)) errors.expertise = 'Choose an area of expertise';
+  else if (v.expertise === 'other' && !v.expertise_other) errors.expertise_other = 'Tell us your area of expertise';
   if (v.statement && wordCount(v.statement) > 250) errors.statement = 'Maximum 250 words';
-  if (v.link && !validUrl(v.link)) errors.link = 'Must be a web address';
-  if (!v.skills.length && !v.skills_other) errors.skills = 'Choose a skill or add your own';
+  if (b.ack !== true) errors.ack = 'Acknowledgment required';
   if (b.consent !== true) errors.consent = 'Consent required';
   return { v, errors };
 }
@@ -122,20 +122,18 @@ async function sendMail(env, { to, subject, text, replyTo }) {
 }
 
 const alliesText = (v) => [
-  `New allies application`,
+  `New Founding Technical Allies application`,
   ``,
-  `Name:      ${oneLine(v.first_name)} ${oneLine(v.last_name)}`,
+  `Name:      ${oneLine(v.full_name)}`,
   `Email:     ${v.email}`,
-  `Company / title: ${oneLine(v.company)}`,
-  `Skills:    ${[...v.skills, v.skills_other].filter(Boolean).join('; ')}`,
-  `Link:      ${v.link || '—'}`,
-  `Country / time zone: ${oneLine(v.country) || '—'}`,
+  `Company / organization / role: ${oneLine(v.organization) || '—'}`,
+  `Primary area of expertise: ${oneLine(v.expertise === 'other' ? v.expertise_other : v.expertise)}`,
   ``,
   `Statement (${wordCount(v.statement)} words):`,
   v.statement,
   ``,
-  `— Sent from yogamaty.com. Consent to the privacy policy was given. Reply to this email to answer the applicant`,
-  `   (request a résumé, or send a kind decline). Nothing is stored on the website.`,
+  `— Sent from yogamaty.com. The applicant acknowledged this is an initial voluntary expression of interest and consented to the privacy policy.`,
+  `   Reply to this email to request more information or send a kind decline. Nothing is stored on the website.`,
 ].join('\n');
 
 const wholesaleText = (v) => [
@@ -179,7 +177,7 @@ async function handleForm(kind, request, env, ctx, c) {
     const { v, errors } = validateAllies(body);
     if (Object.keys(errors).length) return respond({ ok: false, errors }, 422, c.headers);
     try {
-      await sendMail(env, { to: env.ALLIES_TO, subject: `Allies application — ${v.first_name} ${v.last_name}`, text: alliesText(v), replyTo: v.email });
+      await sendMail(env, { to: env.ALLIES_TO, subject: `Allies application — ${v.full_name}`, text: alliesText(v), replyTo: v.email });
     } catch { return respond({ ok: false, error: 'mail_failed' }, 502, c.headers); }
     return respond({ ok: true }, 200, c.headers);
   }

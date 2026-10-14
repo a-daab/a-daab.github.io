@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set path = "refunds-and-cancellations" %}
+{% set title = "Refunds and Cancellations" %}
+{% set description = "Cancellations and refunds for YOGAMATY™ pre-purchases: before and after production starts, late delivery, and returns of delivered pieces." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Refunds and Cancellations</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> Items in brackets still need confirmation.</div>
+    <div class="table-wrap"><table class="plain"><thead><tr><th>Situation</th><th>Policy</th></tr></thead><tbody>
+      <tr><td>Cancel before production starts</td><td>Full refund.</td></tr>
+      <tr><td>Cancel after production starts</td><td>{{ ph('ADD POLICY — e.g. refund less materials and artisan payment already made') }}</td></tr>
+      <tr><td>Delivery will miss the target</td><td>We notify you with a revised date and offer cancellation with a full refund.</td></tr>
+      <tr><td>Return of a delivered piece</td><td>Within 30 days, unused and as sold. You pay return postage unless you provide proof that the piece has serious quality issues or is significantly different from what was expected. Return address: {{ ph('ADD RETURN ADDRESS') }}. Refund timeline: {{ ph('ADD REFUND TIMELINE') }}.</td></tr>
+    </tbody></table></div>
+    <p><strong>Handmade variation.</strong> Each piece is unique and handmade, so your YOGAMATY™ will resemble the image shown but have its own unique color palette. This alone is not a reason for the return-postage exception.</p>
+    <p>If an order will be late, we will tell you and give you the option to cancel for a prompt refund. To start a return or cancellation, <a href="{{ url('contact') }}">contact us</a> and quote your order number. A pre-purchase is a purchase of a product, not a donation or a loan.</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,4 +1,4 @@
-/* Supply chain passport — renders a batch record (/data/batches/<id>.json) into the page.
+/* Supply-Chain Explorer — renders a batch record (/data/batches/<id>.json) into the page.
    One HTML template, any batch: add a batch = add a JSON file. QR codes encode /passport/<batch>?mat=<serial>. */
 (function () {
   'use strict';
@@ -78,29 +78,29 @@
     media_ = media || {};
     var html = [];
     var published = b.status === 'published';
-    var mats = b.mats || {};
+    var pieces = b.pieces || {};
 
     /* ---- batch summary ---- */
     html.push('<section class="sec sec--white sec--tight" id="batch"><div class="wrap">');
     if (!published) html.push('<div class="notice" role="note"><strong>' + esc(T('template_title')) + '</strong> ' + esc(T('template_body')) + '</div>');
     html.push('<dl class="pp-meta">' +
-      '<div><dt>' + esc(T('product')) + '</dt><dd>YogaMaty</dd></div>' +
+      '<div><dt>' + esc(T('product')) + '</dt><dd>YOGAMATY™</dd></div>' +
       '<div><dt>' + esc(T('batch_id')) + '</dt><dd class="data">' + esc(b.batch_id) + '</dd></div>' +
       '<div><dt>' + esc(T('opened')) + '</dt><dd>' + val(b.opened, T('opened')) + '</dd></div>' +
       '<div><dt>' + esc(T('closed')) + '</dt><dd>' + val(b.closed, T('closed')) + '</dd></div>' +
-      '<div><dt>' + esc(T('mats_in_batch')) + '</dt><dd>' + val(mats.count, T('mats_in_batch')) + '</dd></div>' +
+      '<div><dt>' + esc(T('pieces_in_batch')) + '</dt><dd>' + val(pieces.count, T('pieces_in_batch')) + '</dd></div>' +
       '</dl></div></section>');
 
-    /* ---- this mat ---- */
+    /* ---- this piece ---- */
     var serial = (q.get('mat') || '').replace(/[^0-9A-Za-z-]/g, '').slice(0, 10);
     if (serial) {
-      var mr = (b.mat_records || {})[serial] || {};
-      html.push('<section class="sec sec--orange sec--tight" id="your-mat"><div class="wrap grid grid--split">' +
-        '<div><span class="eyebrow">' + esc(T('your_mat')) + '</span>' +
+      var mr = (b.piece_records || {})[serial] || {};
+      html.push('<section class="sec sec--orange sec--tight" id="your-piece"><div class="wrap grid grid--split">' +
+        '<div><span class="eyebrow">' + esc(T('your_piece')) + '</span>' +
         '<h2 class="display" style="font-size:clamp(2.4rem,1rem + 5vw,4.4rem)">No. ' + esc(serial) + '</h2>' +
-        '<p class="statement">' + esc(T('your_mat_lead')) + ' ' + esc(b.batch_id) + '.</p></div>' +
+        '<p class="statement">' + esc(T('your_piece_lead')) + ' ' + esc(b.batch_id) + '.</p></div>' +
         '<div><dl class="pp-meta" style="margin:0"><div><dt style="color:#fff">' + esc(T('assembled')) + '</dt><dd>' + val(mr.assembled, T('assembled')) + '</dd></div></dl>' +
-        '<div style="margin-top:1.6rem">' + mediaBlock('MAT', serial) + '</div></div></div></section>');
+        '<div style="margin-top:1.6rem">' + mediaBlock('PIECE', serial) + '</div></div></div></section>');
     }
 
     /* ---- how this data was collected ---- */
@@ -117,17 +117,17 @@
 
     /* ---- electricity disclosure ---- */
     var all = []; tiers.chains.forEach(function (c) { c.tiers.forEach(function (t) { all.push(t); }); });
-    var rows = all.filter(function (t) { return t.powered === true || t.powered === false; }).map(function (t) {
+    var rows = all.filter(function (t) { return t.powered === true || t.powered === false || t.powered === 'may'; }).map(function (t) {
       return '<li><span><span class="id">' + esc(t.id) + '</span>' + esc(tr(t.name)) + '</span><span>' +
-        (t.powered ? '<span class="badge badge--on">' + esc(T('powered')) + '</span>' : '<span class="badge badge--off">' + esc(T('unpowered')) + '</span>') + '</span></li>';
+        (t.powered === 'may' ? '<span class="badge badge--on">' + esc(T('may_power')) + '</span>' : t.powered ? '<span class="badge badge--on">' + esc(T('powered')) + '</span>' : '<span class="badge badge--off">' + esc(T('unpowered')) + '</span>') + '</span></li>';
     }).join('');
     var m = b.metrics || {};
     html.push('<section class="sec sec--white sec--pp" id="electricity"><div class="wrap">' +
       '<span class="eyebrow">' + esc(T('elec_eyebrow')) + '</span><h2 class="h1">' + esc(T('elec_title')) + '</h2>' +
       '<p>' + esc(T('elec_1')) + '</p><p>' + esc(T('elec_2')) + '</p>' +
       '<ul class="elec-list">' + rows + '</ul>' +
-      '<div class="metrics"><div class="metric"><div class="val">' + val(m.electricity_kwh_per_mat, T('kwh_per_mat')) + '</div><div class="lbl">' + esc(T('kwh_per_mat')) + '</div>' +
-      how(m.electricity_kwh_per_mat, T('elec_how')) + '</div></div></div></section>');
+      '<div class="metrics"><div class="metric"><div class="val">' + val(m.electricity_kwh_per_piece, T('kwh_per_mat')) + '</div><div class="lbl">' + esc(T('kwh_per_mat')) + '</div>' +
+      how(m.electricity_kwh_per_piece, T('elec_how')) + '</div></div></div></section>');
 
     /* ---- fair wage ---- */
     var w = b.wage || {};
@@ -149,21 +149,22 @@
       '<span class="eyebrow">' + esc(T('env_eyebrow')) + '</span><h2 class="h1">' + esc(T('env_title')) + '</h2>' +
       '<p>' + esc(T('env_rule')) + '</p><div class="metrics">' +
       metric(isPh(m.recycled_content_pct) ? null : m.recycled_content_pct + '%', T('recycled_content'), m.recycled_content_pct, T('recycled_how')) +
-      metric(isPh(m.water_l_per_mat) ? null : m.water_l_per_mat + ' L', T('water_per_mat'), m.water_l_per_mat, T('water_how')) +
-      metric(isPh(m.packaging_g_per_mat) ? null : m.packaging_g_per_mat + ' g', T('packaging_per_mat'), m.packaging_g_per_mat, T('packaging_how')) +
+      metric(isPh(m.water_l_per_piece) ? null : m.water_l_per_piece + ' L', T('water_per_mat'), m.water_l_per_piece, T('water_how')) +
+      metric(isPh(m.packaging_g_per_piece) ? null : m.packaging_g_per_piece + ' g', T('packaging_per_mat'), m.packaging_g_per_piece, T('packaging_how')) +
       '</div><div class="callout"><p>' + esc(T('dye_claim')) + '</p></div></div></section>');
 
     /* ---- chains ---- */
     html.push('<section class="sec sec--white sec--pp" id="chains"><div class="wrap">');
     tiers.chains.forEach(function (c) {
-      html.push('<div id="chain-' + c.id.toLowerCase() + '"><div class="chain-head"><span class="letter" aria-hidden="true">' + c.id + '</span><div><h2 class="h1" style="margin:0">' + esc(tr(c.name)) + '</h2><p style="margin:.4rem 0 0">' + esc(tr(c.intro)) + '</p></div></div>');
+      html.push('<div id="chain-' + c.id.toLowerCase() + '"><div class="chain-head"><span class="letter" aria-hidden="true">' + c.id + '</span><div><h2 class="h1" style="margin:0">' + esc(tr(c.name).replace(/^Chain [A-E] — /, '')) + '</h2><p style="margin:.4rem 0 0">' + esc(tr(c.intro)) + '</p></div></div>');
       c.tiers.forEach(function (t) {
         var s = (b.stages || {})[t.id] || {};
         var dl = t.fields.map(function (f) {
           return '<dt>' + esc(tr(f.label)) + '</dt><dd>' + val(s[f.key], tr(f.label)) + '</dd>';
         }).join('');
         var badge = t.powered === true ? '<span class="badge badge--on">' + esc(T('powered')) + '</span>' :
-          t.powered === false ? '<span class="badge badge--off">' + esc(T('unpowered')) + '</span>' : '';   /* 'confirm' => nothing published */
+          t.powered === false ? '<span class="badge badge--off">' + esc(T('unpowered')) + '</span>' :
+          t.powered === 'may' ? '<span class="badge badge--on">' + esc(T('may_power')) + '</span>' : '';   /* 'confirm' / null => no claim published */
         html.push('<article class="tier" id="tier-' + t.id.toLowerCase() + '"><span class="tier-no" aria-hidden="true">' + t.id + '</span>' +
           '<div><h3 class="tier-name"><span class="sr-only">' + t.id + ' </span>' + esc(tr(t.name)) + '</h3>' +
           '<p class="small" style="color:#444;max-width:50ch">' + esc(T('records')) + ': ' + esc(tr(t.records)) + '</p>' +
@@ -193,7 +194,7 @@
     /* ---- bridge to TransparaTrade ---- */
     html.push('<section class="sec sec--orange sec--tight"><div class="wrap"><p class="statement">' + esc(T('bridge')) + '</p>' +
       '<div class="btn-row"><a class="btn" href="' + ROOT + LANG + '/transparatrade/' + IDX + '">' + esc(T('bridge_cta')) + '</a>' +
-      '<a class="btn btn--ghost" href="' + ROOT + LANG + '/petition/' + IDX + '">' + esc(T('bridge_petition')) + '</a></div></div></section>');
+      '<a class="btn btn--ghost" href="' + ROOT + LANG + '/end-modern-slavery-now/' + IDX + '">' + esc(T('bridge_petition')) + '</a></div></div></section>');
 
     app.innerHTML = html.join('');
     stitchDividers();

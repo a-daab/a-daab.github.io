@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set path = "shipping-and-delivery" %}
+{% set title = "Shipping and Delivery" %}
+{% set description = "How YOGAMATY™ ships: made to order in Nepal, consolidated in batches to New Haven, Connecticut, with a target delivery within 60 days; rates, regions, duties and tracking." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Shipping and Delivery</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> Items in brackets still need confirmation.</div>
+    <p>YOGAMATY™ is made to order. Our <strong>target delivery is within 60 days of your pre-purchase</strong> — a target, not a guarantee, until a workable production and shipping process supports a commitment. The first order in a production batch waits longest.</p>
+    <table class="facts"><tbody>
+      <tr><th scope="row">Ships from</th><td>New Haven, Connecticut. Pieces are made in Nepal, shipped in bulk in batches to New Haven, and sent to you from there.</td></tr>
+      <tr><th scope="row">Regions</th><td>{{ ph('TO FINALIZE: global from day one, or US only at launch') }}</td></tr>
+      <tr><th scope="row">Rates</th><td>USPS domestic; USPS International or a comparable carrier overseas. The cost is shown at checkout.</td></tr>
+      <tr><th scope="row">Delivery</th><td>Target within 60 days of pre-purchase.</td></tr>
+      <tr><th scope="row">Import duties</th><td>Paid once per batch by Empowerment Collective when the batch enters the United States.</td></tr>
+      <tr><th scope="row">Outbound international duties</th><td>Recipients outside the United States may owe import duties and taxes on delivery. These are not included in the price.</td></tr>
+      <tr><th scope="row">Sales tax</th><td>Calculated at checkout by Stripe Tax where Connecticut registration applies.</td></tr>
+      <tr><th scope="row">Order tracking</th><td>Email updates at each stage — order received, in production, batch shipped, shipped to you. See <a href="{{ url('track-your-order') }}">Track Your Order</a>.</td></tr>
+    </tbody></table>
+    <p style="margin-top:1.6rem">If your delivery will miss the target, we will notify you with a revised date and offer you the choice to cancel with a full refund. See <a href="{{ url('refunds-and-cancellations') }}">Refunds and Cancellations</a>.</p>
+    <p class="small">Fulfillment arrangements remain to be finalized: international shipping, customs, and confirmation of the 60-day target.</p>
+  </div>
+</section>
+{% endblock %}

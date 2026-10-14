@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set path = "track-your-order" %}
+{% set title = "Track Your Order" %}
+{% set description = "The stages of a YOGAMATY™ pre-purchase and their typical timing, the email updates you will receive, and how to contact us about your order." %}
+{% block main %}
+<section class="sec sec--white sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Supporting page</span>
+    <h1>Track your order</h1>
+    <p class="lede">Your YOGAMATY™ is made to order. Here is what happens after you pre-purchase, and the emails you will receive along the way.</p>
+    <ol class="timeline">
+      <li><b>Order received</b>Your pre-purchase is confirmed by email. Production capacity is organized in batches of approximately 50 pieces.</li>
+      <li><b>In production</b>Global Women’s Handicrafts coordinates materials and an independent woman artisan weaves your piece, which is then collected, inspected, finished and quality-checked in Nepal.</li>
+      <li><b>Batch shipped</b>The completed batch ships from Nepal. Under the working plan it travels in bulk to New Haven, Connecticut.</li>
+      <li><b>Shipped to you</b>Your individual order ships from New Haven, with tracking details by email.</li>
+    </ol>
+    <div class="note-box"><p><strong>Typical timing.</strong> Our target is delivery within 60 days of your pre-purchase. It is a target, not a guarantee — the first order in a batch waits longest. If delivery will miss the target, we will email you a revised date and offer cancellation with a full refund. {{ ph('ADD TYPICAL DURATION OF EACH STAGE ONCE CONFIRMED') }}</p></div>
+    <p>Questions about an order? <a href="{{ url('contact') }}">Contact us</a> and quote your order number. A self-service lookup may follow later.</p>
+  </div>
+</section>
+{% endblock %}

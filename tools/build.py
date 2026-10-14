@@ -129,7 +129,9 @@ def ph(text):
 
 
 def sold_out():
-    return bool(site.get("sold_out"))
+    b = site.get("batch") or {}
+    full = isinstance(b.get("taken"), int) and isinstance(b.get("capacity"), int) and b["taken"] >= b["capacity"]
+    return bool(site.get("sold_out")) or full
 
 
 env.globals.update(motif=motif, divider=divider, flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
@@ -204,6 +206,21 @@ def build_lang(lang, pages_out):
         print(f"  {lang}/{path or ''}")
 
 
+def write_redirects():
+    """Old URLs from earlier builds forward to their v2.0 pages (src/redirects.json: {"old/path": "new/path"})."""
+    f = SRC / "redirects.json"
+    if not f.exists():
+        return
+    for old, new in json.loads(f.read_text(encoding="utf-8")).items():
+        lang = site["default_language"]
+        target = f"/{lang}/" + (new.strip("/") + "/" if new.strip("/") else "")
+        out = ROOT / lang / old.strip("/") / "index.html"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(env.get_template("redirect.html").render(
+            target=target, langs=[lang], default=lang, site=site, noindex=True), encoding="utf-8")
+        print(f"  {lang}/{old} -> {target}")
+
+
 def write_extras(pages):
     today = datetime.date.today().isoformat()
     urls = []
@@ -225,16 +242,18 @@ def write_extras(pages):
         target=f"/{default}/", langs=LANGS, default=default, site=site, noindex=site["noindex"]), encoding="utf-8")
     (ROOT / "passport").mkdir(exist_ok=True)
     (ROOT / "passport" / "index.html").write_text(env.get_template("redirect.html").render(
-        target=f"/{default}/supply-chain/", langs=[default], default=default, site=site, noindex=site["noindex"]), encoding="utf-8")
+        target=f"/{default}/explorer/", langs=[default], default=default, site=site, noindex=site["noindex"]), encoding="utf-8")
 
 
 def main():
-    build_media_manifest()
+    env.globals["media"] = build_media_manifest()
+    env.globals["tiers"] = json.loads((ROOT / "data" / "tiers.json").read_text(encoding="utf-8"))
     pages = []
     for lang in LANGS:
         print(f"[{lang}]")
         build_lang(lang, pages)
     write_extras(pages)
+    write_redirects()
     # 404.html (also resolves QR-code URLs of the form /passport/<batch>?mat=<serial>)
     strings = json.loads((SRC / "i18n" / f"{site['default_language']}.json").read_text(encoding="utf-8"))
     lang = site["default_language"]

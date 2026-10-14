@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% set path = "explorer" %}
+{% set title = "Supply-Chain Explorer" %}
+{% set description = "The Supply-Chain Explorer: the per-piece record of how a YOGAMATY™ was made — stage by stage, with hours, payments, electricity and environmental data, each labeled as measured or estimated." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:clamp(56px,9vw,120px)">
+  <div class="wrap">
+    <span class="eyebrow">{{ t('explorer_page.eyebrow') }}</span>
+    <h1 class="display">Supply-Chain<br>Explorer.</h1>
+    <p class="statement">Every stage of this piece’s life, in the order it happened — and exactly how each record was entered.</p>
+  </div>
+</section>
+
+<div id="pp-app" aria-live="polite">
+  <section class="sec sec--white"><div class="wrap wrap--narrow">
+    <p class="lede" id="pp-loading">{{ t('explorer_page.loading') }}</p>
+    <noscript><p class="lede">{{ t('explorer_page.noscript') }}</p></noscript>
+  </div></section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/assets/js/passport.js?v={{ year }}-2" defer></script>{% endblock %}

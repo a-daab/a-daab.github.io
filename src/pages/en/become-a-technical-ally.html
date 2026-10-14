@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "macros.html" import field, actions with context %}
+{% set path = "become-a-technical-ally" %}
+{% set title = "Become a Technical Ally" %}
+{% set description = "Become a Founding Technical Ally: help build a secure, immutable, open-source programming language for global supply-chain transparency and labeling, inside a survivor-led initiative." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+  <div class="wrap">
+    <span class="eyebrow">The Founding Technical Allies Program</span>
+    <h1 class="display">Become a Founding<br>Technical Ally.</h1>
+    <p class="statement">Help Build a Secure, Immutable, Open-Source Programming Language for Global Supply-Chain Transparency and Labeling.</p>
+    <div class="btn-row"><a class="btn btn--lg" href="#apply">Apply now</a></div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="program">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <span class="eyebrow">The program</span>
+      <h2 class="h1">An invitation to help build the technical foundation.</h2>
+      <p>Empowerment Collective will invite technical contributors to participate in the development of TransparaTrade™ through its Allies Program. The program seeks contributions from software engineers, programming-language designers, cybersecurity specialists, open-source developers, data architects, researchers, UX designers, technical writers, and others with relevant expertise.</p>
+      <p>The objective is to bring professional knowledge into a survivor-led initiative. The Allies Program is not presented as a general volunteer opportunity. It is an invitation to help build the technical foundation for TransparaTrade.</p>
+    </div>
+    <div>
+      <span class="eyebrow">Survivor leadership and the value of knowledge</span>
+      <p>Empowerment Collective is a survivor-led organization. The Allies Program is intended to recognize the value of different forms of knowledge: lived experience, indigenous knowledge, traditional craftsmanship, academic research, and professional expertise. The absence of academic accreditation does not mean the absence of expertise.</p>
+      <p>Survivor leadership is not about replacing academic knowledge with lived experience. It is about leveling the playing field so that the wisdom gained through surviving injustice holds equal authority in shaping the solutions intended to end it. Survivor leaders guide the purpose, values, and direction of the project. Technical Allies contribute their specialized knowledge to help make that vision possible.</p>
+      <p><a href="{{ url('transparatrade') }}">About TransparaTrade →</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="apply" style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow">Application</span>
+    <h2 class="h1">Tell us about yourself.</h2>
+    <p class="lede" style="max-width:50ch">The initial application is simple. A résumé or portfolio is not required at this stage; we may ask selected applicants for more information later.</p>
+
+    <form class="form" data-form="allies" novalidate autocomplete="off" aria-labelledby="apply-h">
+      <h3 id="apply-h" class="sr-only">Founding Technical Allies application</h3>
+      <div class="form-live">
+        {{ field('full_name', 'Full name', required=True, maxlength=160) }}
+        {{ field('email', 'Email address', type='email', required=True, autocomplete='email', maxlength=200, hint='We only use this to reply to you.') }}
+        {{ field('organization', 'Company, organization, or professional role', maxlength=160) }}
+
+        <div class="field" data-field="expertise">
+          <label for="f-expertise">Primary area of expertise</label>
+          <select id="f-expertise" name="ym_expertise" required aria-required="true" autocomplete="off">
+            <option value="">Select…</option>
+            {% for s in ['Software engineering', 'Programming-language design', 'Cybersecurity', 'Open-source development', 'Data architecture', 'Research', 'UX design', 'Technical writing'] %}<option>{{ s }}</option>{% endfor %}
+            <option value="other">Other</option>
+          </select>
+          <div class="err" role="alert"></div>
+        </div>
+        <div class="field" data-field="expertise_other" id="expertise-other-box" hidden>
+          <label for="f-expertise_other">Your area of expertise</label>
+          <input id="f-expertise_other" name="ym_expertise_other" type="text" maxlength="160" autocomplete="off" data-lpignore="true">
+          <div class="err" role="alert"></div>
+        </div>
+
+        <div class="field" data-field="statement">
+          <label for="f-statement">Why you would like to contribute</label>
+          <textarea id="f-statement" name="ym_statement" required aria-required="true" aria-describedby="statement-hint" data-maxwords="250" autocomplete="off"></textarea>
+          <div class="hint" id="statement-hint"><span>A statement of up to 250 words.</span><span class="count" data-count aria-live="polite">0 / 250</span></div>
+          <div class="err" role="alert"></div>
+        </div>
+
+        <label class="check"><input type="checkbox" name="ack" required aria-required="true"><span>I understand that this is an initial voluntary expression of interest.</span></label>
+        <div class="field" data-field="ack" style="margin-top:-1rem"><div class="err" role="alert"></div></div>
+        <label class="check"><input type="checkbox" name="consent" required aria-required="true"><span>I agree to Empowerment Collective using the information above to consider my application, as described in the <a href="{{ url('privacy-and-terms') }}#privacy">privacy policy</a>.</span></label>
+        <div class="field" data-field="consent" style="margin-top:-1rem"><div class="err" role="alert"></div></div>
+
+        <input type="text" class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="hidden" name="t" value="">
+        <div class="cf-turnstile-mount"></div>
+        <button class="btn btn--lg" type="submit">{{ t('forms.submit_application') }}</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+        <p class="small" style="margin-top:1.6rem;max-width:62ch">Applications go to <strong>allies@empowermentcollective.org</strong>. They are submitted securely, emailed to our team and not stored on this website. Every application is read by the Empowerment Collective team.</p>
+      </div>
+      <div class="form-done" tabindex="-1">
+        <h3>Thank you.</h3>
+        <p class="lede">Thank you for your interest. Every application is read by the Empowerment Collective team. If we’d like to take yours further, we’ll email you to request more information. Either way, you’ll hear from us within {{ ph('ADD RESPONSE TIME') }}.</p>
+      </div>
+    </form>
+  </div>
+</section>
+{{ actions('white') }}
+{% endblock %}
+{% block scripts %}<script src="/assets/js/forms.js?v={{ year }}-2" defer></script>{% endblock %}

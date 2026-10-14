@@ -1,12 +1,12 @@
 {
- "_doc": "Batch record. One file per batch in /data/batches/. null = not yet entered (shows as [ADD ...]). Strings beginning with '[' also render as placeholders. A value may be {\"v\":\"..\",\"estimate\":true,\"method\":\"..\"} to label an estimate and say how it was arrived at.",
+ "_doc": "Batch record. One file per batch in /data/batches/ (Specification §5.2). null = not yet entered (shows as [ADD ...]). Strings beginning with '[' also render as placeholders. A value may be {\"v\":\"..\",\"estimate\":true,\"method\":\"..\"} to label an estimate and say how it was arrived at. Per-batch figures are labeled as averages when divided across pieces. Actor IDs are pseudonymous, never a legal name; locations are at a safe granularity, never an artisan's home.",
  "batch_id": "B-2026-04",
- "product_id": "YogaMaty",
+ "product_id": "YOGAMATY™",
  "status": "template",
  "opened": null,
  "closed": null,
  "published": null,
- "mats": {
+ "pieces": {
   "count": null,
   "first_serial": "0001",
   "last_serial": null
@@ -26,102 +26,127 @@
    "location": null,
    "season": null,
    "inputs": null,
-   "water": null,
-   "data_source": null
+   "water": null
   },
   "A2": {
+   "date": null,
+   "quantity_kg": null,
+   "workers": null,
+   "payment": null
+  },
+  "A3": {
    "water_source": null,
    "duration": null,
    "volume": null
   },
-  "A3": {
-   "worker": null,
-   "hours": null,
-   "method": "Fiber drawn across a fixed blade, by hand"
-  },
   "A4": {
    "worker": null,
    "hours": null,
-   "yield": null
+   "payment": null
   },
   "A5": {
-   "location": null,
-   "duration": null,
-   "weather": null
+   "worker": null,
+   "hours": null,
+   "yield": null,
+   "payment": null
   },
   "A6": {
+   "location": null,
+   "duration": null
+  },
+  "A7": {
    "worker": null,
    "hours": null,
    "energy_kwh": null
   },
   "B1": {
+   "earliest_point": null,
+   "original_history": "Unknown where it is unknown"
+  },
+  "B2": {
    "source": null,
    "quantity_kg": null,
    "date": null,
-   "fiber_content": null
-  },
-  "B2": {
-   "worker": null,
-   "hours": null,
-   "rejected": null
+   "payment": null
   },
   "B3": {
    "worker": null,
    "hours": null,
-   "method": "Measured and cut by hand against a straightedge"
+   "rejected": null
   },
   "B4": {
+   "worker": null,
+   "hours": null
+  },
+  "B5": {
+   "worker": null,
+   "hours": null,
+   "method": null
+  },
+  "B6": {
    "worker": null,
    "hours": null,
    "energy_kwh": null
   },
   "C1": {
-   "worker": null,
-   "hours": null
+   "kit_contents": null,
+   "artisan": null,
+   "delivery": null
   },
   "C2": {
-   "worker": null,
-   "hours": null,
-   "materials": "Hemp warp with reclaimed-sari weft"
-  },
-  "C3": {
-   "worker": null,
+   "artisan": null,
    "hours": null
   },
+  "C3": {
+   "artisan": null,
+   "hours": null,
+   "note": "Traditional handloom, at home"
+  },
   "C4": {
+   "artisan": null,
+   "hours": null
+  },
+  "C5": {
    "water_use": null,
-   "location": null,
    "duration": null
   },
+  "C6": {
+   "date": null
+  },
   "D1": {
-   "worker": null,
+   "inspector": null,
    "hours": null
   },
   "D2": {
    "worker": null,
    "hours": null,
    "energy_kwh": null,
-   "note": "Industrial sewing machine"
+   "note": "Sewing may use electricity"
   },
   "D3": {
    "inspector": null,
    "date": null,
+   "serial": null,
    "batch_id": null
+  },
+  "D4": {
+   "materials": null,
+   "grams": null,
+   "recyclable": null
   },
   "E1": {
    "verified_by": null,
    "date": null
   },
   "E2": {
-   "carrier": null,
    "shipment": null,
+   "carrier": null,
    "date": null
   },
   "E3": {
    "entry_date": null,
    "port": null,
-   "duty_paid": null,
-   "clearance": null
+   "duty_paid": null
   },
   "E4": {
    "received_by": null,
@@ -143,13 +168,13 @@
  },
  "metrics": {
   "recycled_content_pct": null,
-  "electricity_kwh_per_mat": null,
-  "water_l_per_mat": null,
-  "packaging_g_per_mat": null,
+  "electricity_kwh_per_piece": null,
+  "water_l_per_piece": null,
+  "packaging_g_per_piece": null,
   "packaging_materials": null,
   "packaging_recyclable_or_compostable": null
  },
- "mat_records": {
+ "piece_records": {
   "0137": {
    "assembled": null,
    "note": null

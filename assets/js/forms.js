@@ -1,4 +1,4 @@
-/* YogaMaty forms — allies application, petition (kiosk), wholesale inquiry.
+/* YOGAMATY forms — allies application, petition (kiosk), wholesale inquiry.
    All three post JSON to one Cloudflare Worker (window.YM.api). Validation here is for friendliness only;
    the Worker validates again server-side. Nothing is stored in the browser. */
 (function () {
@@ -14,7 +14,7 @@
 
   var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   var RULES = {
-    allies: { required: ['first_name', 'last_name', 'email', 'company', 'statement'], email: 'email', url: 'link', words: { statement: 250 }, skills: true },
+    allies: { required: ['full_name', 'email', 'expertise', 'statement'], email: 'email', words: { statement: 250 }, acks: ['ack'] },
     petition: { required: ['name', 'email', 'location'], email: 'email' },
     wholesale: { required: ['name', 'phone', 'email', 'business'], email: 'email', phone: 'phone' }
   };
@@ -45,8 +45,7 @@
       if (!el.name) return;
       var k = el.name.replace(/^ym_/, '');
       if (el.type === 'checkbox') {
-        if (k === 'skills') { o.skills = o.skills || []; if (el.checked) o.skills.push(el.value); }
-        else o[k] = el.checked;
+        o[k] = el.checked;
       } else o[k] = el.value.trim();
     });
     return o;
@@ -58,7 +57,7 @@
     box.classList.toggle('invalid', !!msg);
     var e = box.querySelector('.err');
     if (e) e.textContent = msg || '';
-    var input = box.querySelector('input,textarea');
+    var input = box.querySelector('input,textarea,select');
     if (input && input.type !== 'checkbox') input.setAttribute('aria-invalid', msg ? 'true' : 'false');
   }
   function clearErrs(f) { [].forEach.call(f.querySelectorAll('[data-field]'), function (b) { setErr(f, b.getAttribute('data-field'), ''); }); }
@@ -80,11 +79,12 @@
     if (r.phone && v[r.phone] && v[r.phone].replace(/\D/g, '').length < 7) fail(r.phone, T('required'));
     if (r.url && v[r.url]) { try { var u = new URL(v[r.url]); if (!/^https?:$/.test(u.protocol)) throw 0; } catch (e) { fail(r.url, T('url')); } }
     if (r.words) Object.keys(r.words).forEach(function (k) { if (v[k] && words(v[k]) > r.words[k]) fail(k, T('words', { max: r.words[k] })); });
-    if (r.skills && !(v.skills && v.skills.length) && !v.skills_other) fail('skills', T('skills'));
+    if (r.required.indexOf('expertise') > -1 && v.expertise === 'other' && !v.expertise_other) fail('expertise_other', T('other'));
+    if (r.acks) r.acks.forEach(function (k) { if (!v[k]) fail(k, T('ack')); });
     if (!v.consent) fail('consent', T('consent'));
     if (bad.length) {
       var box = fieldBox(f, bad[0]);
-      var el = box && box.querySelector('input,textarea');
+      var el = box && box.querySelector('input,textarea,select');
       if (el && el.type !== 'checkbox') el.focus(); else if (box) { var c = f.querySelector('input[name="consent"]'); if (bad[0] === 'consent' && c) c.focus(); else if (box.scrollIntoView) box.scrollIntoView({ block: 'center' }); }
     }
     return bad.length ? null : v;
@@ -146,6 +146,7 @@
 
   function done(f, type, j) {
     f.reset(); clearErrs(f); status(f, '', false); tsReset(f);
+    var ob = f.querySelector('#expertise-other-box'); if (ob) ob.hidden = true;
     f.classList.add('is-done');
     var msg = f.querySelector('[data-done-msg]');
     if (msg && type === 'petition') msg.textContent = j.status === 'already_signed' ? T('done_already') : T('done_signed');
@@ -157,6 +158,7 @@
   function reset(f) {
     f.classList.remove('is-done'); f.reset(); clearErrs(f); status(f, '', false); stamp(f); tsReset(f);
     [].forEach.call(f.querySelectorAll('.typo'), function (n) { n.remove(); });
+    var ob = f.querySelector('#expertise-other-box'); if (ob) ob.hidden = true;
     var first = f.querySelector('.form-live input[type="text"], .form-live input[type="email"]');
     if (first) first.focus();
   }
@@ -179,6 +181,8 @@
       var upd = function () { var n = words(ta.value); cnt.textContent = n + ' / ' + max; cnt.style.color = n > max ? '#9b1c00' : ''; };
       ta.addEventListener('input', upd); upd();
     }
+    var sel = f.querySelector('select[name="ym_expertise"]'), oth = d.getElementById('expertise-other-box');
+    if (sel && oth) sel.addEventListener('change', function () { oth.hidden = sel.value !== 'other'; if (!oth.hidden) oth.querySelector('input').focus(); });
     var rs = f.querySelector('[data-reset]');
     if (rs) rs.addEventListener('click', function () { reset(f); });
   });

@@ -1,5 +1,5 @@
 {
-  "origin": "https://www.yogamaty.com",
+  "origin": "https://yogamaty.com",
   "languages": [
     "en"
   ],
@@ -10,7 +10,7 @@
   "turnstile_site_key": "",
   "stripe_payment_link": "",
   "sold_out": false,
-  "price": "38.00",
+  "price": "",
   "currency": "USD",
   "whitepaper_url": "",
   "petition_share_url": "https://www.endmodernslaverynow.org/",
@@ -24,7 +24,15 @@
     "api_base": "URL of the Cloudflare Worker, e.g. https://api.yogamaty.com. Empty = forms show a 'not live yet' message.",
     "turnstile_site_key": "Cloudflare Turnstile PUBLIC site key. Empty = widget omitted (the Worker will then reject unless TURNSTILE_SECRET is also unset).",
     "stripe_payment_link": "The Stripe Payment Link URL (https://buy.stripe.com/...). Empty = the buy button shows a disabled 'opens at launch' state.",
-    "sold_out": "Flip to true when stock is gone (also set the inventory limit on the Stripe Payment Link).",
-    "whitepaper_url": "Path or URL of the whitepaper PDF, e.g. /assets/docs/transparatrade-whitepaper.pdf. Empty = 'coming shortly' state."
-  }
+    "whitepaper_url": "Path or URL of the whitepaper PDF, e.g. /assets/docs/transparatrade-whitepaper.pdf. Empty = 'coming shortly' state.",
+    "price": "Retail price in USD, e.g. \"48.00\". Empty = shows an [ADD RETAIL PRICE] placeholder and no price in structured data.",
+    "batch": "Current production batch: label (e.g. \"2026-04\"), capacity (~50), taken (number of places taken; null = placeholder). When taken >= capacity the page shows \"This batch is full\".",
+    "sold_out": "Flip to true to force the \"this batch is full\" state (also set the quantity limit on the Stripe Payment Link)."
+  },
+  "batch": {
+    "label": "[N]",
+    "capacity": 50,
+    "taken": null
+  },
+  "allies_email": "allies@empowermentcollective.org"
 }

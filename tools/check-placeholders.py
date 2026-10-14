@@ -18,7 +18,8 @@ for f in ROOT.glob("data/batches/*.json"):
         elif o is None: batch_nulls += 1
     walk(json.loads(f.read_text(encoding="utf-8")))
 site = json.loads((ROOT / "src/site.json").read_text(encoding="utf-8"))
-todo = [k for k in ("api_base", "turnstile_site_key", "stripe_payment_link", "whitepaper_url") if not site.get(k)]
+todo = [k for k in ("api_base", "turnstile_site_key", "stripe_payment_link", "whitepaper_url", "price") if not site.get(k)]
+if (site.get("batch") or {}).get("taken") is None: todo.append("batch.taken (places taken in the current batch)")
 if site.get("noindex"): todo.append("noindex is still ON (python3 tools/set-indexing.py index)")
 print(f"{len(found)} distinct placeholders on built pages:")
 for k, pages in sorted(found.items()): print(f"  [{k}]  ({len(pages)} page{'s' if len(pages) > 1 else ''})")

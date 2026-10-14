@@ -13,3 +13,37 @@
   <div class="media-ph" role="img" aria-label="Photograph placeholder: {{ label }}"><b>{{ label }}</b></div>
 </figure>
 {%- endmacro %}
+
+{# ---- v2.0 shared blocks. Import with context: {% from "macros.html" import actions, whitepaper_block with context %} ---- #}
+{% macro actions(tone="white") -%}
+<section class="sec sec--{{ tone }} sec--tight actions-sec" aria-labelledby="actions-h">
+  <div class="wrap">
+    <h2 id="actions-h" class="sr-only">{{ t('home.actions_eyebrow') }}</h2>
+    <div class="actions">
+      <div class="action"><span class="eyebrow">{{ t('actions.buy') }}</span><p>{{ t('actions.buy_line') }}</p><a class="btn" href="{{ url('shop') }}">{{ t('actions.buy_btn') }}</a></div>
+      <div class="action"><span class="eyebrow">{{ t('actions.demand') }}</span><p>{{ t('actions.demand_line') }}</p><a class="btn" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a></div>
+      <div class="action"><span class="eyebrow">{{ t('actions.build') }}</span><p>{{ t('actions.build_line') }}</p><a class="btn" href="{{ url('become-a-technical-ally') }}">{{ t('actions.build_btn') }}</a></div>
+    </div>
+  </div>
+</section>
+{%- endmacro %}
+
+{% macro whitepaper_block(heading=True) -%}
+<div class="wp-block grid grid--split">
+  <div>
+    <span class="eyebrow">{{ t('footer.whitepaper') }}</span>
+    {% if heading %}<h2 class="h1">The TransparaTrade™ whitepaper</h2>{% endif %}
+    <p>TransparaTrade proposes a common technical language for documenting each step of a supply chain — materials, work, payments, transport and delivery — so that every record can be verified while the people behind it stay protected.</p>
+    <p>The whitepaper is currently being amended to cover the more detailed technical and operational questions: hemp farming, material processing, electricity use, labor hours, verification, privacy-preserving identity, offline recording and technical governance. The current target for the amendments is the end of 2026; it is not described as complete until they are finalized and approved.</p>
+  </div>
+  <div>
+    {% if site.whitepaper_url %}
+    <a class="btn btn--lg" href="{{ site.whitepaper_url }}" download>{{ t('tt.download') }}</a>
+    {% else %}
+    <span class="btn btn--lg" aria-disabled="true" role="link">{{ t('tt.coming_shortly') }}</span>
+    <p class="small" style="margin-top:14px">{{ t('tt.wp_note') }}</p>
+    {% endif %}
+    <div class="video-slot media-ph" role="img" aria-label="Explanatory video placeholder" style="aspect-ratio:16/9;margin-top:1.6rem"><b>Explanatory video — planned</b></div>
+  </div>
+</div>
+{%- endmacro %}

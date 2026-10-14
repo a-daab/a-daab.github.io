@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% from "macros.html" import actions with context %}
+{% set path = "faq" %}
+{% set title = "Frequently Asked Questions" %}
+{% set description = "Answers about YOGAMATY™: how it is used on top of a yoga mat, thickness, care, why 60 days, why it is a pre-purchase and not a donation, pricing, what “pilot” means, and what the proposed transparency labels mean." %}
+{% block main %}
+<section class="sec sec--white sec--head" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Supporting page</span>
+    <h1>Frequently asked questions</h1>
+    <div class="faq">
+      <details><summary>Do I use it on top of a mat, or instead of one?</summary><p>On top. YOGAMATY™ is a yoga mat towel/cover placed directly on top of an existing conventional yoga mat. The conventional mat continues to provide cushioning and support; YOGAMATY provides the textile surface. It is not intended to be used as a standalone yoga mat.</p></details>
+      <details><summary>How thick is it?</summary><p>3 millimeters. Its dimensions are 68 inches long by 24 inches wide. We will publish the finished weight once it has been measured.</p></details>
+      <details><summary>Does it grip, and how durable is it?</summary><p>We do not yet make claims about grip, non-slip performance or durability. YOGAMATY is in its pilot and prototype stage, and further testing will examine grip, movement, bunching, durability, washing, and performance when used on top of conventional yoga mats.</p></details>
+      <details><summary>How do I care for it?</summary><p>It can be washed on a gentle machine cycle and air-dried. Hand-washing is recommended for longer-lasting care.</p></details>
+      <details><summary>What is it made of?</summary><p>Natural hemp yarn and reclaimed sari fabric — about 61.5% hemp and 38.5% reclaimed sari by weight of those two principal textile inputs. Because reclaimed saris may contain mixed fibers, we describe YOGAMATY as natural fiber with reclaimed materials rather than entirely natural fiber. We add no dyes or chemicals in making it; the saris carry their original dyes.</p></details>
+      <details><summary>Why 60 days?</summary><p>Every YOGAMATY is made to order, woven by an independent woman artisan after your pre-purchase. Sixty days is our target delivery period from the original pre-purchase. It is a target that must be supported by a workable production and shipping process before we can offer it as a guarantee. If delivery will miss it, we will tell you, give a revised date and offer cancellation with a full refund.</p></details>
+      <details><summary>Is this a donation?</summary><p>No. You are not making a donation and not providing a loan — you are purchasing a product. The way the purchase is organized is intended to create a more direct, transparent and equitable relationship between you and the people whose labor produces it.</p></details>
+      <details><summary>Why is the price what it is?</summary><p>YOGAMATY is a premium boutique product. Its price reflects the materials, artisan compensation, local transportation, training, quality control, finishing, packaging, international delivery, payment processing, and the additional work required for supply-chain documentation — craftsmanship, cultural preservation, fair exchange, and the development of transparency, rather than competing only on low prices.</p></details>
+      <details><summary>What does “pilot” mean?</summary><p>YOGAMATY is the first pilot of TransparaTrade™: a real-world product through which the system can be developed and tested. Several things are still being finalized and we present them as development work, not completed outcomes — the final retail price, finished weight, durability testing, verified artisan capacity and compensation structure, international shipping arrangements, the technology architecture, labeling criteria, the payment provider, and the whitepaper. See <a href="{{ url('how-it-works') }}#pilot-status">pilot status</a>.</p></details>
+      <details><summary>What do the proposed labels mean?</summary><p>Green, Yellow and Red are a proposed transparency labeling concept: Green is verified transparency within a defined and documented scope; Yellow is partial transparency, where some stages are documented but important information remains incomplete or unverified; Red is insufficient evidence to support the transparency claim — not automatically proof of forced labor. They are not yet an operational certification system, and YOGAMATY is not represented as having a verified Green label. <a href="{{ url('transparatrade') }}#labels">Read more</a>.</p></details>
+      <details><summary>Is the whole process electricity-free?</summary><p>No. Weaving uses traditional handlooms with no electricity, but some stages — sewing during finishing, and possibly some bobbin winding — may use electricity. We document electricity per stage rather than making a blanket claim.</p></details>
+      <details><summary>Who makes it, and are they identifiable?</summary><p>Independent women artisans in Nepal, coordinated through Global Women’s Handicrafts and the Empowering Local Women center in Goldhunga. Artisans remain anonymous; if anyone appears in published media, official documented consent is obtained first.</p></details>
+    </div>
+  </div>
+</section>
+{{ actions('white') }}
+{% endblock %}

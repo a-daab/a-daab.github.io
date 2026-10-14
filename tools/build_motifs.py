@@ -1475,7 +1475,7 @@ def sun_spiral():
     write("sun-spiral", (400, 400), "".join(b))
 
 
-# ---------------------------------------------------------------- Nepali village, clothesline with clothes and a YogaMaty
+# ---------------------------------------------------------------- Nepali village, clothesline with clothes and a YOGAMATY
 def newari_window(cx, top, ww, hh):
     """A carved wooden window with an arched head, lattice and a ring of dots, in the style of Newari houses."""
     l, r, bt = cx - ww / 2, cx + ww / 2, top + hh
@@ -1696,7 +1696,7 @@ def village():
     cx = 38
     y = ly(cx)
     b.append(f'<path d="M{cx - 6} {y:.1f}l-13 7l4 6l6 -3v20h18v-20l6 3l4 -6l-13 -7q-6 5 -12 0z" stroke-width="1.7"/>' + dotpath([(cx, y + 14), (cx, y + 20)], w=2))
-    # the YogaMaty, folded over the line: stripes, bound edge, fringe
+    # the YOGAMATY, folded over the line: stripes, bound edge, fringe
     mx0, mx1 = 62, 88
     y = ly((mx0 + mx1) / 2)
     my1 = y + 40
@@ -1865,8 +1865,68 @@ def flow():
         b.append(node(i, X, ys[i], vertical=True))
     write("flow-v", (400, 1150), "".join(b))
 
+# ---------------------------------------------------------------- Seven Keys marks (Design §5: one mark per scroll step)
+def key_marks():
+    """seven small marks, one file each: leaf (Nature), water, grain (Food), house (Housing), care (Medical Care), book (Education), device (Technology)"""
+    # Nature
+    write("key-nature", (120, 120), leaf(30, 96, math.radians(-50), 96, 24) + leaf(60, 100, math.radians(-95), 70, 16, veins=False))
+    # Water: a drop over waves
+    b = [path([(60, 12), (38, 52), (42, 72), (60, 80), (78, 72), (82, 52), (60, 12)], w=2.8, closed=False)]
+    for k in range(3):
+        y = 92 + k * 9
+        b.append(path([(x, y + math.sin(x / 14 + k) * 3) for x in range(8, 113, 15)], w=[2.4, 1.6, 1.2][k], a=.4))
+    write("key-water", (120, 120), "".join(b))
+    # Food: an ear of grain
+    b = [path([(60, 112), (60, 60), (61, 24)], w=2.6)]
+    for i in range(5):
+        y = 28 + i * 14
+        b.append(ellipse(46, y + 4, 6, 12, rot=math.radians(-35), w=2))
+        b.append(ellipse(75, y + 4, 6, 12, rot=math.radians(35), w=2))
+    b.append(ellipse(60, 18, 5, 11, w=2))
+    b.append(line(60, 112, 40, 104, w=1.6)); b.append(line(60, 112, 80, 104, w=1.6))
+    write("key-food", (120, 120), "".join(b))
+    # Housing: a Newari house with a window
+    b = [path([(20, 108), (20, 54), (60, 24), (100, 54), (100, 108), (20, 108)], w=2.8, closed=False),
+         path([(12, 56), (60, 18), (108, 56)], w=2.2),
+         path([(46, 108), (46, 78), (74, 78), (74, 108)], w=2.2), path([(30, 60), (30, 74), (44, 74), (44, 60), (30, 60)], w=1.6),
+         path([(76, 60), (76, 74), (90, 74), (90, 60), (76, 60)], w=1.6)]
+    write("key-housing", (120, 120), "".join(b))
+    # Medical Care: a heart held in a cross
+    b = [path([(60, 100), (22, 62), (20, 40), (36, 26), (52, 32), (60, 44), (68, 32), (84, 26), (100, 40), (98, 62), (60, 100)], w=2.8, closed=False),
+         line(60, 46, 60, 78, w=2.2), line(44, 62, 76, 62, w=2.2)]
+    write("key-care", (120, 120), "".join(b))
+    # Education: an open book
+    b = [path([(60, 36), (34, 28), (12, 34), (12, 94), (34, 88), (60, 96)], w=2.6), path([(60, 36), (86, 28), (108, 34), (108, 94), (86, 88), (60, 96)], w=2.6), line(60, 36, 60, 96, w=1.8)]
+    for k in range(4):
+        b.append(line(22, 46 + k * 10, 50, 46 + k * 10 + 3, w=1.2)); b.append(line(70, 49 + k * 10, 98, 46 + k * 10, w=1.2))
+    write("key-education", (120, 120), "".join(b))
+    # Technology: a phone with a signal
+    b = [path([(40, 14), (80, 14), (84, 18), (84, 104), (80, 108), (40, 108), (36, 104), (36, 18), (40, 14)], w=2.6, closed=False),
+         line(52, 24, 68, 24, w=1.6), circle(60, 96, 4, w=1.8)]
+    for r_ in (10, 18, 26):
+        b.append(path([rot_pt(r_, 0, math.radians(a), 60, 62) for a in range(-50, 51, 25)], w=1.8))
+    write("key-technology", (120, 120), "".join(b))
+
+
+# ---------------------------------------------------------------- the raw-materials kit and the mobile vehicle (How It Works steps 2-3)
+def vehicle():
+    b = []
+    # van body, cab, wheels, a bundle of hemp and sari strips on the roof, a road line
+    b.append(path([(20, 120), (20, 62), (150, 62), (150, 40), (200, 40), (232, 76), (250, 82), (250, 120), (20, 120)], w=2.8, closed=False))
+    b.append(path([(160, 48), (160, 76), (226, 76), (200, 48), (160, 48)], w=1.8))
+    for cx in (66, 200):
+        b.append(circle(cx, 124, 18, w=2.6)); b.append(circle(cx, 124, 6, w=1.6))
+    b.append(ellipse(70, 34, 30, 14, w=2.2)); b.append(ellipse(70, 34, 30, 14, w=1.2))
+    for k in range(5):
+        b.append(line(48 + k * 11, 22, 52 + k * 11, 46, w=1.4))
+    b.append(path([(104, 30), (112, 22), (126, 24), (132, 34), (126, 46), (112, 48), (104, 30)], w=2))
+    b.append(path([(0, 146), (120, 149), (270, 146)], w=1.8))
+    for x in range(8, 270, 22):
+        b.append(line(x, 154, x + 9, 154, w=1.4))
+    write("vehicle", (270, 160), "".join(b))
+
 
 if __name__ == "__main__":
-    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon):
+    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle):
         fn()
     print("motifs written to", OUT)

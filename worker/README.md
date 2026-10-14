@@ -15,7 +15,7 @@ Then add the custom domain `api.yogamaty.com` to the Worker (dashboard → Worke
 
 | Route | Does |
 |---|---|
-| `POST /allies` | validates, emails `ALLIES_TO`, stores nothing (reply-to is the applicant) |
+| `POST /allies` | validates (full name, email, optional organization, expertise select + other, statement ≤250 words, acknowledgment + privacy consent), emails `ALLIES_TO` (allies@empowermentcollective.org), stores nothing (reply-to is the applicant) |
 | `POST /wholesale` | validates, emails `WHOLESALE_TO`, stores nothing |
 | `POST /petition` | validates, stores name/email/location/consent/timestamp in D1, dedupes on lower-cased email (`already_signed`) |
 | `GET /petition/count` | `{visible:false}` until `PETITION_THRESHOLD` (500) is reached, then `{visible:true,count}` |
