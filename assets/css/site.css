@@ -598,3 +598,5 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
   .hero-text{margin-block:0 auto}
   .hero-mat{top:calc(var(--header-h) + 28px);height:calc(100% - var(--header-h) - 28px)}
 }
+/* Home hero headline: exactly three lines on wide screens; wraps naturally on phones */
+@media (min-width:821px){.hero-title .ln{display:block;white-space:nowrap}}
