@@ -591,5 +591,5 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .sec--orange .action .eyebrow{color:#fff}.sec--orange .actions{border-top-color:#fff}.sec--orange .action + .action{border-left-color:rgba(255,255,255,.5)}@media (max-width:820px){.sec--orange .action + .action{border-top-color:rgba(255,255,255,.5)}}
 
 /* Home hero headline: all caps, slightly smaller, soft shadow so it stays legible over the mat artwork */
-.hero-text .display.hero-title{text-transform:uppercase;font-size:clamp(2.1rem,1rem + 4.7vw,4.5rem);text-shadow:0 2px 14px rgba(0,0,0,.28)}
-@media (max-height:820px) and (min-width:821px){.hero-text .display.hero-title{font-size:clamp(2rem,8.6vh,4rem)}}
+.hero-text .display.hero-title{text-transform:uppercase;font-size:clamp(1.9rem,.8rem + 3.5vw,3.6rem);text-shadow:0 2px 14px rgba(0,0,0,.28)}
+@media (max-height:820px) and (min-width:821px){.hero-text .display.hero-title{font-size:clamp(1.9rem,7vh,3.4rem)}}
