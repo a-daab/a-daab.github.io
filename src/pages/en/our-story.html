@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% from "macros.html" import actions with context %}
+{% set path = "our-story" %}
+{% set title = "Our Story" %}
+{% set description = "YOGAMATY™ and TransparaTrade™ are developed by Empowerment Collective, a 100% survivor-led nonprofit, with Global Women’s Handicrafts and independent women artisans in Nepal. Survivor leadership, traditional craftsmanship and the Seven Keys." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+  <div class="motifs" aria-hidden="true">{{ motif('hands', 'md', 'content', cls='', speed=0.95, style='right:3%;bottom:2%') }}</div>
+  <div class="wrap">
+    <span class="eyebrow">{{ t('nav.story') }}</span>
+    <h1 class="display">Not cultural<br>appropriation.<br>Cultural<br>participation.</h1>
+    <p class="statement">A product that is more than something we purchase and consume: a relationship between people.</p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="vision">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <span class="eyebrow">The original vision</span>
+      <h2 class="h1">One consumer. One artisan. One pre-purchase. One YOGAMATY. One transparent supply chain.</h2>
+      <p>YOGAMATY™ is not simply another yoga product. It is a traditionally handwoven yoga mat towel/cover designed to connect conscious consumers directly with the women artisans whose traditional knowledge, labor, and craftsmanship create the product. The vision is to develop a Conscious Consumer-Funded, Indigenous-Based Fair-Exchange and Living-Income Model that recognizes the value of every contribution involved in making a product.</p>
+      <p>At the same time, YOGAMATY is intended to serve as the first pilot for TransparaTrade™, an initiative to develop a secure, immutable, open-source programming language for supply-chain documentation and transparency labeling. This project brings together the product, the person, the materials, the consumer, and the larger movement to end modern slavery.</p>
+      <p>The purpose is to demonstrate that a product can be more than something we purchase and consume. It can become a relationship between people. It can preserve cultural heritage. It can create opportunities for independent women artisans. It can demonstrate fair exchange. And it can help develop the systems necessary to make global supply chains more transparent and accountable.</p>
+    </div>
+    <div>
+      <blockquote class="quote" style="margin:0 0 1rem">
+        {{ ph('ARTISAN TESTIMONY — ADD ONLY WITH OFFICIAL DOCUMENTED CONSENT') }}
+        <cite class="quote-by">{{ ph('ATTRIBUTION BY ROLE, NEVER A LEGAL NAME') }}</cite>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="ec" style="padding-top:0">
+  <div class="wrap grid grid--2">
+    <div>
+      <span class="eyebrow">Empowerment Collective</span>
+      <h2 class="h1">A 100% survivor-led nonprofit.</h2>
+      <p>Empowerment Collective is a 100% survivor-led nonprofit based in New Haven, Connecticut, working in Nepal. It leads the project, the Allies Program and TransparaTrade.</p>
+      <p>It works from the understanding that systemic vulnerability, gendered expectation, and increasing climate risk put women in Nepal at risk of extreme poverty, forced marriage, forced labor and other forms of exploitation. Making YOGAMATY is intended to be an opportunity for paid work, recognized skill, and a pathway toward a living income for every woman involved.</p>
+      <p><a href="{{ site.ec_site }}" rel="noopener">Visit empowermentcollective.org</a></p>
+    </div>
+    <div>
+      <span class="eyebrow">Survivor leadership</span>
+      <h2 class="h1">The value of knowledge.</h2>
+      <p>The Allies Program is intended to recognize the value of different forms of knowledge: lived experience, indigenous knowledge, traditional craftsmanship, academic research, and professional expertise. The absence of academic accreditation does not mean the absence of expertise.</p>
+      <p>Survivor leadership is not about replacing academic knowledge with lived experience. It is about leveling the playing field so that the wisdom gained through surviving injustice holds equal authority in shaping the solutions intended to end it. Survivor leaders guide the purpose, values, and direction of the project. Technical Allies contribute their specialized knowledge to help make that vision possible. <a href="{{ url('become-a-technical-ally') }}">Become a Technical Ally →</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--orange" id="gwh">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <span class="eyebrow">Production partner</span>
+      <h2 class="h1">Global Women’s Handicrafts and production in Nepal.</h2>
+      <p class="statement" style="font-size:clamp(1.3rem,1rem + 1vw,1.7rem);max-width:none">Global Women’s Handicrafts is the artisan production and coordination partner for YOGAMATY.</p>
+    </div>
+    <div>
+      <p>The production coordination center is in Goldhunga, a village and former Village Development Committee that is now part of Tarakeshwar Municipality in Kathmandu District, Bagmati Province (formerly Province No. 3), central Nepal. It is known as <strong>Empowering Local Women</strong>. The center supports training, material preparation, production coordination, quality control, and other activities necessary to connect independent artisan work with international consumers.</p>
+      <p>The wider artisan network preserves traditional skills, including handloom weaving and other cultural crafts. YOGAMATY is intended to demonstrate how these traditional skills can be connected to a contemporary global market without separating the artisans from the value of their contributions.</p>
+      <p>Approximately 20 artisans have contributed to the initial development. Artisans remain anonymous: if anyone appears in published media, official documented consent is obtained first.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="cottage">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Independent women artisans and cottage industry</span>
+    <h2 class="h1">Skilled, independent contributors.</h2>
+    <p>The project builds on traditional cottage-industry production. Rather than requiring all artisans to work in one centralized factory, the intention is to support women who can produce independently from their homes. Many women face barriers to conventional employment, including household responsibilities, transportation challenges, limited financial resources, and social restrictions. Traditional handloom production can provide an opportunity to participate in paid work while preserving skills that have been passed down through generations.</p>
+    <p>The artisans are represented as skilled, independent contributors — never as helpless recipients. <a href="{{ url('how-it-works') }}#independent">How the model works →</a></p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="participation" style="padding-top:0">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Cultural participation</span>
+    <h2 class="h1">Not cultural appropriation. Cultural participation.</h2>
+    <p>An important part of the YOGAMATY philosophy is the relationship between yoga, traditional craftsmanship, and cultural participation. Yoga has historical roots in the Indian subcontinent. Traditional handloom weaving also remains an important living practice in Nepal and the surrounding region. YOGAMATY seeks to connect these traditions through a contemporary product made by women artisans who contribute their own knowledge and craftsmanship.</p>
+    <p>The purpose is not to take cultural knowledge and remove the people who preserve it from the value created. The purpose is to create meaningful participation. The artisans are not simply producing something for an outside brand. Their knowledge, skills, labor, and cultural heritage are central to the product itself.</p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="seven-keys" style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow">The Seven Keys</span>
+    <h2 class="h1">Living income, in seven keys.</h2>
+    <p style="max-width:60ch">Empowerment Collective’s Seven Keys are the framework for evaluating whether an individual’s economic participation supports a dignified and independent life.</p>
+    <ul class="chips" style="margin-top:1rem"><li>Nature</li><li>Water</li><li>Food</li><li>Housing</li><li>Medical Care</li><li>Education</li><li>Technology</li></ul>
+    <p style="margin-top:1.4rem"><a href="{{ url('how-it-works') }}#fair-exchange">The Fair-Exchange and Living-Income Model →</a></p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="orgs" style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow">How the organizations relate</span>
+    <h2 class="h1">Five connected elements.</h2>
+    <div class="table-wrap"><table class="plain"><thead><tr><th>Entity</th><th>What it is</th></tr></thead><tbody>
+      <tr><td>Empowerment Collective</td><td>100% survivor-led nonprofit based in New Haven, Connecticut, working in Nepal. Leads the project, the Allies Program and TransparaTrade.</td></tr>
+      <tr><td>Global Women’s Handicrafts</td><td>Artisan production and coordination partner; the Empowering Local Women center in Goldhunga.</td></tr>
+      <tr><td><a href="{{ url('end-modern-slavery-now') }}">End Modern Slavery Now!</a></td><td>The movement for mandatory supply-chain transparency labeling.</td></tr>
+      <tr><td><a href="{{ url('transparatrade') }}">TransparaTrade™</a></td><td>The proposed technical system.</td></tr>
+      <tr><td><a href="{{ url('shop') }}">YOGAMATY™</a></td><td>The product and first TransparaTrade pilot.</td></tr>
+    </tbody></table></div>
+    <p style="max-width:80ch">The consumer funds production. The pre-purchase helps initiate the making of YOGAMATY. The artisan contributes traditional knowledge and craftsmanship. The product is created through independent labor and living cultural traditions. The Indigenous-Based Fair-Exchange and Living-Income Model guides the relationship; the objective is to recognize contributions and create pathways toward dignified livelihoods. TransparaTrade seeks to document the events. The secure, immutable, open-source language is intended to establish verifiable records of supply-chain activities and exchanges. End Modern Slavery Now! advances the call for mandatory global accountability: making meaningful supply-chain transparency labeling a requirement rather than simply a voluntary promise. Each element supports the others.</p>
+  </div>
+</section>
+
+<section class="sec sec--orange" id="statement">
+  <div class="motifs" aria-hidden="true">{{ motif('border', 'none', 'content', cls='motif--border', inline=True, progress='self', style='bottom:18px') }}</div>
+  <div class="wrap wrap--narrow" style="margin-left:0;max-width:940px">
+    <span class="eyebrow">The project</span>
+    <p class="statement" style="max-width:none;font-size:clamp(1.3rem,1rem + 1vw,1.75rem)">YOGAMATY™ is a premium, traditionally handwoven yoga mat towel/cover created through the traditional craftsmanship of women artisans in Nepal using natural hemp and reclaimed sari textiles. The project introduces Conscious Consumer-Funded Production, where an individual consumer pre-purchases a product, helping initiate an independent artisan production opportunity with a target delivery period of 60 days.</p>
+    <p class="statement" style="max-width:none;font-size:clamp(1.3rem,1rem + 1vw,1.75rem);margin-top:1em">The project is rooted in survivor leadership, indigenous and traditional knowledge, fair exchange, living income, cultural participation, and the belief that transparency should become a basic expectation of global trade. YOGAMATY is not simply a product being sold. It is an invitation for consumers, artisans, technologists, and advocates to participate in creating a more transparent and accountable relationship between production and consumption.</p>
+    <p class="core" style="margin-top:1.4em">The product demonstrates the idea. The programming language documents the events. The labeling system communicates the evidence. The movement seeks to establish global accountability.</p>
+  </div>
+</section>
+{{ actions('white') }}
+{% endblock %}

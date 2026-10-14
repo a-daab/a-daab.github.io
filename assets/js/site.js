@@ -1,4 +1,4 @@
-/* YogaMaty — navigation + scroll-driven motif layer. No dependencies, sets no cookies, stores nothing. */
+/* YOGAMATY — navigation + scroll-driven motif layer. No dependencies, sets no cookies, stores nothing. */
 (function () {
   'use strict';
   var d = document, body = d.body;

@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+{% from "macros.html" import actions with context %}
 {% set path = "" %}
 {% set title = "" %}
-{% set description = "YogaMaty is a hemp and recycled-sari yoga mat woven by women artisans in the Kathmandu Valley — the first product to ship with a full, tier-by-tier supply chain passport you can open by scanning the label." %}
+{% set description = "YOGAMATY™ is a premium hemp and reclaimed-sari yoga mat towel/cover, handwoven by independent women artisans in Nepal — the first pilot of TransparaTrade™, a supply chain documented step by step." %}
 {% block main %}
 
-{# ───────── 1. Hero — a horizontal mat unrolls down the right half as you scroll ───────── #}
+{# ───────── 1. Hero — the product unrolls down the right half as you scroll, settling onto the outline of a conventional mat ───────── #}
 <section class="sec sec--orange hero-tall" id="top" data-divider="1">
   <div class="hero-stick">
     <div class="hero-mat" aria-hidden="true">
@@ -16,26 +17,28 @@
     <div class="hero-text">
       <span class="eyebrow">{{ t('home.hero_eyebrow') }}</span>
       <h1 class="display">FREE THE WORLD TRAPPED BEHIND THE LABEL</h1>
-      <p class="lede">A world of supply chain omniscience begins with one product. YogaMaty weaves generational Nepali arts knowledge into a vision of a future where exploitation can no longer hide.</p>
+      <p class="lede">A world of supply chain omniscience begins with one product. YOGAMATY™ weaves generational Nepali arts knowledge into a vision of a future where exploitation can no longer hide.</p>
       <div class="btn-row">
         <a class="btn btn--lg" href="{{ url('shop') }}">{{ t('nav.shop_yogamaty') }}</a>
-        <a class="btn btn--ghost btn--lg" href="{{ url('supply-chain') }}">{{ t('home.open_passport') }}</a>
+        <a class="btn btn--ghost btn--lg" href="{{ url('supply-chain') }}">{{ t('home.open_explorer') }}</a>
+        <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
       </div>
     </div>
   </div>
 </section>
 
-{# ───────── 2. The mat — sari strips are woven into the loom as you scroll ───────── #}
-<section class="sec sec--white" id="the-mat" data-divider="5">
+{# ───────── 2. The product ───────── #}
+<section class="sec sec--white" id="the-product" data-divider="5">
   <div class="wrap grid grid--split" style="align-items:stretch">
     <div>
-      <span class="eyebrow">{{ t('home.mat_eyebrow') }}</span>
-      <h2 class="h1">Woven on looms that use no electricity.</h2>
-      <p>The face of every YogaMaty is hemp thread and strips cut from reclaimed post-consumer saris, woven together on a hundred-year-old loom. Its backing is a separate handwoven hemp cloth, woven on a second hundred-year-old loom, then washed and sun-dried. The bound edge and knotted fringe are sewn on after each mat is checked by hand.</p>
-      <p>Both looms run on no electricity at all. Some other stages do use power — the finishing is done on an industrial sewing machine — which is why the passport states electricity stage by stage, never as a blanket claim for the whole product.</p>
-      <p><a href="{{ url('supply-chain') }}#electricity">{{ t('home.see_electricity') }}</a></p>
+      <span class="eyebrow">{{ t('home.product_eyebrow') }}</span>
+      <h2 class="h1">The conscious layer between you and your yoga mat.</h2>
+      <p class="lede-lg" style="margin-bottom:1em">YOGAMATY™ is a premium yoga mat towel/cover, handwoven from natural hemp and reclaimed sari textiles on traditional, electricity-free handlooms by independent women artisans in Nepal, in partnership with the survivor-led anti-slavery organization Empowerment Collective. It is the first pilot of TransparaTrade™ — an initiative to document every step of a product’s supply chain and make it visible to the person who buys it.</p>
+      <p>It is placed directly on top of your existing conventional yoga mat, creating a washable textile layer between your body and the mat underneath. Your conventional mat keeps providing the cushioning and support; YOGAMATY provides the textile surface. It is not a standalone yoga mat.</p>
+      <p>Yoga has become a global practice of mindfulness, well-being and discipline, yet many of the products used in it come from supply chains consumers know very little about. The consciousness we bring to our practice should also extend to the people and materials behind the products we use.</p>
+      <p><a href="{{ url('shop') }}#details">See the specifications →</a> &nbsp; <a href="{{ url('supply-chain') }}#electricity">{{ t('home.see_electricity') }}</a></p>
       <figure class="media" style="margin-top:1rem;max-width:520px">
-        <img src="/assets/media/yogamaty-flat-overhead.webp" width="942" height="942" alt="YogaMaty seen flat from overhead: a long handwoven mat of multicoloured recycled-sari stripes with a cream bound edge and knotted fringe at each end" loading="lazy" decoding="async" style="display:block;width:100%;height:auto">
+        <img src="/assets/media/yogamaty-flat-overhead.webp" width="942" height="942" alt="YOGAMATY™ seen flat from overhead: a long handwoven towel/cover of multicolored reclaimed-sari stripes with a cream bound edge and knotted fringe at each short end" loading="lazy" decoding="async" style="display:block;width:100%;height:auto">
       </figure>
     </div>
     <div class="weave-col" aria-hidden="true">
@@ -44,20 +47,32 @@
   </div>
 </section>
 
-{# ───────── 3. The makers — two cupped hands reach down from the top right ───────── #}
+{# ───────── 3. The makers ───────── #}
 <section class="sec sec--orange" id="makers" data-divider="2">
   <div class="motifs" aria-hidden="true">
     {{ motif('hands-cup', 'none', 'content', '', cls='hands-cup') }}
   </div>
   <div class="wrap wrap--narrow" style="max-width:860px;margin-left:0;margin-right:auto">
     <span class="eyebrow">{{ t('home.makers_eyebrow') }}</span>
-    <p class="statement">Every YogaMaty is made by women artisans in Nepal who are trained and employed through Empowerment Collective, a 100% survivor-led nonprofit dedicated to ending modern slavery.</p>
-    <p class="statement">Making this product is itself an opportunity for economic empowerment, through a living income, for every woman involved.</p>
-    <div class="btn-row"><a class="btn" href="{{ url('about') }}">{{ t('home.meet_makers') }}</a></div>
+    <p class="statement">One consumer. One artisan. One pre-purchase. One YOGAMATY. One transparent supply chain.</p>
+    <p class="statement">Each piece is woven by an independent woman artisan, working from home, connected to Empowerment Collective’s production partner Global Women’s Handicrafts in Nepal.</p>
+    <p class="statement">Not cultural appropriation. Cultural participation.</p>
+    <div class="btn-row"><a class="btn" href="{{ url('our-story') }}">{{ t('home.meet_makers') }}</a><a class="btn btn--ghost" href="{{ url('how-it-works') }}">{{ t('home.see_how') }}</a></div>
   </div>
 </section>
 
-{# ───────── 4. The problem — spiral clouds, and spiral rain that falls as you scroll ───────── #}
+{# ───────── 4. Conscious Consumer-Funded Production ───────── #}
+<section class="sec sec--white" id="ccfp" data-divider="6">
+  <div class="wrap wrap--narrow" style="margin-left:0;max-width:880px">
+    <span class="eyebrow">{{ t('home.how_eyebrow') }}</span>
+    <h2 class="h1">Conscious Consumer-Funded Production.</h2>
+    <p>Instead of producing large quantities in advance and then trying to sell them, the process begins with you: you pre-purchase a YOGAMATY, and that purchase helps provide the working capital to start production. One consumer, one individual artisan production opportunity.</p>
+    <p>You are not making a donation and not providing a loan. You are purchasing a product — but the way the purchase is organized creates a more direct, transparent and equitable relationship between you and the people whose labor produces it. Made to order; target delivery within 60 days.</p>
+    <p><a class="btn btn--ghost" href="{{ url('how-it-works') }}">{{ t('home.see_how') }}</a></p>
+  </div>
+</section>
+
+{# ───────── 5. The problem ───────── #}
 <section class="sec sec--white" id="why" data-divider="9">
   <div class="motifs" aria-hidden="true">
     {{ motif('rain', 'none', 'content', '', cls='rain-art motif--clip', inline=True) }}
@@ -67,14 +82,14 @@
     <div class="why-left">
       <span class="eyebrow">{{ t('home.why_eyebrow') }}</span>
       <h2 class="h1">50 million people are trapped in modern slavery.</h2>
-      <p>The most accurate statistics to date indicate that 50 million people are trapped in modern slavery worldwide — and the number grew by 10 million between 2016 and 2021.<sup><a href="#src-gsi" aria-label="Source 1">1</a></sup> Many of them are trapped inside supply chains, producing clothing, electronics and food for global markets.</p>
+      <p>While the veiled nature of modern slavery makes it impossible to know the full extent of global exploitation, the most accurate statistics to date indicate that 50 million people are trapped in modern slavery worldwide — and the number grew by 10 million between 2016 and 2021.<sup><a href="#src-gsi" aria-label="Source 1">1</a></sup> Many of them are trapped inside supply chains, producing clothing, electronics and food for global markets.</p>
       <p>Modern slavery and the climate crisis are tangled in a vicious cycle: forced labor is most heavily concentrated in environmentally destructive industries, and the disasters those industries fuel leave people in the kind of desperation traffickers exploit.<sup><a href="#src-pec" aria-label="Source 2">2</a></sup></p>
-      <p><a class="btn btn--ghost" href="{{ url('transparatrade') }}#argument">{{ t('home.read_argument') }}</a></p>
+      <p><a class="btn btn--ghost" href="{{ url('end-modern-slavery-now') }}#argument">{{ t('home.read_argument') }}</a></p>
     </div>
     <div>
       <p class="quote" style="margin-top:2.4rem">With each dollar we spend, we vote for the world we want to live in.</p>
-      <p class="small" style="margin-top:2.4rem" id="src-gsi" data-source="Walk Free, Global Slavery Index 2023 (50 million in modern slavery on any given day in 2021; +10 million since 2016)">
-        <strong>1.</strong> <a href="{{ site.walkfree_gsi_2023 }}" rel="noopener">Walk Free, Global Slavery Index 2023</a> — an estimated 50 million people in modern slavery on any given day in 2021, up 10 million since 2016.
+      <p class="small" style="margin-top:2.4rem" id="src-gsi" data-source="Walk Free, Global Slavery Index 2023" data-source-date="2023" data-years="2016–2021">
+        <strong>1.</strong> <a href="{{ site.walkfree_gsi_2023 }}" rel="noopener">Walk Free, <em>Global Slavery Index 2023</em></a> (2023) — 50 million people in modern slavery, up 10 million between 2016 and 2021.
       </p>
       <p class="small" id="src-pec" data-source="Modern Slavery and Human Rights Policy and Evidence Centre, Global Commission scoping study report">
         <strong>2.</strong> <a href="{{ site.mspec_scoping_study }}" rel="noopener">Modern Slavery and Human Rights Policy and Evidence Centre, Global Commission scoping study report</a>.
@@ -83,55 +98,57 @@
   </div>
 </section>
 
-{# ───────── 5. The passport — an abstract Mithila flow; each stage links into the passport ───────── #}
-<section class="sec sec--orange" id="passport" data-divider="3">
+{# ───────── 6. The supply chain ───────── #}
+<section class="sec sec--orange" id="chain" data-divider="3">
   <div class="wrap">
-    <span class="eyebrow">{{ t('home.passport_eyebrow') }}</span>
-    <h2 class="h1" style="max-width:20ch">Scan the label. See every stage.</h2>
-    <p class="statement">From raw plant and reclaimed sari to the customer who scans the code.</p>
+    <span class="eyebrow">{{ t('home.chain_eyebrow') }}</span>
+    <h2 class="h1" style="max-width:20ch">Document the steps. Protect the person.</h2>
+    <p class="statement">Two material journeys — natural hemp and reclaimed saris — meet at the loom, then travel to you.</p>
     {{ flow(url('supply-chain')) }}
-    <p class="statement" style="margin-top:2rem;max-width:34ch">Today, every record is entered by hand. That is exactly the limitation TransparaTrade exists to fix.</p>
+    <p class="statement" style="margin-top:2rem;max-width:36ch">Today, records are entered by hand. That is exactly the weakness TransparaTrade exists to fix.</p>
     <div class="btn-row">
-      <a class="btn" href="{{ url('supply-chain') }}">{{ t('home.open_passport') }}</a>
+      <a class="btn" href="{{ url('supply-chain') }}">{{ t('home.open_explorer') }}</a>
       <a class="btn btn--ghost" href="{{ url('transparatrade') }}">{{ t('home.what_is_tt') }}</a>
     </div>
   </div>
 </section>
 
-{# ───────── 6. Three reasons — one lotus blooms from the bottom centre as you scroll ───────── #}
+{# ───────── 7. Three appeals, in order ───────── #}
 <section class="sec sec--white" id="reasons" data-divider="none">
   <div class="motifs" aria-hidden="true">
     {{ motif('lotus-bloom', 'none', 'content', '', cls='lotus-art motif--clip', inline=True, progress='end') }}
   </div>
   <div class="wrap">
     <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
-    <h2 class="h1" style="max-width:18ch">Why people choose YogaMaty.</h2>
+    <h2 class="h1" style="max-width:18ch">Why people choose YOGAMATY™.</h2>
     <div class="grid grid--3" style="margin-top:3rem">
       <div class="appeal"><span class="num">1</span><h3>Ethics and transparency</h3>
-        <p>The supply chain is fully visible to consumers, revealing that human dignity, sustainability, and living wages are prioritized at every stage.</p></div>
+        <p>The supply chain is being documented step by step and made visible to consumers, with human dignity, sustainability, and fair exchange prioritized at every stage.</p></div>
       <div class="appeal"><span class="num">2</span><h3>Energy</h3>
-        <p>The energy that flows through your yoga practice should not be grounded on a mat that holds the energy of suffering, extraction, and toxic materials. YogaMaty allows yogis to weave their practice with the energy of empowerment and environmental protection.</p></div>
-      <div class="appeal" data-pending="sari-fiber-content"><span class="num">3</span><h3>Health</h3>
-        {# Cotton wording removed until the sari fiber content is confirmed (Concept §7.1). #}
-        <p>YogaMaty is woven with natural hemp fibers and reclaimed sari fabric for safe and healthy interaction with skin.</p></div>
+        <p>The energy that flows through your yoga practice should not be grounded on a mat that holds the energy of suffering, extraction, and toxic materials. YOGAMATY allows yogis to weave their practice with the energy of empowerment and environmental protection.</p></div>
+      <div class="appeal"><span class="num">3</span><h3>Health</h3>
+        <p>YOGAMATY gives your practice a washable, handwoven textile surface of natural hemp and reclaimed sari fabric, so your skin rests on cloth rather than directly on your conventional mat.</p></div>
     </div>
   </div>
 </section>
 
-{# ───────── 7. The ask — text only; the eye-pattern stitched divider closes the section ───────── #}
+{# ───────── 8. The ask ───────── #}
 <section class="sec sec--orange" id="ask" data-divider="10">
   <div class="wrap wrap--narrow" style="margin-left:0;margin-right:auto;max-width:880px">
     <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
     <h2 class="display" style="font-size:clamp(2.2rem,1rem + 5vw,4.2rem);color:#fff">Make transparency the law.</h2>
-    <p class="statement">Our mission starts with YogaMaty and ends with a world where supply chain transparency labeling is mandatory for every product that enters the market.</p>
+    <p class="statement">Our mission starts with YOGAMATY and ends with a world where supply chain transparency labeling is mandatory for every product that enters the market.</p>
     <div class="btn-row">
-      <a class="btn btn--lg" href="{{ url('petition') }}">{{ t('home.sign_petition') }}</a>
-      <a class="btn btn--ghost btn--lg" href="{{ url('transparatrade') }}#apply">{{ t('home.join_team') }}</a>
+      <a class="btn btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
+      <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
     </div>
   </div>
 </section>
 
-{# ───────── 8. Shop — a village with a clothesline (right, bottom) and a spiral sun (top right) ───────── #}
+{# ───────── 9. BUY · DEMAND · BUILD ───────── #}
+{{ actions('white') }}
+
+{# ───────── 10. Shop ───────── #}
 <section class="sec sec--white sec--tight sec--hero-last" id="shop-cta">
   <div class="motifs" aria-hidden="true">
     {{ motif('sun-spiral', 'none', 'content', '', cls='sun-art', rot=120) }}
@@ -140,8 +157,8 @@
   <div class="wrap grid grid--split">
     <div>
       <span class="eyebrow">{{ t('home.shop_eyebrow') }}</span>
-      <h2 class="h1">Bring a YogaMaty home.</h2>
-      <p>$38.00 USD. Each piece is unique and handmade by our women, so your product will resemble the image shown but have its own unique color palette.</p>
+      <h2 class="h1">Pre-purchase a YOGAMATY.</h2>
+      <p>{% if site.price %}${{ site.price }} USD{% else %}{{ ph('ADD RETAIL PRICE') }} USD{% endif %} · {{ t('shop.made_to_order') }}. {{ t('shop.variation') }}</p>
     </div>
     <div class="btn-row" style="margin-top:0">
       <a class="btn btn--lg" href="{{ url('shop') }}">{{ t('nav.shop_yogamaty') }}</a>

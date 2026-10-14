@@ -1,62 +1,71 @@
 {% extends "base.html" %}
+{% from "macros.html" import actions with context %}
 {% set path = "shop" %}
-{% set title = "Shop YogaMaty" %}
-{% set description = "Buy the YogaMaty: a hemp and reclaimed-sari yoga mat, 68 × 24 in, handwoven in Nepal and shipped from New Haven, Connecticut. $38. Scan the label to open its full supply chain passport." %}
+{% set title = "Shop YOGAMATY™" %}
+{% set description = "Pre-purchase YOGAMATY™: a hemp yoga mat towel/cover handwoven in Nepal from natural hemp and reclaimed sari textiles, 68 × 24 in, made to order with a target delivery within 60 days. Used on top of your yoga mat." %}
 {% block head %}
-<script type="application/ld+json">
-{{ {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "YogaMaty",
-  "description": "Hemp and reclaimed-sari yoga mat, 68 in × 24 in, woven by women artisans in the Kathmandu Valley on hundred-year-old electricity-free looms. Ships with a supply chain passport.",
-  "brand": {"@type": "Brand", "name": "YogaMaty"},
-  "weight": {"@type": "QuantitativeValue", "value": 260, "unitCode": "GRM"},
-  "offers": {
+{% set offer = {
     "@type": "Offer",
     "url": BASE ~ url('shop'),
-    "price": site.price,
     "priceCurrency": site.currency,
-    "availability": "https://schema.org/OutOfStock" if sold_out() else "https://schema.org/InStock",
+    "availability": "https://schema.org/OutOfStock" if sold_out() else "https://schema.org/PreOrder",
     "seller": {"@type": "Organization", "name": "Empowerment Collective"}
-  }
-}|tojson }}
+} %}
+{% if site.price %}{% set _ = offer.update({"price": site.price}) %}{% endif %}
+<script type="application/ld+json">
+{{ ({
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "YOGAMATY™ — The Conscious Layer Between You and Your Yoga Mat",
+  "description": "Handwoven hemp yoga mat towel/cover, 68 in × 24 in × 3 mm, made from natural hemp yarn and reclaimed sari textiles by independent women artisans in Nepal. Used on top of a conventional yoga mat; not a standalone yoga mat. First pilot of TransparaTrade™.",
+  "brand": {"@type": "Brand", "name": "YOGAMATY™"},
+  "offers": offer
+})|tojson }}
 </script>
 {% endblock %}
 {% block main %}
 <section class="sec sec--white sec--head" style="padding-top:calc(var(--header-h) + clamp(32px,5vw,70px))">
   <div class="wrap grid grid--split" style="align-items:start">
     <div>
-      <figure class="media" style="--ar:68/34">
-        <div class="media-ph" role="img" aria-label="Product photograph placeholder: flat overhead, full length" style="aspect-ratio:68/34"><b>Product — flat overhead, full length</b></div>
+      <figure class="media">
+        <img src="/assets/media/yogamaty-flat-overhead.webp" width="942" height="942" alt="YOGAMATY™ seen flat from overhead: a long handwoven towel/cover of multicolored reclaimed-sari stripes with a cream bound edge and knotted fringe at each short end" decoding="async" style="display:block;width:100%;height:auto">
       </figure>
       <div class="grid grid--3" style="gap:12px;margin-top:12px">
-        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: rolled three-quarter"><b>Rolled</b></div>
-        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: partially rolled overhead"><b>Partly rolled</b></div>
-        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: weave detail"><b>Weave detail</b></div>
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: rolled close-up"><b>Rolled close-up</b></div>
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: in use on top of a conventional mat"><b>In use, on top of a conventional mat</b></div>
+        <div class="media-ph" style="aspect-ratio:1/1" role="img" aria-label="Product photograph placeholder: weave macro"><b>Weave macro</b></div>
       </div>
     </div>
     <div>
       <span class="eyebrow">{{ t('shop.eyebrow') }}</span>
-      <h1>YogaMaty</h1>
-      <p class="h2" style="margin:0;color:var(--ink)"><span class="count-badge" style="font-size:2.4rem">$38.00</span> <span class="small" style="color:#444">USD</span> {{ ph('CONFIRM PRICE MATCHES ETSY LISTING') }}</p>
-      <p class="quote" style="font-size:1.35rem;margin:.8rem 0 1.6rem;max-width:36ch">Each piece is unique and handmade by our women, so your product will resemble the image shown but have its own unique color palette.</p>
+      <h1>YOGAMATY™</h1>
+      <p class="h2" style="margin:0;color:var(--ink)">The Conscious Layer Between You and Your Yoga Mat</p>
 
-      {% if sold_out() %}
-        <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.sold_out') }}</span>
-        <p class="small" style="margin-top:10px;color:#444">{{ t('shop.sold_out_note') }}</p>
-      {% elif site.stripe_payment_link %}
-        <a class="btn btn-xl" href="{{ site.stripe_payment_link }}" rel="noopener">{{ t('shop.buy') }}</a>
-        <p class="small" style="margin-top:10px;color:#444">{{ t('shop.secure') }}</p>
-      {% else %}
-        <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.opens_at_launch') }}</span>
-        <p class="small" style="margin-top:10px">{{ ph('ADD STRIPE PAYMENT LINK — set stripe_payment_link in src/site.json') }}</p>
-      {% endif %}
+      <div class="preorder">
+        <div class="price">{% if site.price %}${{ site.price }}{% else %}{{ ph('ADD RETAIL PRICE') }}{% endif %} <span class="small" style="color:#444">USD</span></div>
+        <p class="meta"><b>{{ t('shop.made_to_order') }}</b></p>
+        <p class="meta"><b>{{ t('shop.use_on_top') }}</b></p>
+        <p class="vary">{{ t('shop.variation') }}</p>
 
-      <div class="callout" style="margin-top:2rem">
-        <p><strong>Ships from New Haven, Connecticut.</strong> Within the US, expect a few days to a week. International delivery takes longer and varies. Recipients outside the US may owe import duties and taxes on delivery; these are not included in the price.</p>
-        <p><strong>Returns.</strong> Accepted within 30 days {{ ph('CONFIRM MATCHES ETSY') }} if unused, as sold. You pay return postage unless the mat has serious quality issues or is significantly different from what was described. <a href="{{ url('shipping-returns') }}">Full shipping &amp; returns policy</a>.</p>
+        {% if sold_out() %}
+          <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.sold_out') }}</span>
+          <p class="small" style="margin-top:10px;color:#444">{{ t('shop.sold_out_note') }}</p>
+        {% elif site.stripe_payment_link %}
+          <a class="btn btn-xl" href="{{ site.stripe_payment_link }}" rel="noopener">{{ t('shop.buy') }}</a>
+          <p class="small" style="margin-top:10px;color:#444">{{ t('shop.secure') }}</p>
+        {% else %}
+          <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.opens_at_launch') }}</span>
+          <p class="small" style="margin-top:10px">{{ ph('ADD STRIPE PAYMENT LINK — set stripe_payment_link in src/site.json') }}</p>
+        {% endif %}
+        {% set b = site.batch %}
+        <p class="batch-status" data-batch>Batch {% if b.label.startswith('[') %}{{ ph(b.label|trim('[]')) }}{% else %}{{ b.label }}{% endif %} — {% if b.taken is none %}{{ ph('x') }}{% else %}{{ b.taken }}{% endif %} of ~{{ b.capacity }} places taken{% if sold_out() %} · <strong>This batch is full.</strong>{% endif %}</p>
       </div>
-      <p class="small" style="color:#444">Small batch, handmade — when a batch is gone, it is gone.</p>
+
+      <div class="callout">
+        <p><strong>A pre-purchase, not a donation or a loan.</strong> You are buying a product, made to order for you. Your purchase helps provide the working capital to begin production — one consumer, one artisan, one pre-purchase.</p>
+        <p><strong>Target delivery within 60 days</strong> of your pre-purchase — a target, not a guarantee. If it will be late we will tell you with a revised date and offer cancellation with a full refund. See <a href="{{ url('shipping-and-delivery') }}">Shipping and Delivery</a> and <a href="{{ url('refunds-and-cancellations') }}">Refunds and Cancellations</a>.</p>
+      </div>
+      <p class="small" style="color:#444">One production batch is approximately 50 pieces, subject to operational confirmation. When a batch is full, the next opens.</p>
     </div>
   </div>
 </section>
@@ -67,22 +76,31 @@
       <span class="eyebrow">{{ t('shop.details') }}</span>
       <h2 class="h1">What it is.</h2>
       <table class="facts"><tbody>
-        <tr><th scope="row">Dimensions</th><td>68 in (L) × 24 in (W) <span class="small" style="color:#444">· 173 × 61 cm</span></td></tr>
-        <tr><th scope="row">Thickness</th><td>{{ ph('ADD THICKNESS IN MILLIMETERS') }}</td></tr>
-        <tr><th scope="row">Weight</th><td>260 g</td></tr>
-        <tr><th scope="row">Face</th><td>Hemp warp with weft strips cut from reclaimed post-consumer sari fabric</td></tr>
-        <tr><th scope="row">Backing</th><td>Handwoven hemp cloth, no artificial dyes</td></tr>
-        <tr><th scope="row">Finish</th><td>Bound edge with knotted fringe at both ends</td></tr>
-        <tr><th scope="row">Recycled content</th><td>{{ ph('ADD % OF FINISHED WEIGHT FROM RECLAIMED SARI') }}</td></tr>
-        <tr><th scope="row">Care</th><td>{{ ph('ADD CARE INSTRUCTIONS — machine-wash or hand-wash') }}</td></tr>
-        <tr><th scope="row">Best used</th><td>{{ ph('ADD — alone, over a conventional mat, or under one') }}</td></tr>
-        <tr><th scope="row">Made</th><td>By women artisans in the Kathmandu Valley, Nepal, on hundred-year-old looms that use no electricity</td></tr>
+        <tr><th scope="row">What it is</th><td>A yoga mat towel/cover, placed directly on top of an existing conventional yoga mat. Not intended to be used as a standalone yoga mat.</td></tr>
+        <tr><th scope="row">Dimensions</th><td>68 in (L) × 24 in (W) × 3 mm thick <span class="small" style="color:#444">· 173 × 61 cm</span></td></tr>
+        <tr><th scope="row">Finished weight</th><td>{{ ph('ADD — remains to be confirmed; published once measured') }}</td></tr>
+        <tr><th scope="row">Composition</th><td>Natural fiber with reclaimed materials. Face: hemp warp with weft strips cut from reclaimed post-consumer sari fabric. Backing: handwoven hemp cloth, no artificial dyes. Bound edge with knotted fringe at both short ends.</td></tr>
+        <tr><th scope="row">Primary textile inputs</th><td class="data">Natural hemp yarn about 650 g; reclaimed sari fabric about 484 g; combined about 1,134 g — about 61.5% hemp and 38.5% reclaimed sari by weight. <span class="small" style="color:#444">These are the percentages of the two principal textile inputs, not of the finished product. Reclaimed saris may contain mixed fibers.</span></td></tr>
+        <tr><th scope="row">Care</th><td>Can be washed on a gentle machine cycle and air-dried. Hand-washing is recommended for longer-lasting care.</td></tr>
+        <tr><th scope="row">Delivery</th><td>Made to order; target delivery within 60 days of the pre-purchase.</td></tr>
+        <tr><th scope="row">Made</th><td>By independent women artisans in Nepal, on traditional handlooms, coordinated through Global Women’s Handicrafts.</td></tr>
       </tbody></table>
+
+      <h3 style="margin-top:2.4rem">Construction</h3>
+      <div class="table-wrap"><table class="plain"><thead><tr><th>Component</th><th>Materials</th><th>How it is made</th></tr></thead><tbody>
+        <tr><td>Face</td><td>Hemp warp; weft strips cut from reclaimed post-consumer sari</td><td>Traditional handloom, no electricity</td></tr>
+        <tr><td>Backing</td><td>Handwoven hemp cloth, no artificial dyes</td><td>Traditional handloom, then washed and sun-dried</td></tr>
+        <tr><td>Binding and fringe</td><td>Bound edge; knotted fringe at both short ends</td><td>Sewn during finishing — sewing may use electricity</td></tr>
+      </tbody></table></div>
     </div>
     <div>
-      <p>The face of the mat is hemp thread and strips cut from reclaimed post-consumer saris, woven together on a hundred-year-old loom. It is backed with a separate handwoven hemp cloth — a genuine feature of the mat, and one that keeps it from being just a surface. The bound edge and knotted fringe are sewn on after every piece is checked by hand.</p>
-      <p>Because the weft comes from reclaimed saris, no two mats are alike: the stripes, the colors and the rhythm of the weave differ from piece to piece. That is the imperfection that proves it was made by hand.</p>
-      <p><a href="{{ url('supply-chain') }}">Open the supply chain passport</a> to see every stage of how a YogaMaty is made — or scan the label on the mat when it arrives.</p>
+      <p>YOGAMATY is traditionally handwoven from natural hemp yarn and reclaimed sari textiles. It brings together traditional weaving knowledge, agricultural materials, textile recovery and contemporary consumer demand.</p>
+      <p>Because the weft comes from reclaimed saris, no two pieces are alike: the stripes, colors and rhythm of the weave differ from piece to piece. That is the imperfection that proves it was made by hand.</p>
+      <div class="note-box">
+        <p><strong>Where it is today.</strong> YOGAMATY is in its pilot and prototype stage. Further testing will examine grip, movement, bunching, durability, washing and performance when used on top of conventional yoga mats; we make no promises about those until it is complete. The finished weight, other components and packaging measurements are still being confirmed.</p>
+      </div>
+      <p>It is made, packed and documented as the first pilot of <a href="{{ url('transparatrade') }}">TransparaTrade™</a>. <a href="{{ url('supply-chain') }}">Follow the supply chain</a> — and when records are published, scan the label to open the record for your piece in the <a href="{{ url('explorer') }}">Supply-Chain Explorer</a>.</p>
+      <p><a href="{{ url('faq') }}">Frequently asked questions</a></p>
     </div>
   </div>
 </section>
@@ -91,17 +109,18 @@
   <div class="wrap">
     <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
     <div class="grid grid--3" style="margin-top:2rem">
-      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Ethics and transparency.</strong> The supply chain is fully visible to consumers, revealing that human dignity, sustainability, and living wages are prioritized at every stage.</p></div>
-      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Energy.</strong> The energy that flows through your yoga practice should not be grounded on a mat that holds the energy of suffering, extraction, and toxic materials. YogaMaty allows yogis to weave their practice with the energy of empowerment and environmental protection.</p></div>
-      <div data-pending="sari-fiber-content"><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Health.</strong> YogaMaty is woven with natural hemp fibers and reclaimed sari fabric for safe and healthy interaction with skin.</p></div>
+      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Ethics and transparency.</strong> The supply chain is being documented step by step and made visible to consumers, with human dignity, sustainability, and fair exchange prioritized at every stage.</p></div>
+      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Energy.</strong> The energy that flows through your yoga practice should not be grounded on a mat that holds the energy of suffering, extraction, and toxic materials. YOGAMATY allows yogis to weave their practice with the energy of empowerment and environmental protection.</p></div>
+      <div><p class="statement" style="font-size:clamp(1.5rem,1.1rem + 1vw,1.75rem)"><strong style="font-weight:400;text-decoration:underline;text-underline-offset:.25em">Health.</strong> YOGAMATY gives your practice a washable, handwoven textile surface of natural hemp and reclaimed sari fabric, so your skin rests on cloth rather than directly on your conventional mat.</p></div>
     </div>
   </div>
 </section>
 
 <section class="sec sec--white sec--tight">
   <div class="wrap grid grid--split">
-    <div><h2 class="h1" style="margin:0">Buying for a studio?</h2><p style="margin-top:.6rem">Request a meeting about a wholesale or studio partnership.</p></div>
+    <div><h2 class="h1" style="margin:0">Buying for a studio?</h2><p style="margin-top:.6rem">Request a meeting about a wholesale or studio partnership: covers that carry a story your staff can tell, and a washable layer over shared mats.</p></div>
     <div class="btn-row" style="margin-top:0"><a class="btn btn--ghost btn--lg" href="{{ url('shop/wholesale') }}">{{ t('nav.wholesale') }}</a></div>
   </div>
 </section>
+{{ actions('white') }}
 {% endblock %}

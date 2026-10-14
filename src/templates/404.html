@@ -9,10 +9,10 @@
   <div class="btn-row"><a class="btn" href="{{ url() }}">{{ t('notfound.home') }}</a><a class="btn btn--ghost" href="{{ url('supply-chain') }}">{{ t('nav.supply_chain') }}</a></div>
 </div></section>
 <script>
-/* GitHub Pages serves this file for unknown paths. QR codes encode /passport/<batch>?mat=<serial>,
+/* GitHub Pages serves this file for unknown paths. QR codes (yogamaty.com/passport/[BATCH]?mat=[SERIAL]) encode /passport/<batch>?mat=<serial>,
    which is not a real file, so hand it to the passport page. */
 (function(){var m=location.pathname.match(/^\/passport\/([^\/]+)\/?$/);
 if(m){var q=new URLSearchParams(location.search);q.set("batch",decodeURIComponent(m[1]));
-location.replace("/en/supply-chain/?"+q.toString())}})();
+location.replace("/en/explorer/?"+q.toString())}})();
 </script>
 {% endblock %}

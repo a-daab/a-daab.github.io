@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{% set full_title = (title ~ " — YogaMaty") if title is defined and title else t('meta.home_title') %}
+{% set full_title = (title ~ " — YOGAMATY™") if title is defined and title else t('meta.home_title') %}
 {% set desc = description if description is defined and description else t('meta.default_description') %}
 {% set canon = BASE ~ (url(page_path) if page_path != '404' else '/') %}
 <title>{{ full_title }}</title>
@@ -13,7 +13,7 @@
 <link rel="canonical" href="{{ canon }}">
 {% if site.languages|length > 1 %}{% for l in site.languages %}<link rel="alternate" hreflang="{{ l }}" href="{{ BASE }}/{{ l }}/{{ page_path ~ '/' if page_path else '' }}">{% endfor %}{% endif %}
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="YogaMaty">
+<meta property="og:site_name" content="YOGAMATY™">
 <meta property="og:title" content="{{ full_title }}">
 <meta property="og:description" content="{{ desc }}">
 <meta property="og:url" content="{{ canon }}">
@@ -28,15 +28,10 @@
 
 <header class="site-header" id="site-header">
   <div class="bar">
-    <a class="wordmark" href="{{ url() }}" aria-label="YogaMaty — {{ t('nav.home') }}">YOGAMATY</a>
+    <a class="wordmark" href="{{ url() }}" aria-label="{{ t('a11y.logo_home') }}">YOGAMATY<sup>™</sup></a>
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="{{ t('a11y.menu') }}"><span></span></button>
     <nav aria-label="{{ t('a11y.primary_nav') }}">
     <ul class="nav" id="nav">
-      <li><a href="{{ url() }}"{% if current == '' %} aria-current="page"{% endif %}>{{ t('nav.home') }}</a></li>
-      <li><a href="{{ url('supply-chain') }}"{% if current == 'supply-chain' %} aria-current="page"{% endif %}>{{ t('nav.supply_chain') }}</a></li>
-      <li><a href="{{ url('transparatrade') }}"{% if current == 'transparatrade' %} aria-current="page"{% endif %}>{{ t('nav.transparatrade') }}</a></li>
-      <li><a href="{{ url('petition') }}"{% if current == 'petition' %} aria-current="page"{% endif %}>{{ t('nav.petition') }}</a></li>
-      <li><a href="{{ url('about') }}"{% if current == 'about' %} aria-current="page"{% endif %}>{{ t('nav.about') }}</a></li>
       <li class="has-drop" id="shop-menu">
         <button type="button" class="nav-btn" id="shop-btn" aria-expanded="false" aria-haspopup="true" aria-controls="shop-drop">{{ t('nav.shop') }}<span class="caret" aria-hidden="true"></span></button>
         <ul class="drop" id="shop-drop">
@@ -44,6 +39,11 @@
           <li><a href="{{ url('shop/wholesale') }}"{% if current == 'shop/wholesale' %} aria-current="page"{% endif %}>{{ t('nav.wholesale') }}</a></li>
         </ul>
       </li>
+      <li><a href="{{ url('how-it-works') }}"{% if current == 'how-it-works' %} aria-current="page"{% endif %}>{{ t('nav.how') }}</a></li>
+      <li><a href="{{ url('supply-chain') }}"{% if current == 'supply-chain' %} aria-current="page"{% endif %}>{{ t('nav.supply_chain') }}</a></li>
+      <li><a href="{{ url('transparatrade') }}"{% if current == 'transparatrade' %} aria-current="page"{% endif %}>{{ t('nav.transparatrade') }}</a></li>
+      <li><a href="{{ url('end-modern-slavery-now') }}"{% if current == 'end-modern-slavery-now' %} aria-current="page"{% endif %}><span class="lbl-long">{{ t('nav.movement') }}</span><span class="lbl-short" aria-hidden="true">{{ t('nav.movement_short') }}</span></a></li>
+      <li><a href="{{ url('our-story') }}"{% if current == 'our-story' %} aria-current="page"{% endif %}>{{ t('nav.story') }}</a></li>
     </ul>
     </nav>
   </div>
@@ -56,15 +56,20 @@
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <div class="wm">YOGAMATY</div>
+      <div class="wm">YOGAMATY<sup>™</sup></div>
       <p class="small" style="color:#444;margin-top:8px">{{ t('footer.tagline') }}</p>
     </div>
     <nav aria-label="{{ t('a11y.footer_nav') }}">
       <ul>
+        <li><a href="{{ url('track-your-order') }}">{{ t('footer.track') }}</a></li>
+        <li><a href="{{ url('explorer') }}">{{ t('footer.explorer') }}</a></li>
+        <li><a href="{{ url('whitepaper') }}">{{ t('footer.whitepaper') }}</a></li>
+        <li><a href="{{ url('faq') }}">{{ t('footer.faq') }}</a></li>
+        <li><a href="{{ url('become-a-technical-ally') }}">{{ t('footer.ally') }}</a></li>
         <li><a href="{{ url('contact') }}">{{ t('footer.contact') }}</a></li>
-        <li><a href="{{ url('privacy') }}">{{ t('footer.privacy') }}</a></li>
-        <li><a href="{{ url('terms') }}">{{ t('footer.terms') }}</a></li>
-        <li><a href="{{ url('shipping-returns') }}">{{ t('footer.shipping') }}</a></li>
+        <li><a href="{{ url('privacy-and-terms') }}">{{ t('footer.privacy') }}</a></li>
+        <li><a href="{{ url('shipping-and-delivery') }}">{{ t('footer.shipping') }}</a></li>
+        <li><a href="{{ url('refunds-and-cancellations') }}">{{ t('footer.refunds') }}</a></li>
       </ul>
     </nav>
     <p class="fine">© {{ year }} Empowerment Collective. {{ t('footer.fine') }}{% if site.test_build %} <strong>{{ t('footer.test_build') }}</strong>{% endif %}</p>

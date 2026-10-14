@@ -32,13 +32,17 @@ c = await j(await worker.fetch(new Request('https://api.yogamaty.com/petition/co
 assert.equal(c.visible, true); assert.equal(c.count, 3);
 
 const words = (n) => Array(n).fill('w').join(' ');
-const ally = { first_name: 'Ada', last_name: 'L', email: 'ada@x.org', company: 'Co', skills: ['Law and policy', 'Not a skill'], statement: words(250), consent: true, t: old() };
+const ally = { full_name: 'Ada L', email: 'ada@x.org', organization: 'Co', expertise: 'Cybersecurity', statement: words(250), ack: true, consent: true, t: old() };
 r = await j(await post('/allies', ally)); assert.equal(r.s, 200);
 assert.equal(sent.length, 1); assert.equal(sent[0].to[0], 'allies@example.org'); assert.equal(sent[0].reply_to, 'ada@x.org');
-assert.ok(!sent[0].text.includes('Not a skill'), 'unknown skills dropped');
+r = await j(await post('/allies', { ...ally, organization: '' })); assert.equal(r.s, 200, 'organization is optional');
 r = await j(await post('/allies', { ...ally, statement: words(251) })); assert.equal(r.s, 422); assert.ok(r.errors.statement, '251 words rejected server-side');
-r = await j(await post('/allies', { ...ally, skills: [], skills_other: '' })); assert.ok(r.errors.skills);
-r = await j(await post('/allies', { ...ally, first_name: 'Ada\r\nBcc: x@evil', link: 'javascript:alert(1)' })); assert.ok(r.errors.link);
+r = await j(await post('/allies', { ...ally, expertise: 'Not an option' })); assert.ok(r.errors.expertise);
+r = await j(await post('/allies', { ...ally, expertise: 'other', expertise_other: '' })); assert.ok(r.errors.expertise_other);
+r = await j(await post('/allies', { ...ally, expertise: 'other', expertise_other: 'Privacy law' })); assert.equal(r.s, 200); assert.ok(sent.at(-1).text.includes('Privacy law'));
+r = await j(await post('/allies', { ...ally, ack: false })); assert.ok(r.errors.ack, 'acknowledgment required');
+r = await j(await post('/allies', { ...ally, consent: false })); assert.ok(r.errors.consent);
+r = await j(await post('/allies', { ...ally, full_name: 'Ada\r\nBcc: x@evil' })); assert.equal(r.s, 200); assert.ok(!/\r|\n.*Bcc/.test(sent.at(-1).subject), 'header injection stripped');
 
 const ws = { name: 'N', phone: '203-555-0100', email: 'n@x.org', business: 'Studio', consent: true, t: old() };
 r = await j(await post('/wholesale', ws)); assert.equal(r.s, 200); assert.equal(sent.at(-1).to[0], 'ws@example.org');

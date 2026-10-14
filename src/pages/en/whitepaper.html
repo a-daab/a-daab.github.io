@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "macros.html" import whitepaper_block with context %}
+{% set path = "whitepaper" %}
+{% set title = "Whitepaper" %}
+{% set description = "The TransparaTrade™ whitepaper — being amended to cover hemp farming, material processing, electricity use, labor hours, verification, privacy-preserving identity, offline recording and technical governance." %}
+{% block main %}
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+  <div class="wrap"><span class="eyebrow">{{ t('nav.transparatrade') }}</span><h1 class="display">Whitepaper.</h1>
+  <p class="statement">The technical foundation for the next stage of TransparaTrade development.</p></div>
+</section>
+<section class="sec sec--white"><div class="wrap">
+  {{ whitepaper_block(heading=False) }}
+  <h3 style="margin-top:2.4rem">What the amendments cover</h3>
+  <ul class="cols">
+    <li>Hemp farming and agricultural documentation</li><li>Material sourcing and processing</li><li>Electricity use and production measurements</li><li>Labor-hour documentation</li><li>Supply-chain event records</li><li>Verification standards</li><li>Privacy-preserving identity</li><li>Offline documentation</li><li>Open-source language architecture</li><li>QR-linked product records</li><li>Transparency labeling criteria</li><li>Technical governance and security</li>
+  </ul>
+  <p style="margin-top:2rem"><a class="btn" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a></p>
+</div></section>
+{% endblock %}

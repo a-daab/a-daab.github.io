@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% set path = "privacy-and-terms" %}
+{% set title = "Privacy and Terms" %}
+{% set description = "Privacy policy and terms of sale for YOGAMATY™: what is collected when you pre-purchase, sign the petition, apply as a Technical Ally or send a wholesale inquiry — and the terms of a made-to-order purchase." %}
+{% block main %}
+<section class="sec sec--white sec--head legal" style="padding-top:calc(var(--header-h) + clamp(40px,6vw,80px))">
+  <div class="wrap wrap--narrow" style="margin-left:0">
+    <span class="eyebrow">Legal</span>
+    <h1>Privacy and Terms</h1>
+    <div class="draft-banner" role="note"><strong>Draft for attorney review.</strong> This is a scope-complete draft built from the project specification. It is not legal advice and should be reviewed by a qualified attorney before launch. Seller entity, data controller contact, sales geographies, Connecticut tax treatment and any claim about how proceeds are used are still to be finalized.</div>
+    <p><a href="#privacy">Privacy policy</a> · <a href="#terms">Terms of sale</a></p>
+
+    <h2 id="privacy" style="margin-top:1.6em;font-size:2rem">Privacy policy</h2>
+<p class="small">Last updated: {{ ph('ADD DATE') }}</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Who is responsible for your data</h3>
+    <p>Empowerment Collective, a nonprofit organization based in New Haven, Connecticut, operates this website and is the controller of the personal data described here. To ask a question or make a request about your data, write to {{ ph('ADD DATA-REQUEST EMAIL') }} or {{ ph('ADD POSTAL ADDRESS') }}.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Cookies</h3>
+    <p>This site sets no cookies. Stripe's hosted checkout sets its own on Stripe's domain.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">What we collect, why, and for how long</h3>
+    <p>Signing the petition, applying as a Technical Ally and sending a wholesale inquiry each collect only what the form asks for. Nothing is collected for advertising and we run no analytics that set cookies.</p>
+    <h3>Buying a YOGAMATY™</h3>
+    <p>Checkout is handled by Stripe. We never see or store your card details. Stripe collects your name, email address, shipping address and payment details, and shares your order, name, email and shipping address with us so we can ship your order and respond to you. Stripe is an independent processor and has its own privacy policy. We keep order records as long as needed for fulfillment, returns, accounting and tax obligations.</p>
+    <p><em>Basis:</em> performing the sale (contract); legal obligations.</p>
+
+    <h3>Signing the petition</h3>
+    <p>We store your name, email address, location, the time you signed, and that you confirmed the petition's demand. The petition list is kept in a database on Cloudflare's infrastructure. We use your email address only to prevent duplicate signatures and to count signatures. Signing does not subscribe you to a mailing list.</p>
+    <p>Signatures are retained for the foreseeable future; Empowerment Collective leadership decides whether and when they are deleted. <strong>The list may be presented publicly or to legislators.</strong> You can ask us to remove your signature at any time (see below).</p>
+    <p><em>Basis:</em> your consent, which you can withdraw.</p>
+
+    <h3>Applying to become a Founding Technical Ally</h3>
+    <p>The application form sends what you enter (full name, email, optional company, organization or professional role, primary area of expertise, your statement, and your acknowledgment that this is an initial voluntary expression of interest) by email to the Empowerment Collective team. <strong>The website itself does not store your application.</strong> A copy remains in the team's email inbox, where it is retained for the foreseeable future; Empowerment Collective leadership decides on deletion. A résumé or portfolio is not required at the initial stage; we may request more information from selected applicants later.</p>
+    <p><em>Basis:</em> your consent; our interest in considering applicants.</p>
+
+    <h3>Wholesale and studio inquiries</h3>
+    <p>The inquiry form emails your name, phone number, email, business name and note to our team. The website does not store it. A copy remains in the team's email inbox.</p>
+    <p><em>Basis:</em> your consent; steps you ask us to take before entering a contract.</p>
+
+    <h3>Technical data</h3>
+    <p>To protect the forms from abuse we use Cloudflare Turnstile, which runs a short check in your browser without cookies or tracking for advertising, and we briefly use your IP address to limit how fast a single device can submit a form. IP addresses are not kept in our petition database. Our hosting provider, GitHub Pages, may keep its own server logs, including IP addresses. {{ ph('IF ANALYTICS ARE ADDED, DESCRIBE THEM HERE — currently none') }}</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Who we share data with</h3>
+    <ul>
+      <li><strong>Stripe</strong> — payment processing and checkout.</li>
+      <li><strong>Cloudflare</strong> — runs the form endpoint, the petition database and Turnstile spam protection.</li>
+      <li><strong>{{ ph('RESEND OR POSTMARK — CONFIRM EMAIL PROVIDER') }}</strong> — delivers form submissions to our team by email.</li>
+      <li><strong>GitHub</strong> — hosts the website.</li>
+      <li>Legislators and the public — only for the petition list, as described above.</li>
+    </ul>
+    <p>We do not sell your personal data.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Your rights</h3>
+    <p>Depending on where you live, you may have the right to access the personal data we hold about you, correct it, have it deleted, restrict or object to its use, receive a copy in a portable format, and withdraw consent at any time. If you are in the European Economic Area or the United Kingdom, you may also complain to your data-protection authority. Residents of Connecticut and California have rights under the Connecticut Data Privacy Act and the California Consumer Privacy Act, to the extent those laws apply to us; we do not sell or share personal data for advertising. To exercise any right, contact {{ ph('ADD DATA-REQUEST EMAIL') }}.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">International transfers</h3>
+    <p>We are based in the United States, so data you give us is processed there. Where GDPR or UK GDPR applies, we rely on appropriate safeguards offered by our processors for these transfers.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Children</h3>
+    <p>This site is not directed at children under 13 and we do not knowingly collect their data.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Changes</h3>
+    <p>If we change this policy, we will update the date above.</p>
+  
+    <h2 id="terms" style="margin-top:2.4em;font-size:2rem">Terms of sale</h2>
+<p class="small">Last updated: {{ ph('ADD DATE') }}</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Who is selling</h3>
+    <p>YOGAMATY™ is sold by Empowerment Collective, New Haven, Connecticut {{ ph('CONFIRM SELLING ENTITY WITH PROJECT LEAD') }}. By placing an order you agree to these terms.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Price and currency</h3>
+    <p>The price of a YOGAMATY is {% if site.price %}${{ site.price }}{% else %}{{ ph('ADD RETAIL PRICE') }}{% endif %} US dollars. Applicable sales tax is calculated and added at checkout by Stripe Tax. Shipping is added at checkout at standard postal rates.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">What you are buying</h3>
+    <p>YOGAMATY™ is a yoga mat towel/cover used on top of a conventional yoga mat. It is not a standalone yoga mat. We do not promise grip, non-slip performance or durability until the testing described on our site is complete.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Handmade variation</h3>
+    <p>Each piece is unique and handmade, so your YOGAMATY will resemble the image shown but have its own unique color palette. Variation in color, stripe pattern and small irregularities of weave is a feature of a handmade, reclaimed-fabric product and is not a defect.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Made to order; delivery</h3>
+    <p>YOGAMATY is made to order after your pre-purchase, with a <strong>target delivery within 60 days</strong>. This is a target, not a guarantee. If we expect to miss it, we will notify you with a revised date and offer cancellation with a full refund. Pieces ship from New Haven, Connecticut. Recipients outside the United States may owe import duties and taxes on delivery; these are not included in the price. See <a href="{{ url('shipping-and-delivery') }}">Shipping and Delivery</a>.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Cancellations, refunds and returns</h3>
+    <p>See <a href="{{ url('refunds-and-cancellations') }}">Refunds and Cancellations</a>, which forms part of these terms.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Availability</h3>
+    <p>YOGAMATY is made in production batches of approximately 50 pieces. We may limit quantities; when a batch is full, orders cannot be accepted until the next batch opens. If an order cannot be fulfilled, we will refund you in full.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Product information</h3>
+    <p>Your purchase helps initiate production {{ ph("CONFIRM WORDING ON HOW PROCEEDS ARE USED WITH COUNSEL — THIS IS ITSELF A CLAIM AND MUST BE ACCURATE AND CONSISTENT WITH CHARITY-REGULATOR RULES") }}. A pre-purchase is the purchase of a product; it is not a donation and not a loan. We aim to describe the product and its supply chain accurately, and label estimates as estimates. The supply-chain records are hand-entered by Empowerment Collective and reflects the information available when each batch record was published.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Liability</h3>
+    <p>To the fullest extent permitted by law, our liability for any claim relating to an order is limited to the amount you paid for it. Nothing in these terms limits any right you have under mandatory consumer law that cannot be excluded.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Governing law</h3>
+    <p>These terms are governed by the laws of the State of Connecticut, United States, without regard to conflict-of-law rules {{ ph('ATTORNEY TO CONFIRM GOVERNING LAW AND DISPUTE RESOLUTION') }}.</p>
+
+    <h3 style="font-size:1.35rem;text-transform:none;letter-spacing:0;color:var(--orange);margin-top:2em">Contact</h3>
+    <p>Questions about these terms: see <a href="{{ url('contact') }}">Contact</a>.</p>
+  
+  </div>
+</section>
+{% endblock %}

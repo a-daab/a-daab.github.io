@@ -1,21 +1,172 @@
 {% extends "base.html" %}
+{% from "macros.html" import actions with context %}
 {% set path = "supply-chain" %}
-{% set title = "Supply chain passport" %}
-{% set description = "The tier-by-tier record of how a YogaMaty was made — hemp and reclaimed saris to loom, finishing and delivery — with hours, wages, electricity and environmental data, each labeled as measured or estimated." %}
+{% set title = "The Supply Chain" %}
+{% set description = "The transparent supply chain behind YOGAMATY™: two material journeys — natural hemp and reclaimed sari textiles — meeting at the loom, every production stage, what will be recorded at each, and the planned documentation framework." %}
+{% macro stage_card(t) %}
+<article class="stage-card" id="stage-{{ t.id|lower }}">
+  <span class="sid" aria-hidden="true">{{ t.id }}</span>
+  <h4><span class="sr-only">{{ t.id }} — </span>{{ t.name.en }}</h4>
+  <p>{{ t.records.en }}</p>
+  <p>
+    <span class="tag">planned</span>
+    {% if t.powered == false %}<span class="tag">No electricity</span>
+    {% elif t.powered == true %}<span class="tag" style="background:var(--orange);color:#fff">Uses electricity</span>
+    {% elif t.powered == 'may' %}<span class="tag" style="background:var(--orange);color:#fff">May use electricity</span>{% endif %}
+    {% if t.powered == 'may' or t.powered == true %}{{ ph('ADD kWh') }}{% endif %}
+    {% if t.id == 'D2' %}<span class="small">sewing · solar under consideration</span>{% endif %}
+    {% if t.id == 'C1' %}{{ ph('ADD transport') }}{% endif %}
+    {% if t.powered == 'confirm' and t.id != 'C1' %}{{ ph('ADD — electricity use to be confirmed') }}{% endif %}
+  </p>
+  {% set m = media.get(t.id) %}
+  {% if m %}{% set f = m[0] %}
+  <figure class="media"><img src="{{ f.src }}" alt="{{ f.alt or ('Process image for ' ~ t.id ~ ' — ' ~ t.subject) }}" loading="lazy" decoding="async" style="width:100%;aspect-ratio:3/2;object-fit:cover"></figure>
+  {% else %}
+  <div class="media-ph" role="img" aria-label="Photograph placeholder: {{ t.id }} — {{ t.subject }}"><b>{{ t.id }} — {{ t.subject }}</b></div>
+  {% endif %}
+</article>
+{% endmacro %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:clamp(56px,9vw,120px)">
+<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
   <div class="wrap">
-    <span class="eyebrow">{{ t('passport_page.eyebrow') }}</span>
-    <h1 class="display">Supply chain<br>passport.</h1>
-    <p class="statement">Every stage of this mat's life, in the order it happened — and exactly how each record was entered.</p>
+    <span class="eyebrow">{{ t('nav.supply_chain') }}</span>
+    <h1 class="display">The supply<br>chain.</h1>
+    <p class="statement">Two material journeys, every production stage, and the documentation we are building to make each one visible.</p>
+    <div class="btn-row"><a class="btn" href="{{ url('explorer') }}">{{ t('footer.explorer') }}</a><a class="btn btn--ghost" href="{{ url('transparatrade') }}">{{ t('home.what_is_tt') }}</a></div>
   </div>
 </section>
 
-<div id="pp-app" aria-live="polite">
-  <section class="sec sec--white"><div class="wrap wrap--narrow">
-    <p class="lede" id="pp-loading">{{ t('passport_page.loading') }}</p>
-    <noscript><p class="lede">{{ t('passport_page.noscript') }}</p></noscript>
-  </div></section>
-</div>
+<section class="sec sec--white" id="journeys">
+  <div class="wrap">
+    <span class="eyebrow">Two material journeys</span>
+    <h2 class="h1" style="max-width:22ch">One material comes from agriculture. The other from the recovery of existing textiles.</h2>
+    <p>YOGAMATY™ is particularly suitable as a TransparaTrade pilot because it combines two distinct material journeys. The objective is to demonstrate how different types of supply chains can be documented through a common technical language.</p>
+    <div class="journeys" role="group" aria-label="Diagram: the hemp and reclaimed-sari journeys converge at the loom">
+      <div class="journey">
+        <h3>Material one — natural hemp</h3>
+        <ol>
+          <li>Cultivation</li><li>Harvesting</li><li>Retting</li><li>Fiber processing</li><li>Spinning</li><li>Sun-drying</li><li class="powered">Bobbin winding</li>
+        </ol>
+      </div>
+      <div class="journey">
+        <h3>Material two — reclaimed sari textiles</h3>
+        <ol>
+          <li>Recovery</li><li>Collection</li><li>Sorting</li><li>Cutting</li><li>Preparation</li><li class="powered">Bobbin winding</li>
+        </ol>
+      </div>
+      <div class="converge"><span class="loom-box">Weaving at the loom — independent artisans</span></div>
+    </div>
+    <p class="diagram-key"><span><i aria-hidden="true"></i>Stage with no powered equipment</span><span><i class="pw" aria-hidden="true"></i>Stage that may use electricity</span></p>
+    <p style="margin-top:1.4rem">The hemp chain documents the agricultural source and the successive stages through which the material passes: the people involved, the materials transferred, the work performed, and the economic exchanges. The reclaimed-sari chain begins at the earliest documented point of recovery; the original manufacturing history of a reclaimed sari may be unknown, and the record says so.</p>
+  </div>
+</section>
+
+<section class="sec sec--orange" id="honesty">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <span class="eyebrow">Honesty about today’s records</span>
+      <h2 class="h1">Hand-entered, and we say so.</h2>
+      <p class="statement" style="font-size:clamp(1.3rem,1rem + 1vw,1.7rem);max-width:none">Current records are entered by hand. That is exactly the weakness TransparaTrade exists to fix: when companies enter their own data by hand, those not committed to ethics can enter false data.</p>
+    </div>
+    <div>
+      <p>The stages below are the planned documentation framework, shown with placeholder media. They are marked <span class="tag" style="border-color:#fff;color:#fff">planned</span> until records are published, batch by batch, in the <a href="{{ url('explorer') }}">Supply-Chain Explorer</a>.</p>
+      <p>YOGAMATY is never shown with a verified Green label until the criteria and verification processes exist. See the <a href="{{ url('transparatrade') }}#labels">proposed labeling concept</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="chains">
+  <div class="wrap">
+    <span class="eyebrow">Production stages</span>
+    <h2 class="h1">Every stage, and what will be recorded.</h2>
+    {% for c in tiers.chains %}
+    <div class="chain-block" id="chain-{{ c.id|lower }}">
+      {% if c.id == 'A' %}<div class="art" aria-hidden="true">{{ motif('hemp', 'none', 'content', '', cls='', inline=True, rise=60, speed=0.8) }}</div>{% endif %}
+      {% if c.id == 'B' %}<div class="art" aria-hidden="true">{{ motif('sari', 'none', 'content', '', cls='', inline=True, speed=0.8) }}</div>{% endif %}
+      {% if c.id == 'C' %}<div class="art" aria-hidden="true">{{ motif('loom', 'none', 'content', '', cls='', inline=True, speed=0.8) }}</div>{% endif %}
+      {% if c.id == 'D' %}<div class="art" aria-hidden="true" style="width:clamp(140px,22vw,280px)">{{ motif('sewing', 'none', 'content', '', cls='', inline=True, progress='self') }}</div>{% endif %}
+      <h2 class="h1" style="margin-bottom:.3em">{{ c.name.en }}</h2>
+      <p style="max-width:60ch">{{ c.intro.en }}</p>
+      {% if c.id == 'A' %}<div class="art" style="right:clamp(120px,22vw,260px);width:clamp(80px,10vw,130px);opacity:.4" aria-hidden="true">{{ motif('spin', 'none', 'mid', '', cls='', inline=True, rot=40) }}</div>{% endif %}
+      <div class="stage-grid">
+        {% for tier in c.tiers %}{{ stage_card(tier) }}{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="sec sec--white" id="electricity" style="padding-top:0">
+  <div class="wrap wrap--narrow" style="margin-left:0;max-width:820px">
+    <span class="eyebrow">Traditional production and electricity</span>
+    <h2 class="h1">What uses power, and what doesn’t.</h2>
+    <p>Traditional handloom weaving is central to the YOGAMATY production process. The project seeks to preserve traditional production methods and reduce unnecessary reliance on industrial machinery. However, <strong>the complete production process should not be described as electricity-free.</strong> Some stages, including sewing and certain bobbin-winding activities, may use electricity. The intention is to document these activities accurately and potentially use solar panel technology to exclude electricity.</p>
+    <p>We plan to measure electricity consumption per production batch where feasible — weaving stages are genuine zeroes — and to document labor hours, material quantities, packaging weight, transportation and other relevant production data. These details are being further developed through amendments to the TransparaTrade whitepaper. The objective is not simply to make environmental claims. It is to create evidence that supports those claims.</p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="record" style="padding-top:0">
+  <div class="wrap">
+    <span class="eyebrow">The record</span>
+    <h2 class="h1">What a record contains.</h2>
+    <div class="table-wrap"><table class="plain"><thead><tr><th>Field</th><th>Notes</th></tr></thead><tbody>
+      <tr><td>Product, piece and batch ID</td><td>Each piece has a serial mapped to its batch; QR format <span class="data">yogamaty.com/passport/[BATCH]?mat=[SERIAL]</span></td></tr>
+      <tr><td>Actor IDs</td><td>Pseudonymous; never a legal name.</td></tr>
+      <tr><td>Location</td><td>At a safe granularity — never an artisan’s home.</td></tr>
+      <tr><td>Dates</td><td>When it happened; separately, when recorded.</td></tr>
+      <tr><td>Materials</td><td>Inputs, outputs, quantities.</td></tr>
+      <tr><td>Work and hours</td><td>Activity and duration.</td></tr>
+      <tr><td>Economic exchange</td><td>What was paid, by role, in local currency.</td></tr>
+      <tr><td>Media</td><td>Photos, video, voice testimony — with consent.</td></tr>
+      <tr><td>Environmental data</td><td>See the metrics below.</td></tr>
+      <tr><td>Verification</td><td>Who checked it, against what, when, and how it was captured.</td></tr>
+    </tbody></table></div>
+    <p>Data comes in three classes: <strong>per batch</strong> (harvest, hours per stage, metered electricity, batch media, shipping records — per-piece averages are labeled as averages); <strong>per piece</strong> (serial, assembly date, any piece-specific media); and <strong>standard</strong> (construction, loom type, dimensions, care, packaging specification — with the date last checked).</p>
+  </div>
+</section>
+
+<section class="sec sec--orange" id="privacy-protection">
+  <div class="wrap grid grid--split" style="align-items:start">
+    <div>
+      <span class="eyebrow">Privacy, identity and worker protection</span>
+      <h2 class="h1">Document the steps. Protect the person.</h2>
+      <p>The intention of TransparaTrade is to prove that a documented step occurred while protecting the people involved. The system should not become a tool for unnecessary surveillance. It should protect workers’ identities, private information, and physical safety.</p>
+    </div>
+    <div>
+      <p>Artisans remain anonymous; if anyone appears in published media, official documented consent is obtained first. Because weaving happens at home, no record or image may reveal where an artisan lives.</p>
+      <p>The project has considered privacy-preserving identification methods and the possible use of biometrics where appropriate. Any biometric approach would require informed consent, legal compliance, meaningful alternatives, and strong safeguards. Offline documentation, QR codes, photographs, and later synchronization may be important where reliable internet access is unavailable.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--white" id="fair-exchange">
+  <div class="wrap wrap--narrow" style="margin-left:0;max-width:820px">
+    <span class="eyebrow">Fair exchange and living income</span>
+    <h2 class="h1">What each stage was paid.</h2>
+    <p>The amount paid for each stage is published per hour, in local currency: <strong>NPR {{ ph('ADD HOURLY RATE') }} per hour.</strong></p>
+    <p>Benchmark: the Seven Keys framework with local benchmarks — {{ ph('ADD LOCAL BENCHMARK, SOURCE AND DATE') }}. Until that assessment exists, we present living income as the objective being measured, not an outcome achieved. If a figure cannot be published, we publish who verified it and how. <a href="{{ url('how-it-works') }}#fair-exchange">About the Fair-Exchange and Living-Income Model →</a></p>
+  </div>
+</section>
+
+<section class="sec sec--white" id="environment" style="padding-top:0">
+  <div class="motifs" aria-hidden="true">
+    {{ motif('leaves', 'md', 'bg', cls='drift', style='right:3%;top:8%') }}
+    {{ motif('water', 'md', 'bg', cls='drift', style='right:18%;bottom:10%') }}
+  </div>
+  <div class="wrap">
+    <span class="eyebrow">Environmental metrics</span>
+    <h2 class="h1">Only what is measured, and the method named.</h2>
+    <div class="table-wrap"><table class="plain"><thead><tr><th>Metric</th><th>Treatment</th></tr></thead><tbody>
+      <tr><td>Recycled content</td><td>“About 38.5% of the primary textile input by weight is reclaimed sari fabric.” Finished-product percentage once weighed.</td></tr>
+      <tr><td>Electricity</td><td>kWh per piece by stage, measured per production batch where feasible; weaving stages are genuine zeroes.</td></tr>
+      <tr><td>Labor hours, material quantities, packaging weight, transportation</td><td>Documented.</td></tr>
+      <tr><td>Water</td><td>Growing and processing, once grower data is available.</td></tr>
+      <tr><td>Agricultural inputs</td><td>Recorded from the grower.</td></tr>
+      <tr><td>Dyes and chemicals</td><td>“No dyes or chemicals added in making YOGAMATY” — the saris carry their original dyes.</td></tr>
+      <tr><td>Transport emissions</td><td>Phase 2, with the calculation shown.</td></tr>
+      <tr><td>End of life</td><td>No “fully biodegradable” claim, since reclaimed saris may contain mixed fibers.</td></tr>
+    </tbody></table></div>
+  </div>
+</section>
+{{ actions('white') }}
 {% endblock %}
-{% block scripts %}<script src="/assets/js/passport.js?v={{ year }}-1" defer></script>{% endblock %}

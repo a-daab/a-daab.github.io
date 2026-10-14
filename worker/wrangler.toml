@@ -8,10 +8,10 @@ compatibility_date = "2025-01-01"
 # routes = [{ pattern = "api.yogamaty.com", custom_domain = true }]
 
 [vars]
-ALLOWED_ORIGINS = "https://www.yogamaty.com,https://yogamaty.com"
+ALLOWED_ORIGINS = "https://yogamaty.com,https://www.yogamaty.com"
 ALLIES_TO = "allies@empowermentcollective.org"     # to be confirmed by the project lead
 WHOLESALE_TO = ""                                   # [ADD WHOLESALE INBOX ADDRESS]
-MAIL_FROM = "YogaMaty <forms@yogamaty.com>"         # a sender on a domain verified with Resend/Postmark
+MAIL_FROM = "YOGAMATY <forms@yogamaty.com>"         # a sender on a domain verified with Resend/Postmark
 PETITION_THRESHOLD = "500"                          # the live count is shown only at/above this many signatures
 MIN_FILL_SECONDS = "3"                              # submissions faster than this are treated as bots
 
