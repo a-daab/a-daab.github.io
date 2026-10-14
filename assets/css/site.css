@@ -573,9 +573,6 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .field select{background:transparent;padding-right:1.4rem;background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 10px) 55%,calc(100% - 5px) 55%;background-size:5px 5px;background-repeat:no-repeat}
 
 /* Hero: the conventional mat the product settles onto (Design §5 — shows it is a layer on top) */
-.hero-mat::before{content:"";position:absolute;z-index:0;left:1%;right:1%;top:0;bottom:0;border:2px solid rgba(255,255,255,.55);border-top:0;border-radius:0 0 18px 18px}
-.hero-mat::after{content:"conventional mat";position:absolute;right:calc(1% + 14px);bottom:10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8)}
-@media (max-width:820px){.hero-mat::after{display:none}}
 .hero-roll,.hero-clip{position:relative;z-index:1}
 
 /* Wordmark placeholder box: fixed 160x32 so the real mark drops in without moving the layout */
