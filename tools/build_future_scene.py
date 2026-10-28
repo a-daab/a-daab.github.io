@@ -64,7 +64,7 @@ def hemp():
         for (y, L) in ((31, 14), (21, 11)):
             tip = (24 + side * L, y - 8)
             pts = [(24, y), (24 + side * L * .5, y - 6.5), tip, (24 + side * L * .55, y - 1.5)]
-            o += path(smooth([jit(p, .25) for p in pts], True), .9, ORANGE)
+            o += path(smooth([jit(p, .25) for p in pts], True), .9, "none")
             o += line((24, y - 1), (tip[0] - side * 2, tip[1] + 1.5), .5, amp=.05, over=0)
     o += path(smooth([(24, 12), (21.4, 8), (24, 4), (26.6, 8)], True), .9, ORANGE)
     o += path(smooth([(8, 43), (16, 39.5), (24, 38.6), (32, 39.5), (40, 43)]), 1.0)
@@ -76,7 +76,7 @@ def icons():
     chain = [("hemp", hemp()), ("spin", bi.materials()), ("weave", bi.artisan()), ("finish", bi.production()), ("ship", bi.delivery()), ("buy", bi.consumer())]
     out = ""
     for i, (name, body) in enumerate(chain):
-        body = body.replace('"#fff"', f'"{ORANGE}"')
+        body = body.replace('"#fff"', '"none"').replace(f'"{ORANGE}"', '"none"')   # drawn in the section's own orange: interiors stay open so only light reveals them
         out += (f'<g id="ico-{i}" fill="none" stroke="currentColor" stroke-width=".9" stroke-linecap="round" stroke-linejoin="round" '
                 f'transform="translate(-24 -24)">{body}</g>')
     return out

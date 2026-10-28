@@ -710,12 +710,9 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .future__title{margin:0 auto;max-width:26em;text-align:center;font-weight:300;font-size:clamp(1.3rem,.9rem + 1.8vw,2.5rem);line-height:1.2;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
 .future__stage{flex:1;min-height:0;width:100%}
 .future__svg{display:block;width:100%;height:100%;color:#fff;overflow:visible}
-/* plain class selectors: these elements are cloned by <use>, whose shadow tree does not match descendant selectors */
-.fv-dim{opacity:.12}
-.fv-link{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:7 8;stroke-linecap:round}
-.fv-disc{fill:#CC5500;stroke:#fff;stroke-width:1.6}
-.fv-disc2{fill:none;stroke:#fff;stroke-width:.8;opacity:.8}
-.fv-label{fill:#fff;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+/* the steps are the same orange as the section: they show only where light falls on them */
+.fv-link{fill:none;stroke:#CC5500;stroke-width:2;stroke-dasharray:7 8;stroke-linecap:round}
+.fv-label{fill:#CC5500;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
 @media (prefers-reduced-motion:reduce){
   .future{height:auto}
   .future__pin{position:relative;height:min(100svh,820px)}
