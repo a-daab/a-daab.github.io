@@ -704,7 +704,19 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
   .aisle__line--bottom{opacity:1}
 }
 
-/* TransparaTrade: the statement that follows the aisle */
-.future{padding-top:clamp(72px,10vw,140px);padding-bottom:clamp(72px,10vw,140px)}
-.future .wrap{text-align:center}
-.future__title{margin:0 auto;max-width:26em;font-weight:300;font-size:clamp(1.7rem,1rem + 2.6vw,3.2rem);line-height:1.22;letter-spacing:.005em;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
+/* TransparaTrade: "Imagine a future" - an eye whose beam widens along a supply chain as you scroll */
+.future{position:relative;z-index:1;height:calc(100svh + 140vh);background:var(--orange);color:#fff;box-shadow:0 -8px 22px -10px rgba(70,30,0,.3),0 12px 26px -10px rgba(70,30,0,.3)}
+.future__pin{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;gap:8px;padding:calc(var(--header-h) + 18px) var(--gutter) 18px;overflow:hidden}
+.future__title{margin:0 auto;max-width:26em;text-align:center;font-weight:300;font-size:clamp(1.3rem,.9rem + 1.8vw,2.5rem);line-height:1.2;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
+.future__stage{flex:1;min-height:0;width:100%}
+.future__svg{display:block;width:100%;height:100%;color:#fff;overflow:visible}
+/* plain class selectors: these elements are cloned by <use>, whose shadow tree does not match descendant selectors */
+.fv-dim{opacity:.12}
+.fv-link{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:7 8;stroke-linecap:round}
+.fv-disc{fill:#CC5500;stroke:#fff;stroke-width:1.6}
+.fv-disc2{fill:none;stroke:#fff;stroke-width:.8;opacity:.8}
+.fv-label{fill:#fff;font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+@media (prefers-reduced-motion:reduce){
+  .future{height:auto}
+  .future__pin{position:relative;height:min(100svh,820px)}
+}

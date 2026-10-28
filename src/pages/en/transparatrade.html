@@ -30,9 +30,24 @@
   </div>
 </section>
 
-<section class="sec sec--orange future" id="future" aria-labelledby="future-title">
-  <div class="wrap">
+<section class="future" id="future" aria-labelledby="future-title">
+  <div class="future__pin">
     <h2 class="future__title" id="future-title">Imagine a future where every product tells us its story. Where every person within a supply chain is visible, honored, and protected.</h2>
+    <div class="future__stage">
+      <svg class="future__svg" viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustration: an eye casts a beam of light along a supply chain. At first the beam is narrow and lights only the first step; as it widens, more of the chain, from raw materials to the customer, comes into view.">
+        {% include "future-art.html" %}
+        <defs>
+          <filter id="fv-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="16"/></filter>
+          <mask id="fv-mask" maskUnits="userSpaceOnUse" x="-400" y="-400" width="2400" height="1600"><g filter="url(#fv-soft)"><path id="fv-mask-cone" fill="#fff"/></g></mask>
+          <linearGradient id="fv-grad" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".4" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity=".02"/></linearGradient>
+          <g id="fv-chain"></g>
+        </defs>
+        <use href="#fv-chain" class="fv-dim"/>
+        <g mask="url(#fv-mask)"><use href="#fv-chain"/></g>
+        <g id="fv-eye"><use href="#fe-eye"/></g>
+        <path id="fv-beam" fill="url(#fv-grad)" stroke="none"/>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -131,4 +146,4 @@
 </section>
 {{ actions('white') }}
 {% endblock %}
-{% block scripts %}<script src="/assets/js/aisle.js?v=6" defer></script>{% endblock %}
+{% block scripts %}<script src="/assets/js/aisle.js?v=6" defer></script><script src="/assets/js/future.js?v=2" defer></script>{% endblock %}
