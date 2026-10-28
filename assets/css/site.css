@@ -633,3 +633,6 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 /* TransparaTrade banner: the lines under the title may run wider than the title itself */
 .sec--banner .statement.banner-wide-line{max-width:none}
 .sec--banner .lede.banner-wide-line{max-width:min(64ch,100%);text-wrap:balance}
+
+/* A longer sentence under a banner title: wide, and balanced across two or three lines */
+.sec--banner .statement.banner-wide-text{max-width:min(44em,100%);text-wrap:balance}
