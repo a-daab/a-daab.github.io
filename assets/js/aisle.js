@@ -181,10 +181,21 @@
     if (bottom && !reduce) bottom.style.setProperty('--bo', String(Math.max(0, Math.min(1, (p - 0.45) / 0.25))));
     if (!raf) raf = requestAnimationFrame(frame);
   }
+  /* The scene is shifted down just far enough that the shelf tops, which fan out from the vanishing point, pass below the headline. */
+  var TOPSLOPE = 0.35 / WALL;                                  /* how steeply the top shelf line rises per unit of sideways distance */
   function fitView() {
     var st = section.querySelector('.aisle__stage'), w = st.clientWidth, h = st.clientHeight;
-    var a = h ? w / h : 1.4, vw = VH * a;
-    svg.setAttribute('viewBox', f1(VPX - vw / 2) + ' 0 ' + f1(vw) + ' ' + VH);
+    var a = h ? w / h : 1.4, u = 0;
+    var head = section.querySelector('.aisle__line--top');
+    if (head && h) {
+      var sr = st.getBoundingClientRect(), rg = document.createRange();
+      rg.selectNodeContents(head);
+      var tr = rg.getBoundingClientRect();
+      var need = (tr.bottom - sr.top) + 14 + TOPSLOPE * (tr.width / 2);      /* px: headline bottom, a gap, and the line's rise over half the text width */
+      if (need < h) u = Math.max(0, Math.min(260, (need * VH - VPY * h) / (h - need)));
+    }
+    var vh = VH + u, vw = vh * a;
+    svg.setAttribute('viewBox', f1(VPX - vw / 2) + ' ' + f1(-u) + ' ' + f1(vw) + ' ' + f1(vh));
   }
 
   draw();
@@ -193,5 +204,6 @@
     window.addEventListener('scroll', update, { passive: true });
   }
   window.addEventListener('resize', function () { fitView(); update(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitView(); });
   update();
 })();
