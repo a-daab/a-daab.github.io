@@ -88,139 +88,211 @@ def flower(x, y, r=2.2):
     return out + dot(x, y, .8)
 
 
-# ------------------------------------------------------------------ the icons
-def consumer():
-    o = ""
-    o += path(smooth([(3, 8), (6.5, 8.6), (9.6, 9)]), 2.4)                                          # handle
-    o += poly([(9.6, 9), (14, 28), (38, 28.4), (43, 12.6), (24, 11.2)], 2.3, a=.5)                  # basket
-    for x in (18.5, 24, 29.5, 35):                                                                 # carved weave
-        o += line((x - 1, 13.2), (x + 1.2, 26.2), 1.3)
-    for y in (17.5, 22.5):
-        o += line((12.4, y), (41, y - 1.4), 1.3)
-    o += path(smooth([(14, 28), (15.6, 33), (35, 33.4)]), 2)                                        # frame under basket
-    for cx in (18.5, 34.5):                                                                         # solid wheels, knocked-out hubs
-        o += blob(cx, 39.4, 4.1, 4.1, fill="solid", k=8)
-        o += blob(cx, 39.4, 1.3, 1.3, fill="#fff", k=5)
+# ------------------------------------------------------------------ Mithila-style helpers
+_ids = [0]
+TH, FINE = 0.9, 0.55      # outline and fine-line weights
+
+
+def uid(prefix="m"):
+    _ids[0] += 1
+    return f"{prefix}{_ids[0]}"
+
+
+def centroid(pts):
+    return (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
+
+
+def inset(pts, f):
+    cx, cy = centroid(pts)
+    return [(cx + (x - cx) * f, cy + (y - cy) * f) for x, y in pts]
+
+
+def shape(pts, w=TH, fill=None, a=0.22):
+    return path(smooth([jit(p, a) for p in pts], True), w, fill)
+
+
+def double(pts, f=0.84, fill=None):
+    """Mithila double outline: the figure and a finer line inside it."""
+    return shape(pts, TH, fill) + shape(inset(pts, f), FINE, None, .12)
+
+
+def ring(cx, cy, r, w=FINE, fill=None):
+    k = 10
+    return path(smooth([(cx + math.cos(2 * math.pi * i / k) * r * R.uniform(.97, 1.03), cy + math.sin(2 * math.pi * i / k) * r * R.uniform(.97, 1.03)) for i in range(k)], True), w, fill)
+
+
+def hatch(pts, angle=45, gap=2.6, w=0.5, keep=None):
+    """Parallel fine lines filling a shape (clipped to it) - the Mithila filled-figure look."""
+    cid = uid("c")
+    xs, ys = [p[0] for p in pts], [p[1] for p in pts]
+    x0, x1, y0, y1 = min(xs) - 3, max(xs) + 3, min(ys) - 3, max(ys) + 3
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    big = max(x1 - x0, y1 - y0) * 1.5
+    lines = ""
+    t = -big
+    while t <= big:
+        p, q = rot([(cx - big, cy + t), (cx + big, cy + t)], cx, cy, angle)
+        lines += f"M{n(p[0])} {n(p[1])}L{n(q[0])} {n(q[1])}"
+        t += gap
+    return (f'<clipPath id="{cid}"><path d="{smooth(pts, True)}"/></clipPath>'
+            f'<path d="{lines}" clip-path="url(#{cid})" stroke-width="{w}"/>')
+
+
+def dotted(p, q, gap=2.4, r=0.5):
+    L = math.hypot(q[0] - p[0], q[1] - p[1])
+    k = max(1, int(L / gap))
+    return "".join(dot(p[0] + (q[0] - p[0]) * i / k, p[1] + (q[1] - p[1]) * i / k, r) for i in range(k + 1))
+
+
+def petals(cx, cy, r=2.6, k=8, pr=.55):
+    return "".join(dot(cx + math.cos(i * 2 * math.pi / k) * r, cy + math.sin(i * 2 * math.pi / k) * r, pr) for i in range(k)) + dot(cx, cy, .7)
+
+
+def wheel(cx, cy, r):
+    o = ring(cx, cy, r, TH) + ring(cx, cy, r * .5, FINE) + dot(cx, cy, .7)
+    for i in range(6):
+        t = i * math.pi / 3 + .3
+        o += line((cx + math.cos(t) * r * .5, cy + math.sin(t) * r * .5), (cx + math.cos(t) * r * .92, cy + math.sin(t) * r * .92), .5, amp=.05, over=0)
     return o
 
 
-def hand(side):
-    """One raised hand with carved finger lines, a palm flower and a sleeve band. side=-1 left hand, +1 right hand (mirrored)."""
-    pts = [(14, 44), (7.5, 41), (6, 33), (8.2, 27.5), (6.2, 22.6), (7.6, 20.8), (10.4, 24.2), (10.2, 14), (11.4, 12), (13.4, 13.4), (13.9, 24),
-           (14.4, 8.6), (16.2, 7.2), (17.8, 9), (17.9, 22.6), (19.5, 11.4), (21.2, 10.4), (22.6, 12.4), (21.8, 25), (25.2, 15), (27, 15.2), (27.4, 17.4),
-           (25.6, 30), (26, 38), (22, 44)]
-    sx = side
+def capsule(x0, y0, x1, y1, hw, tf):
+    """A finger: flat base at (x0,y0), rounded tip at (x1,y1); points are mapped through tf."""
+    dx, dy = x1 - x0, y1 - y0
+    L = math.hypot(dx, dy)
+    ux, uy = dx / L, dy / L
+    nx, ny = -uy, ux
+    tipx, tipy = x1 - ux * hw, y1 - uy * hw
+    pts = [(x0 + nx * hw, y0 + ny * hw), (tipx + nx * hw, tipy + ny * hw)]
+    for i in range(1, 6):
+        t = math.pi * i / 6
+        pts.append((tipx + nx * hw * math.cos(t) + ux * hw * math.sin(t), tipy + ny * hw * math.cos(t) + uy * hw * math.sin(t)))
+    pts += [(tipx - nx * hw, tipy - ny * hw), (x0 - nx * hw, y0 - ny * hw)]
+    return [tf(p) for p in pts]
+
+
+# ------------------------------------------------------------------ the icons
+def consumer():
+    o = ""
+    o += path(smooth([(3.6, 7.6), (7, 7.8), (10, 11)]), TH)                                              # handle
+    o += dot(3.4, 7.6, .8)
+    basket = [(10, 11.2), (42, 13), (38, 29.4), (14.4, 29)]
+    o += double(basket, .86, "#fff")
+    o += hatch(inset(basket, .86), 52, 3.0, .5) + hatch(inset(basket, .86), -52, 3.0, .5)               # woven lattice
+    o += path(smooth([(14.4, 29), (16.2, 34.2), (36.4, 34.6)]), TH)                                      # frame
+    o += dotted((12.5, 8.4), (40.5, 10.2), 3.2, .5)                                                      # dotted rim
+    o += wheel(19, 40, 3.7) + wheel(34.6, 40.4, 3.7)
+    return o
+
+
+def hand(ox, oy, sx, tilt, s=1.04):
     def tf(p):
         x, y = p
-        x = 16 + (x - 16) * sx
-        return (x, y)
-    o = path(smooth([jit(tf(p), .3) for p in pts], True), 2.2, "#fff")
-    o += line(tf((10.6, 23.6)), tf((11.2, 29)), 1.1)                                                   # finger creases
-    o += line(tf((14.2, 23)), tf((14.6, 28)), 1.1)
-    o += line(tf((18, 23)), tf((18.2, 28)), 1.1)
-    o += line(tf((21.9, 24)), tf((21.9, 29)), 1.1)
-    o += flower(*tf((16.6, 34.4)), r=2.2)                                                              # mehndi flower
-    o += line(tf((9.4, 40.6)), tf((22.4, 41.2)), 1.8)                                                   # sleeve band
+        x, y = x * sx * s, y * s
+        c, sn = math.cos(math.radians(tilt)), math.sin(math.radians(tilt))
+        return (ox + x * c - y * sn, oy + x * sn + y * c)
+    o = ""
+    # sleeve with bangles
+    sleeve = [tf(p) for p in [(-4.6, 2.5), (4.6, 2.5), (5.4, 11), (-5.4, 11)]]
+    o += shape(sleeve, TH, "#fff") 
+    for yy in (5.2, 7.2):
+        o += line(tf((-4.9, yy)), tf((4.9, yy)), FINE, amp=.1)
+    o += dotted(tf((-4.2, 9.4)), tf((4.2, 9.4)), 1.7, .4)
+    # thumb, then the four fingers, then the palm over their bases
+    thumb = capsule(-5.8, -1.2, -12, -8.8, 1.9, tf)
+    o += shape(thumb, TH, "#fff", .12)
+    o += line(tf((-7, -3.2)), tf((-10.2, -7)), .5, amp=.05, over=0)
+    for (x, ln, hw) in ((-5.1, 12.4, 1.6), (-1.7, 14.4, 1.65), (1.7, 13, 1.6), (5.1, 10.2, 1.45)):
+        f = capsule(x, -7, x, -7 - ln, hw, tf)
+        o += shape(f, TH, "#fff", .12)
+        o += line(tf((x, -9)), tf((x, -7 - ln + 3.2)), .5, amp=.05, over=0)                            # carved centre line
+        o += dot(*tf((x, -7 - ln + 1.6)), .5)
+    palm = [(-7, -8), (-2.4, -9.4), (2.4, -9.4), (7, -8), (7.4, -2), (5.2, 2.8), (-5.2, 2.8), (-7.4, -2)]
+    o += shape([tf(p) for p in palm], TH, "#fff", .15)
+    o += petals(*tf((0, -3.2)), r=2.9 * s, k=8, pr=.5)                                                 # mehndi flower
+    o += ring(*tf((0, -3.2)), 1.4 * s, .5)
     return o
 
 
 def artisan():
-    """Two hands, tilted toward each other, each with a carved palm flower."""
-    left = f'<g transform="translate(-.2 4.2) scale(.95) rotate(-9 16 44)">{hand(1)}</g>'
-    right = f'<g transform="translate(18.4 4.2) scale(.95) rotate(9 16 44)">{hand(-1)}</g>'
-    return left + right
+    return hand(13.8, 32.6, 1, -7) + hand(34.2, 32.6, -1, 7)
 
 
 def materials():
     o = ""
-    # solid top and bottom flanges with knocked-out dots
-    o += poly([(9, 6.4), (38.6, 6), (39, 11.2), (9.6, 11.6)], 1.2, fill="solid", a=.35)
-    o += poly([(9.4, 38), (39, 37.6), (38.6, 43), (9, 43.4)], 1.2, fill="solid", a=.35)
-    for x in (14, 19.5, 25, 30.5, 35):
-        o += blob(x, 8.8, .7, .7, fill="#fff", k=5, a=.1)
-        o += blob(x, 40.6, .7, .7, fill="#fff", k=5, a=.1)
-    # barrel wound with plenty of thread: two sets of slanted windings
-    o += line((12, 12), (11.6, 37.4), 2)
-    o += line((36, 11.8), (36.4, 37.2), 2)
-    y = 13.2
-    while y < 36:
-        o += line((12.4, y + 2.2), (35.8, y - .6), 1.5, amp=.25, over=.1)
-        y += 2.55
-    y = 13.4
-    while y < 35:
-        o += line((12.4, y), (35.8, y + 2.4), 1.0, amp=.25, over=.1)
-        y += 5.1
-    # loose thread end trailing from the bottom, with a curl
-    o += path(smooth([(35.8, 34.5), (42, 38), (44, 43), (40.5, 46), (38, 44.2), (39.6, 42.4)]), 1.7)
+    top = [(9.4, 6.4), (38.6, 6), (39, 10.6), (9.8, 11)]
+    bot = [(9.6, 37.6), (39, 37.2), (38.6, 42), (9.2, 42.4)]
+    o += double(top, .78, "#fff") + double(bot, .78, "#fff")
+    o += dotted((12.5, 8.7), (35.6, 8.5), 3.0, .45) + dotted((12.5, 39.9), (35.6, 39.7), 3.0, .45)
+    o += line((12, 11), (11.8, 37.6), TH) + line((36.2, 10.8), (36.4, 37.4), TH)                      # barrel sides
+    y = 12.4
+    while y < 36.4:                                                                                  # plenty of thread: two crossing windings
+        o += line((12.2, y + 2.4), (36.2, y - .4), .6, amp=.12, over=0)
+        o += line((12.2, y - .2), (36.2, y + 2.2), .5, amp=.12, over=0)
+        y += 2.2
+    o += path(smooth([(36.3, 35.6), (41, 38.4), (44, 42), (42.2, 45.4), (39.4, 44.2), (40.4, 42)]), .8)   # loose thread, curled
+    o += dot(40.4, 41.4, .5)
     return o
 
 
 def production():
     o = ""
-    # one carved C-shaped body: arm, column, throat, bed
-    o += poly([(5, 11), (33, 10.4), (38.6, 13.4), (40.4, 22), (39.6, 34), (44.6, 35.2), (44.8, 43), (3.6, 43.6), (3.8, 35.2), (5.4, 34.4), (30.4, 34.8), (31.6, 21.4), (5.4, 20.6)], 2.2, a=.35)
-    o += line((8.4, 15.6), (28, 15.4), 1.2)                                                              # carved band on the arm
-    o += flower(35, 16.4, 2)
-    o += blob(43.2, 16.2, 3.2, 3.2, 1.7, "#fff", k=8)                                                    # hand wheel
-    o += line((43.2, 13.4), (43.2, 19), 1.0) + line((40.4, 16.2), (46, 16.2), 1.0)
-    o += blob(20, 6, 2.4, 2.4, 1.5, "#fff", k=7)                                                         # thread spool on top
-    o += path(smooth([(20, 8.4), (16, 11), (12.4, 14), (11.6, 20.4)]), 1.1)                             # thread down to the needle
-    o += line((11.6, 20.6), (11.6, 31.4), 1.8)                                                           # needle
-    o += poly([(10.2, 31), (13, 31), (11.6, 35.6)], 1, fill="solid", a=.1)
-    o += poly([(3.6, 38.6), (44.8, 38.4), (44.8, 43), (3.6, 43.6)], 1, fill="solid", a=.3)             # solid bed face
-    for x in (6, 12, 18, 24, 30, 36, 41):                                                                # stitches in the fabric
-        o += f'<path d="M{n(x)} 41l2.6 -.1" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/>'
+    body = [(5, 11), (33, 10.4), (38.6, 13.4), (40.4, 22), (39.8, 34), (44.4, 35.2), (44.6, 43), (3.6, 43.6), (3.8, 35.2), (5.4, 34.4), (30.4, 34.8), (31.6, 21.4), (5.4, 20.6)]
+    o += double(body, .93, "#fff")
+    o += hatch([(31.8, 22), (39.2, 22.4), (38.6, 34), (31.4, 34)], 60, 2.0, .45)                        # filled column
+    o += dotted((8, 15.6), (28, 15.4), 2.6, .5)
+    o += petals(35.4, 16.6, 1.9, 6, .4)
+    o += wheel(43.4, 16.4, 3.2)
+    o += ring(20, 6, 2.2, TH) + dot(20, 6, .6)                                                        # thread spool on top
+    o += path(smooth([(20, 8.2), (16, 11), (12.4, 14), (11.8, 20.2)]), .6)
+    o += line((11.8, 20.6), (11.8, 31.4), TH)                                                          # needle
+    o += path("M10.8 31.2L12.8 31.2L11.8 34.6Z", .8, "solid")
+    o += dotted((6.4, 40.2), (42.4, 40), 2.4, .5)                                                      # stitched line on the bed
     return o
 
 
-def note(cx, cy, w, h, deg, glyph=False):
-    """A banknote: carved border, inner frame, corner dots, central medallion."""
+def note(cx, cy, w, h, deg, glyph=False, hatched=False):
     hw, hh = w / 2, h / 2
     outer = rot([(cx - hw, cy - hh), (cx + hw, cy - hh), (cx + hw, cy + hh), (cx - hw, cy + hh)], cx, cy, deg)
-    inner = rot([(cx - hw + 2.4, cy - hh + 2.4), (cx + hw - 2.4, cy - hh + 2.4), (cx + hw - 2.4, cy + hh - 2.4), (cx - hw + 2.4, cy + hh - 2.4)], cx, cy, deg)
-    o = path(smooth([jit(p, .3) for p in outer], True), 2.0, "#fff")
-    o += path(smooth([jit(p, .25) for p in inner], True), 1.0)
+    o = double(outer, .86, "#fff")
+    if hatched:
+        o += hatch(inset(outer, .86), 40, 2.4, .4)
     for dx in (-1, 1):
-        x, y = rot([(cx + dx * (hw - 5.2), cy)], cx, cy, deg)[0]
-        o += dot(x, y, 1.1)
-    mx, my = cx, cy
-    o += blob(mx, my, 5.6, 5.6, 1.2, "#fff", k=8)
+        x, y = rot([(cx + dx * (hw - 4.4), cy)], cx, cy, deg)[0]
+        o += petals(x, y, 1.5, 4, .35)
+    o += ring(cx, cy, 5.4, TH, "#fff") + ring(cx, cy, 4.4, .4)
     if glyph:
-        o += f'<text x="{n(mx)}" y="{n(my + 3.4)}" text-anchor="middle" font-size="9.4" font-weight="800" fill="currentColor" stroke="none">रू</text>'
+        o += f'<text x="{n(cx)}" y="{n(cy + 3.2)}" text-anchor="middle" font-size="8.4" font-weight="700" fill="currentColor" stroke="none">\u0930\u0942</text>'
     else:
-        o += flower(mx, my, 1.9)
+        o += petals(cx, cy, 2.2, 6, .4)
     return o
 
 
-def coin(cx, cy, r=3.7):
-    return blob(cx, cy, r, r * .9, 1.8, "#fff", k=9) + blob(cx, cy, r * .5, r * .45, 1, None, k=6) + dot(cx, cy, .6)
+def coin(cx, cy, r=3.5):
+    return ring(cx, cy, r, TH, "#fff") + ring(cx, cy, r * .62, .5) + petals(cx, cy, r * .3, 4, .3)
 
 
 def fair():
     o = ""
-    o += note(18.6, 13.2, 30, 17, -12)
-    o += note(27.2, 22.6, 31, 18, 6, glyph=True)
-    for (x, y) in ((8, 41.6), (13.4, 43), (9.6, 36.8)):
+    o += note(18.6, 13.2, 30, 17, -12, hatched=True)
+    o += note(27.2, 22.4, 31, 18, 6, glyph=True)
+    for (x, y) in ((8.4, 41.4), (14, 43), (10.4, 36.6), (34.6, 43), (40.2, 41.2)):
         o += coin(x, y)
-    o += coin(38.6, 41, 4)
-    o += coin(32.6, 43.4, 3.4)
     return o
 
 
 def delivery():
     o = ""
-    o += poly([(3, 10.6), (28.6, 10.2), (29, 33.4), (3.4, 33.8)], 2.2, a=.4)                          # cargo box
-    for x in (9.4, 15.8, 22.2):
-        o += line((x, 12.4), (x + .2, 31.6), 1.1)                                                       # carved planks
-    o += poly([(29, 17.2), (37.6, 17), (44.6, 25), (44.8, 33.4), (29, 33.6)], 2.2, a=.4)                # cab
-    o += poly([(32, 20), (37, 19.8), (41, 24.6), (32.2, 24.8)], 1.3, fill="#fff", a=.2)                 # window
-    o += flower(16, 22, 2.4)                                                                           # the painted medallion on the box
-    o += line((3.4, 33.8), (44.8, 33.6), 2)
-    for cx in (12.6, 36.4):
-        o += blob(cx, 37.6, 4.7, 4.7, fill="solid", k=9)
-        o += blob(cx, 37.6, 1.4, 1.4, fill="#fff", k=5)
-    for x in (2, 12, 22, 32, 42):
-        o += line((x, 45.4), (x + 4.4, 45.4), 1.4)                                                      # road dashes
+    box = [(3, 10.6), (28.6, 10.2), (29, 33.4), (3.4, 33.8)]
+    o += double(box, .88, "#fff")
+    o += hatch(inset(box, .88), 45, 3.2, .45) + hatch(inset(box, .88), -45, 3.2, .45)                   # lattice on the cargo box
+    o += ring(15.8, 22, 5, TH, "#fff") + petals(15.8, 22, 2.4, 8, .45) + ring(15.8, 22, 1.2, .4)       # the painted medallion
+    cab = [(29, 17.2), (37.6, 17), (44.6, 25), (44.8, 33.4), (29, 33.6)]
+    o += double(cab, .9, "#fff")
+    o += shape([(32, 20), (37, 19.8), (41, 24.6), (32.2, 24.8)], FINE, "#fff", .15)                     # window
+    o += line((3.4, 33.8), (44.8, 33.6), TH)
+    o += wheel(12.6, 37.8, 4.2) + wheel(36.6, 37.8, 4.2)
+    o += dotted((2.4, 45.6), (45, 45.4), 2.8, .5)                                                      # road
     return o
 
 
