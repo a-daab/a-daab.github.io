@@ -977,7 +977,7 @@ def dividers():
 
     def ring(cx, cy, seed):
         """One chain link as a lino-block print: a solid, slightly ragged ink band with carved gouge cuts, a clean paper-coloured gap round it
-        where it passes over its neighbour, and a few specks where the block did not take the ink."""
+        where it passes over its neighbour."""
         rng = random.Random(seed)
         n = 64
 
@@ -998,15 +998,6 @@ def dividers():
         g = f'<path d="{o}{h}" fill-rule="evenodd" stroke-width="3" style="fill:var(--divbg,#fff);stroke:var(--divbg,#fff)"/>'
         # the link is a line drawing: two bold, slightly ragged carved lines (outer and inner edge) with the middle of the band left open
         g += f'<path d="{edge(RX - 1, RY - 1, .12)}{edge(HX + 1, HY + 1, .1)}" fill="none" stroke="currentColor" stroke-width="3.1"/>'
-        mrx, mry = (RX + HX) / 2, (RY + HY) / 2
-        cuts = ""
-        for _ in range(9):                                                   # nicks where the knife slipped or the ink did not take, on the lines
-            t = rng.uniform(0, 2 * math.pi)
-            on_outer = rng.random() < .5
-            rx_, ry_ = (RX - 1, RY - 1) if on_outer else (HX + 1, HY + 1)
-            sx, sy = cx + rx_ * math.cos(t), cy + ry_ * math.sin(t)
-            cuts += f"M{sx - .7:.1f} {sy:.1f}a.7 .55 0 1 0 1.4 0a.7 .55 0 1 0 -1.4 0z"
-        g += f'<path d="{cuts}" stroke="none" style="fill:var(--divbg,#fff)"/>'
         return g
 
     b = []
