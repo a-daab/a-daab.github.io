@@ -27,13 +27,13 @@
 </article>
 {% endmacro %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+<section class="sec sec--orange sec--head sec--banner">
   <div class="wrap">
-    <span class="eyebrow">{{ t('nav.supply_chain') }}</span>
-    <h1 class="display">The supply<br>chain.</h1>
+    <h1 class="display banner-title" style="--n:16">The supply chain</h1>
     <p class="statement">Two material journeys, every production stage, and the documentation we are building to make each one visible.</p>
     <div class="btn-row"><a class="btn" href="{{ url('explorer') }}">{{ t('footer.explorer') }}</a><a class="btn btn--ghost" href="{{ url('transparatrade') }}">{{ t('home.what_is_tt') }}</a></div>
   </div>
+  {{ stitch_divider(5, "page") }}
 </section>
 
 <section class="sec sec--white" id="journeys">

@@ -4,13 +4,13 @@
 {% set title = "Our Story" %}
 {% set description = "YOGAMATY™ and TransparaTrade™ are developed by Empowerment Collective, a survivor-led organization, with Global Women’s Handicrafts and independent women artisans in Nepal. Survivor leadership, traditional craftsmanship and the Seven Keys." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+<section class="sec sec--orange sec--head sec--banner">
   <div class="motifs" aria-hidden="true">{{ motif('hands', 'md', 'content', cls='', speed=0.95, style='right:3%;bottom:2%') }}</div>
   <div class="wrap">
-    <span class="eyebrow">{{ t('nav.story') }}</span>
-    <h1 class="display">Not cultural<br>appropriation.<br>Cultural<br>participation.</h1>
+    <h1 class="display banner-title" style="--n:27">Not cultural appropriation.<br>Cultural participation.</h1>
     <p class="statement">A product that is more than something we purchase and consume: a relationship between people.</p>
   </div>
+  {{ stitch_divider(5, "page") }}
 </section>
 
 <section class="sec sec--white" id="vision">

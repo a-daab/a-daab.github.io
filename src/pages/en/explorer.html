@@ -3,12 +3,12 @@
 {% set title = "Supply-Chain Explorer" %}
 {% set description = "The Supply-Chain Explorer: the per-piece record of how a YOGAMATY™ was made — stage by stage, with hours, payments, electricity and environmental data, each labeled as measured or estimated." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:clamp(56px,9vw,120px)">
+<section class="sec sec--orange sec--head sec--banner">
   <div class="wrap">
-    <span class="eyebrow">{{ t('explorer_page.eyebrow') }}</span>
-    <h1 class="display">Supply-Chain<br>Explorer.</h1>
+    <h1 class="display banner-title" style="--n:21">Supply-Chain Explorer</h1>
     <p class="statement">Every stage of this piece’s life, in the order it happened — and exactly how each record was entered.</p>
   </div>
+  {{ stitch_divider(5, "page") }}
 </section>
 
 <div id="pp-app" aria-live="polite">

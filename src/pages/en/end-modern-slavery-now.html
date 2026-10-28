@@ -4,14 +4,14 @@
 {% set title = "End Modern Slavery Now!" %}
 {% set description = "End Modern Slavery Now! calls for mandatory supply-chain transparency labeling laws. Read the argument, sign the petition, hand your device to the next person, and share it." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+<section class="sec sec--orange sec--head sec--banner">
   <div class="wrap">
-    <span class="eyebrow">The movement</span>
-    <h1 class="display">End Modern<br>Slavery Now!</h1>
+    <h1 class="display banner-title" style="--n:23">End Modern Slavery Now!</h1>
     <p class="statement">The movement’s call: mandatory supply-chain transparency labeling.</p>
     <p class="count-badge" id="pet-count" hidden style="color:#fff"></p>
     <div class="btn-row"><a class="btn" href="#sign">{{ t('actions.demand_btn') }}</a></div>
   </div>
+  {{ stitch_divider(5, "page") }}
 </section>
 
 <section class="sec sec--white" id="movement">
