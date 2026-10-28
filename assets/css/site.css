@@ -603,8 +603,14 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 /* Home hero headline: exactly three lines on wide screens; wraps naturally on phones */
 @media (min-width:821px){.hero-title .ln{display:block;white-space:nowrap}}
 
-/* How It Works hero: the white border sits 1/4 cm (~9px) above the bottom edge of the orange block */
-.sec--head > .stitchdiv{bottom:9px;opacity:1}
+/* Orange page banners: one centered all-caps line of thin type with a soft shadow, a block 1 cm shorter than the old hero, and a white textile border 1/4 cm above its bottom edge that is drawn in as the page scrolls */
+.sec--banner{padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:calc(clamp(120px,13vw,170px) - clamp(24px,3vw,38px))}
+.sec--banner .wrap{text-align:center}
+.sec--banner .statement,.sec--banner .lede{margin-left:auto;margin-right:auto}
+.sec--banner .btn-row{justify-content:center}
+.sec--banner > .stitchdiv{bottom:9px;opacity:1}
+.banner-title{font-weight:240;text-transform:uppercase;white-space:nowrap;text-shadow:0 2px 3px rgba(90,35,0,.22),0 6px 18px rgba(90,35,0,.18);font-size:clamp(1.75rem,min(5vw,calc(91vw / var(--n,12))),5.5rem)}
+@media (max-width:760px){.banner-title{white-space:normal;font-size:1.75rem}}
 
 /* ---------- How It Works: the web ---------- */
 .web-sec{padding-top:clamp(56px,7vw,96px)}

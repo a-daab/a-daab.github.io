@@ -4,10 +4,9 @@
 {% set title = "TransparaTrade™" %}
 {% set description = "TransparaTrade™ is a survivor-led initiative to build a secure, immutable, open-source programming language for supply chain transparency labeling. YOGAMATY™ is its first pilot." %}
 {% block main %}
-<section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px))">
+<section class="sec sec--orange sec--head sec--banner">
   <div class="wrap">
-    <span class="eyebrow">{{ t('tt.eyebrow') }}</span>
-    <h1 class="display">TransparaTrade™.</h1>
+    <h1 class="display banner-title" style="--n:15">TransparaTrade™</h1>
     <p class="statement">Document the steps. Protect the person.</p>
     <p class="lede" style="margin-top:1rem">TransparaTrade is the proposed technical system connecting supply-chain documentation with transparency labeling.</p>
     <div class="btn-row">
@@ -15,6 +14,7 @@
       <a class="btn btn--ghost btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
     </div>
   </div>
+  {{ stitch_divider(5, "page") }}
 </section>
 
 <section class="sec sec--white" id="mission">
