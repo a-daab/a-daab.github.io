@@ -17,6 +17,19 @@
   {{ stitch_divider(10, "page") }}
 </section>
 
+<section class="aisle" id="aisle" aria-labelledby="aisle-title">
+  <div class="aisle__pin">
+    <h2 class="aisle__line aisle__line--top" id="aisle-title">We live in a world where the history of our products is hidden</h2>
+    <div class="aisle__stage">
+      <svg class="aisle__svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Illustration: a woman seen from behind stands at the start of a grocery-store aisle. Every product on the shelves has a question mark on it.">
+        <g id="aisle-world" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></g>
+        {% include "woman-back.html" %}
+      </svg>
+    </div>
+    <p class="aisle__line aisle__line--bottom">Transparency is the end of invisibility as a source of margin.</p>
+  </div>
+</section>
+
 <section class="sec sec--white" id="mission">
   <div class="wrap wrap--narrow" style="margin-left:0">
     <span class="eyebrow">Why transparency</span>
@@ -112,3 +125,4 @@
 </section>
 {{ actions('white') }}
 {% endblock %}
+{% block scripts %}<script src="/assets/js/aisle.js?v=2" defer></script>{% endblock %}
