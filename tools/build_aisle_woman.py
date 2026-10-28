@@ -13,6 +13,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import build_web_icons as bi                                     # shared hand-drawn helpers (smooth, jit, line, dot, hatch ...)
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "src" / "templates" / "woman-back.html"
+bi.ID_PREFIX = "wm"
 bi.R = random.Random(5)
 n, path, line, dot, smooth, jit = bi.n, bi.path, bi.line, bi.dot, bi.smooth, bi.jit
 W = 1.5                  # outline weight
