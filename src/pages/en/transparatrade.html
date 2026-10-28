@@ -34,11 +34,11 @@
   <div class="future__pin">
     <h2 class="future__title" id="future-title">Imagine a future where every product tells us its story. Where every person within a supply chain is visible, honored, and protected.</h2>
     <div class="future__stage">
-      <svg class="future__svg" viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustration: an eye looks down at a row of six steps of a supply chain, from raw materials to the customer. A slice of light widens from the eye, lighting first only the middle of the row and then, as it widens, every step.">
+      <svg class="future__svg" viewBox="0 0 1000 540" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Illustration: an eye looks down at a row of six steps of a supply chain, from raw materials to the customer. A slice of light from the eye lights only the customer at first, then reaches back along the chain, step by step, to raw materials.">
         {% include "future-art.html" %}
         <defs>
           <filter id="fv-soft" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="5"/></filter>
-          <linearGradient id="fv-grad" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".6" stop-color="#fff" stop-opacity=".88"/><stop offset=".84" stop-color="#fff" stop-opacity=".88"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+          <radialGradient id="fv-grad" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".3" stop-color="#fff" stop-opacity=".95"/><stop offset=".86" stop-color="#fff" stop-opacity=".97"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
         </defs>
         <g id="fv-eye"><use href="#fe-eye"/></g>
         <path id="fv-beam" fill="url(#fv-grad)" stroke="none" filter="url(#fv-soft)"/>
@@ -143,4 +143,4 @@
 </section>
 {{ actions('white') }}
 {% endblock %}
-{% block scripts %}<script src="/assets/js/aisle.js?v=6" defer></script><script src="/assets/js/future.js?v=4" defer></script>{% endblock %}
+{% block scripts %}<script src="/assets/js/aisle.js?v=6" defer></script><script src="/assets/js/future.js?v=7" defer></script>{% endblock %}
