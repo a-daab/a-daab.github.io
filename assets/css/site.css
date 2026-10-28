@@ -602,3 +602,6 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 }
 /* Home hero headline: exactly three lines on wide screens; wraps naturally on phones */
 @media (min-width:821px){.hero-title .ln{display:block;white-space:nowrap}}
+
+/* How It Works hero: the white border sits 1/4 cm (~9px) above the bottom edge of the orange block */
+.sec--head > .stitchdiv{bottom:9px;opacity:1}

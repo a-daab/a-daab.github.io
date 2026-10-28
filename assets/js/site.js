@@ -168,6 +168,8 @@
           if (stick && getComputedStyle(stick).position === 'sticky') p = clamp(sy / Math.max(1, (r.height - vh) * 0.8));   /* unrolled by 80% of the pinned scroll, then held */
           else if (getComputedStyle(o.host.querySelector('.hero-mat')).position === 'absolute') p = clamp(sy / Math.max(1, r.height * 0.6));   /* wide but short window: unroll over the first part of the hero */
           else { var mr = m.getBoundingClientRect(); p = clamp((vh - mr.top) / (vh * 0.8)); }
+        } else if (o.mode === 'page') {                                    /* a page-top border: empty at the top, drawn left to right over the first 40% of a screen of scrolling */
+          p = clamp(sy / Math.max(1, vh * 0.4));
         } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to mid-screen */
           var sr = m.getBoundingClientRect();
           p = clamp((vh * 0.96 - sr.top) / (vh * 0.5));
