@@ -717,3 +717,15 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
   .future{height:auto}
   .future__pin{position:relative;height:min(100svh,820px)}
 }
+
+/* TransparaTrade "Why transparency": tighter space above and below (the stitched-divider allowance is not needed here) */
+#mission.sec{padding-top:clamp(40px,5vw,72px);padding-bottom:clamp(40px,5vw,72px)}
+/* TransparaTrade: "What would transparency actually look like?" - a label being scanned */
+#look.sec{padding-top:clamp(40px,5vw,72px);padding-bottom:clamp(8px,2vw,24px)}
+#labels.sec{padding-top:clamp(24px,3vw,40px)}
+.scan{margin:clamp(20px,3vw,40px) auto 0;max-width:900px}
+.scan__svg{display:block;width:100%;height:auto;color:var(--orange)}
+.scan__svg *{vector-effect:non-scaling-stroke}
+.scan-line{animation:scan-sweep 2.6s ease-in-out infinite alternate}
+@keyframes scan-sweep{from{transform:translateY(0)}to{transform:translateY(88px)}}
+@media (prefers-reduced-motion:reduce){.scan-line{animation:none;transform:translateY(44px)}}

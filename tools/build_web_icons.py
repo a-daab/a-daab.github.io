@@ -90,12 +90,13 @@ def flower(x, y, r=2.2):
 
 # ------------------------------------------------------------------ Mithila-style helpers
 _ids = [0]
+ID_PREFIX = ""          # set by generators whose output shares a page with others, so clipPath ids never collide
 TH, FINE = 0.9, 0.55      # outline and fine-line weights
 
 
 def uid(prefix="m"):
     _ids[0] += 1
-    return f"{prefix}{_ids[0]}"
+    return f"{ID_PREFIX}{prefix}{_ids[0]}"
 
 
 def centroid(pts):

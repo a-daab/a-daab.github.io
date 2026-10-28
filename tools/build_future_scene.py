@@ -13,6 +13,7 @@ import build_web_icons as bi                                     # shared hand-d
 
 OUT = pathlib.Path(__file__).resolve().parent.parent / "src" / "templates" / "future-art.html"
 ORANGE = "#CC5500"
+bi.ID_PREFIX = "fa"
 bi.R = random.Random(41)
 n, path, line, dot, smooth, jit, ring, shape = bi.n, bi.path, bi.line, bi.dot, bi.smooth, bi.jit, bi.ring, bi.shape
 
