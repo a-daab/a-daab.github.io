@@ -32,7 +32,7 @@
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      note.textContent = 'Tracing by product number isn’t live yet. For now you can browse a sample record in the Supply-Chain Explorer.';
+      note.innerHTML = 'Tracing by product number isn’t live yet. For now you can browse a sample record in the <a href="/en/explorer/">Supply-Chain Explorer</a>.';
     });
   }
 })();
