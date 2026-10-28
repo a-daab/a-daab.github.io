@@ -703,3 +703,8 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
   .aisle__pin{position:relative;height:min(100svh,860px)}
   .aisle__line--bottom{opacity:1}
 }
+
+/* TransparaTrade: the statement that follows the aisle */
+.future{padding-top:clamp(72px,10vw,140px);padding-bottom:clamp(72px,10vw,140px)}
+.future .wrap{text-align:center}
+.future__title{margin:0 auto;max-width:26em;font-weight:300;font-size:clamp(1.7rem,1rem + 2.6vw,3.2rem);line-height:1.22;letter-spacing:.005em;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
