@@ -75,9 +75,9 @@ def divider(name, tone="white", rot=360):
 STITCH_ORDER = [1, 5, 2, 4, 3, 7, 6, 8]
 
 
-def stitch_divider(n):
+def stitch_divider(n, mode="self"):
     raw, _ = _svg(f"stitch-{n}")
-    return f'<div class="stitchdiv" aria-hidden="true" data-progress="self">{raw}</div>'
+    return f'<div class="stitchdiv" aria-hidden="true" data-progress="{mode}">{raw}</div>'
 
 
 def add_symbols(html):
@@ -134,7 +134,7 @@ def sold_out():
     return bool(site.get("sold_out")) or full
 
 
-env.globals.update(motif=motif, divider=divider, flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
+env.globals.update(motif=motif, divider=divider, stitch_divider=lambda n, mode="self": Markup(stitch_divider(n, mode)), flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
 
 # ---------------------------------------------------------------- media manifest (passport photos by tier)
 MEDIA_DIR = ROOT / "assets" / "media" / "passport"
