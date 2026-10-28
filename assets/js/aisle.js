@@ -178,7 +178,11 @@
   function update() {
     var p = progress();
     tTarget = reduce ? T * 0.55 : T * (1 - p);
-    if (bottom && !reduce) bottom.style.setProperty('--bo', String(Math.max(0, Math.min(1, (p - 0.45) / 0.25))));
+    if (bottom && !reduce) {
+      var bo = Math.max(0, Math.min(1, (p - 0.45) / 0.25));
+      bottom.style.setProperty('--bo', String(bo));
+      bottom.classList.toggle('is-live', bo > 0.5);                 /* the link in the line can be clicked only once the line has faded in */
+    }
     if (!raf) raf = requestAnimationFrame(frame);
   }
   /* The scene is shifted down just far enough that the shelf tops, which fan out from the vanishing point, pass below the headline. */
@@ -198,6 +202,7 @@
     svg.setAttribute('viewBox', f1(VPX - vw / 2) + ' ' + f1(-u) + ' ' + f1(vw) + ' ' + f1(vh));
   }
 
+  if (bottom && reduce) bottom.classList.add('is-live');
   draw();
   fitView();
   if (!reduce) {
