@@ -726,3 +726,4 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .look .wrap{text-align:center}
 .look__title{margin:0 auto;max-width:18em;font-weight:300;font-size:clamp(2rem,1rem + 4vw,4.2rem);line-height:1.12;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
 #labels.sec{padding-top:clamp(48px,6vw,88px)}
+.look__line{margin:clamp(18px,2.4vw,32px) auto 0;max-width:30em;font-weight:300;font-size:clamp(1.2rem,.9rem + 1.3vw,1.9rem);line-height:1.35;color:#fff;text-wrap:balance;text-shadow:0 2px 3px rgba(90,35,0,.2),0 6px 18px rgba(90,35,0,.16)}
