@@ -12,7 +12,7 @@
   var NS = 'http://www.w3.org/2000/svg';
 
   /* Scene (1000 x 700): K px per metre at the woman's distance, eye level on y = VPY, floor at her feet y = 690. */
-  var K = 290, VPX = 500, VPY = 226, T = 3.2, WALL = 1.9, VH = 790;
+  var K = 290, VPX = 500, VPY = 226, T = 3.2, WALL = 1.9, VH = 850;
   var SHELVES = [0.15, 0.75, 1.35, 1.95], CELL = 0.55, D0 = 0.05, N = 22;
   var BACK = D0 + CELL * N;
 
