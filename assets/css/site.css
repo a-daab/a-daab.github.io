@@ -717,3 +717,6 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
   .future{height:auto}
   .future__pin{position:relative;height:min(100svh,820px)}
 }
+
+/* TransparaTrade "Why transparency": tighter space above and below (the stitched-divider allowance is not needed here) */
+#mission.sec{padding-top:clamp(40px,5vw,72px);padding-bottom:clamp(40px,5vw,72px)}
