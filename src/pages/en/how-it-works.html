@@ -4,6 +4,33 @@
 {% set title = "How It Works" %}
 {% set description = "How YOGAMATY™ is made: Conscious Consumer-Funded Production — one consumer, one independent women artisan, one pre-purchase — and an Indigenous-Based Fair-Exchange and Living-Income Model built on the Seven Keys." %}
 {% block main %}
+{% set web_data = {
+  "nodes": [
+    {"id": "consumer", "label": "The consumer"},
+    {"id": "artisan", "label": "The artisan"},
+    {"id": "materials", "label": "Materials"},
+    {"id": "production", "label": "Production"},
+    {"id": "fair", "label": "Fair exchange"},
+    {"id": "delivery", "label": "Delivery"}
+  ],
+  "edges": [
+    ["consumer", "artisan", "The consumer’s pre-purchase is what opens up one artisan’s production opportunity. The aim is to connect one consumer with one individual artisan."],
+    ["consumer", "materials", "Each pre-purchase helps provide the working capital to organize the hemp yarn, reclaimed fabric and other materials before production begins."],
+    ["consumer", "production", "Production starts after a consumer pre-purchases, so YOGAMATY is not made in bulk in advance and then pushed to market."],
+    ["consumer", "fair", "The consumer is buying a product, not making a donation or a loan. The purchase is meant to support fair exchange, and the amount paid for each stage will be published per hour in local currency."],
+    ["consumer", "delivery", "The target is delivery within 60 days of the pre-purchase. That is a proposed target, not yet a guarantee."],
+    ["artisan", "materials", "Materials reach each independent artisan as a raw-materials kit of hemp yarn and reclaimed sari fabric."],
+    ["artisan", "production", "The artisan weaves the YOGAMATY on a traditional handloom. The intention is that women can work independently, including from home."],
+    ["artisan", "fair", "Fair exchange recognizes the artisan’s knowledge, labor and skill, and aims at a living income measured against the Seven Keys. It is an objective being measured, not an outcome already achieved."],
+    ["artisan", "delivery", "Finished pieces travel from the artisan back for inspection, finishing and quality control before they are packed. A proposed mobile vehicle would collect completed work."],
+    ["materials", "production", "Hemp yarn and reclaimed sari fabric are what the handloom turns into the finished piece. About 38.5% of the primary textile input by weight is reclaimed sari."],
+    ["materials", "fair", "Fair exchange reaches back to everyone behind the materials: the farmers who grow hemp, the people who process and spin the fibre, and those who recover and prepare discarded saris."],
+    ["materials", "delivery", "Materials are delivered out to the artisans and finished pieces come back. As TransparaTrade develops, these movements are meant to become verified records."],
+    ["production", "fair", "Each production stage is paid and documented. What each stage was paid will be published per hour in local currency, or we publish who verified it and how."],
+    ["production", "delivery", "After weaving, the piece is collected for inspection, finishing and quality control, then packaged and prepared for international shipment."],
+    ["fair", "delivery", "Fair exchange does not end at the loom. The people who coordinate production, transportation, technology and distribution are among the contributions the model aims to recognize and document."]
+  ]
+} %}
 <section class="sec sec--orange sec--head" style="padding-top:calc(var(--header-h) + clamp(48px,8vw,110px));padding-bottom:calc(clamp(120px,13vw,170px) - clamp(24px,3vw,38px))">
   <div class="wrap" style="text-align:center">
     <h1 class="display" style="font-weight:240;text-shadow:0 2px 3px rgba(90,35,0,.22),0 6px 18px rgba(90,35,0,.18);text-transform:uppercase;white-space:nowrap;font-size:clamp(1.75rem,5vw,5.5rem)">How it works</h1>
@@ -12,108 +39,16 @@
   {{ stitch_divider(5, "page") }}
 </section>
 
-<section class="sec sec--white" id="ccfp">
-  <div class="wrap wrap--narrow" style="margin-left:0">
-    <span class="eyebrow">Conscious Consumer-Funded Production</span>
-    <h2 class="h1">The foundation of YOGAMATY™.</h2>
-    <p>The foundation of YOGAMATY is what we are calling Conscious Consumer-Funded Production. Instead of producing large quantities of products in advance and then attempting to sell them, the consumer begins the process by pre-purchasing a YOGAMATY. That purchase helps provide the working capital needed to initiate production. The intention is to connect one consumer with one individual artisan production opportunity.</p>
-    <p><strong>The consumer is not making a donation. The consumer is not providing a loan. The consumer is purchasing a product.</strong> But the way that purchase is organized is intended to create a more direct, transparent, and equitable relationship between the consumer and the people whose labor produces it.</p>
-    <p class="core">Target delivery within 60 days of the original pre-purchase.</p>
-  </div>
-</section>
-
-<section class="sec sec--white" id="journey" style="padding-top:0">
+<section class="sec sec--white web-sec" id="web" aria-labelledby="web-title">
   <div class="wrap">
-    <span class="eyebrow">The eight steps</span>
-    <h2 class="h1">From your pre-purchase to your doorstep.</h2>
-    <ol class="steps">
-      <li class="step"><span class="n" aria-hidden="true">1</span><div><h3>The consumer pre-purchases YOGAMATY.</h3><p>The customer places an order through yogamaty.com.</p></div></li>
-      <li class="step"><span class="n" aria-hidden="true">2</span><div><h3>Production is coordinated in Nepal.</h3><p>Global Women’s Handicrafts receives the production requirement and coordinates the materials and artisan assignment.</p></div></li>
-      <li class="step"><span class="n" aria-hidden="true">3</span><div><h3>Materials are prepared and distributed.</h3><p>Hemp yarn, reclaimed fabric, and materials are organized for production.</p></div></li>
-    </ol>
-    <div class="track" aria-hidden="true">{{ motif('vehicle', 'none', 'content', '', cls='', inline=True, speed=1, dx=620) }}</div>
-    <ol class="steps" style="margin-top:0">
-      <li class="step"><span class="n" aria-hidden="true">4</span><div><h3>An independent woman artisan produces the YOGAMATY using raw materials kits.</h3><p>The artisan uses traditional handloom weaving techniques.</p></div></li>
-    </ol>
-    <div class="loom-track" aria-hidden="true">{{ motif('loom', 'none', 'content', '', cls='', inline=True) }}</div>
-    <ol class="steps" style="margin-top:0">
-      <li class="step"><span class="n" aria-hidden="true">5</span><div><h3>The completed product is collected.</h3><p>The finished YOGAMATY is returned for inspection, finishing, and quality control.</p></div></li>
-      <li class="step"><span class="n" aria-hidden="true">6</span><div><h3>The product is prepared for shipment.</h3><p>The product is packaged and prepared for international delivery.</p></div></li>
-      <li class="step step--accent"><span class="n" aria-hidden="true">7</span><div><h3>The consumer receives YOGAMATY.</h3><p>The target is delivery within 60 days of the original pre-purchase.</p><span class="tag">target: 60 days</span></div></li>
-      <li class="step step--accent"><span class="n" aria-hidden="true">8</span><div><h3>The product’s documented journey becomes visible.</h3><p>As TransparaTrade develops, the consumer will be able to explore appropriate verified records of the product’s material and production journey.</p><span class="tag">as TransparaTrade develops</span></div></li>
-    </ol>
-    <p class="small" style="margin-top:1.4rem;max-width:70ch">The 60-day delivery period is the proposed target and must be supported by a workable production and shipping process before being offered as a guaranteed commitment. See <a href="{{ url('shipping-and-delivery') }}">Shipping and Delivery</a>.</p>
-  </div>
-</section>
-
-<section class="sec sec--orange" id="independent">
-  <div class="wrap grid grid--split" style="align-items:start">
-    <div>
-      <span class="eyebrow">The independent-artisan model</span>
-      <h2 class="h1">Independent women artisans and cottage industry.</h2>
-      <p class="statement" style="font-size:clamp(1.3rem,1rem + 1vw,1.7rem);max-width:none">The project seeks to build on traditional cottage-industry production. Rather than requiring all artisans to work in one centralized factory, the intention is to support women who can produce independently from their homes.</p>
-    </div>
-    <div>
-      <p>This approach recognizes that many women face barriers to conventional employment, including household responsibilities, transportation challenges, limited financial resources, and social restrictions. Traditional handloom production can provide an opportunity for women to participate in paid work while preserving skills that have been passed down through generations.</p>
-      <p>The proposed system includes a mobile vehicle that can deliver materials, facilitate access to looms and training where appropriate, and collect completed products. The central production team coordinates materials, quality standards, records, and fulfillment. The intention is to strengthen the independence of women artisans while connecting their work with global consumer demand.</p>
-      <p>Approximately 20 artisans have contributed to the initial development. The estimated production capacity in Kathmandu is approximately 50 products per batch, subject to further operational confirmation.</p>
+    <h2 class="sr-only" id="web-title">How the pieces of YOGAMATY connect</h2>
+    <p class="web-hint" aria-hidden="true"><span class="web-hint--hover">Hover over any line of stitches</span><span class="web-hint--tap">Tap any line of stitches</span> to see how two parts connect.</p>
+    <div class="web" id="web-figure" data-web>
+      <svg class="web-svg" role="group" aria-label="A web connecting six parts of YOGAMATY: the consumer, the artisan, materials, production, fair exchange and delivery. Each line of stitches is focusable and explains how its two parts connect."></svg>
+      <div class="web-tip" id="web-tip" role="status" aria-live="polite" hidden></div>
     </div>
   </div>
+  <script type="application/json" id="web-data">{{ web_data | tojson }}</script>
 </section>
-
-<section class="sec sec--white" id="fair-exchange">
-  <div class="wrap">
-    <span class="eyebrow">Fair exchange and living income</span>
-    <h2 class="h1" style="max-width:22ch">The Indigenous-Based Fair-Exchange and Living-Income Model.</h2>
-    <div class="grid grid--2" style="margin-top:1.6rem">
-      <div>
-        <p>This is one of the most important distinctions in the project. We do not want YOGAMATY to be presented simply as an economic model. The intention is to develop an Indigenous-Based Fair-Exchange and Living-Income Model. The idea is rooted in recognizing the value of traditional knowledge, individual contribution, community relationships, cultural preservation, and fair exchange.</p>
-        <p>The project seeks to recognize the contribution of everyone involved: the farmers who grow hemp, the individuals who process and spin the fibers, the people who recover and prepare discarded sari textiles, the artisans who weave the product, and those who coordinate production, transportation, technology, and distribution. The intention is that the value of each contribution should be recognized and documented.</p>
-      </div>
-      <div>
-        <p>Fair exchange should not be determined only by the institutional position, academic credentials, or financial power of a participant. It should also recognize the actual knowledge, labor, skill, and value that the participant contributes.</p>
-        <p>The project also seeks to create a pathway toward living income. Living income means more than a payment for completing a task. It must be understood in relation to the resources required for a dignified life. This is where Empowerment Collective’s Seven Keys become central.</p>
-      </div>
-    </div>
-    <h3 style="margin-top:2.4rem">The Seven Keys</h3>
-    <ol class="keys">
-      <li>{{ motif('key-nature', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Nature</b></li>
-      <li>{{ motif('key-water', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Water</b></li>
-      <li>{{ motif('key-food', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Food</b></li>
-      <li>{{ motif('key-housing', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Housing</b></li>
-      <li>{{ motif('key-care', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Medical Care</b></li>
-      <li>{{ motif('key-education', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Education</b></li>
-      <li>{{ motif('key-technology', 'static', 'content', '', cls='key-mark', inline=True, progress='self') }}<b>Technology</b></li>
-    </ol>
-    <p style="margin-top:2rem">These Seven Keys provide the intended framework for evaluating whether an individual’s economic participation supports the basic conditions necessary for a dignified and independent life. The project seeks to move beyond measuring economic opportunity solely through wages or the number of products produced. The question is whether the work contributes meaningfully toward a life in which the Seven Keys are accessible.</p>
-    <div class="note-box"><p><strong>An objective, not an outcome.</strong> This is the living-income objective behind YOGAMATY. It is an aspiration that requires measurement, local benchmarks, and transparent evidence. It should not be represented as an outcome already achieved simply because a proposed artisan payment has been established. The amount paid for each stage will be published per hour in local currency; if a figure cannot be published, we publish who verified it and how. See <a href="{{ url('supply-chain') }}#fair-exchange">The Supply Chain</a>.</p></div>
-  </div>
-</section>
-
-<section class="sec sec--white" id="participation" style="padding-top:0">
-  <div class="wrap wrap--narrow" style="margin-left:0">
-    <span class="eyebrow">Cultural participation</span>
-    <h2 class="h1">Not cultural appropriation. Cultural participation.</h2>
-    <p>Yoga has historical roots in the Indian subcontinent. Traditional handloom weaving also remains an important living practice in Nepal and the surrounding region. YOGAMATY seeks to connect these traditions through a contemporary product made by women artisans who contribute their own knowledge and craftsmanship.</p>
-    <p>The purpose is not to take cultural knowledge and remove the people who preserve it from the value created. The purpose is to create meaningful participation. The artisans are not simply producing something for an outside brand. Their knowledge, skills, labor, and cultural heritage are central to the product itself. This philosophy should guide how YOGAMATY is described, photographed, priced, marketed, and documented.</p>
-  </div>
-</section>
-
-<section class="sec sec--white" id="pilot-status" style="padding-top:0">
-  <div class="wrap wrap--narrow" style="margin-left:0">
-    <span class="eyebrow">Pilot status</span>
-    <h2 class="h1">What remains to be finalized.</h2>
-    <p>Several important matters remain to be finalized. These matters should be presented as development work rather than completed outcomes.</p>
-    <ul>
-      <li><strong>Product:</strong> final retail price, finished weight, durability testing, and confirmed material composition.</li>
-      <li><strong>Production:</strong> verified artisan capacity, actual working hours, compensation structure, and living-income assessment.</li>
-      <li><strong>Fulfillment:</strong> international shipping arrangements, customs, and confirmation of the 60-day delivery target.</li>
-      <li><strong>Technology:</strong> programming-language architecture, verification methods, immutable record design, and privacy safeguards.</li>
-      <li><strong>Labeling:</strong> published criteria for Green, Yellow, and Red transparency classifications.</li>
-      <li><strong>Payments:</strong> final payment-processing provider and integration.</li>
-      <li><strong>Whitepaper:</strong> completion and approval of the current amendments.</li>
-    </ul>
-  </div>
-</section>
-{{ actions('orange') }}
 {% endblock %}
+{% block scripts %}<script src="/assets/js/web.js?v=1" defer></script>{% endblock %}
