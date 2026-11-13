@@ -65,6 +65,11 @@ def motif(name, size="md", layer="mid", style="", cls="", rot=0, rise=0, inline=
     return Markup(f'<div class="{klass} motif--mask" style="--ar:{ar};{style}" {attrs} data-mask="/assets/motifs/{name}.svg"></div>')
 
 
+def art(name):
+    """A motif's SVG inlined as-is, with none of the motif layer's positioning or motion (the page styles it itself)."""
+    return Markup(_svg(name)[0])
+
+
 def divider(name, tone="white", rot=360):
     """A single rotating motif used as a section divider instead of a rule."""
     raw, vb = _svg(name)
@@ -134,7 +139,7 @@ def sold_out():
     return bool(site.get("sold_out")) or full
 
 
-env.globals.update(motif=motif, divider=divider, stitch_divider=lambda n, mode="self": Markup(stitch_divider(n, mode)), flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
+env.globals.update(motif=motif, art=art, divider=divider, stitch_divider=lambda n, mode="self": Markup(stitch_divider(n, mode)), flow=flow, ph=ph, site=site, sold_out=sold_out, BASE=BASE)
 
 # ---------------------------------------------------------------- media manifest (passport photos by tier)
 MEDIA_DIR = ROOT / "assets" / "media" / "passport"

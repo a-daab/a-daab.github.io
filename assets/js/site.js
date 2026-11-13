@@ -89,24 +89,26 @@
   window.addEventListener('load', alignWhy);
   if (d.fonts && d.fonts.ready) d.fonts.ready.then(alignWhy);
 
-  /* Hero: stays pinned while the mat unrolls. If its text block is taller than one screen it is scaled down to fit
-     (so the pin still works); only on very short windows does the hero scroll normally. Nothing slides under the nav. */
-  function fitHero() {
-    var h = d.querySelector('.hero-tall');
-    if (!h || !header) return;
-    var tx = h.querySelector('.hero-text');
-    if (!tx) return;
-    h.classList.remove('hero-flow');
-    tx.style.removeProperty('--fit');
-    var avail = window.innerHeight - header.offsetHeight - 24 - 36;
-    var fit = Math.min(1, avail / Math.max(1, tx.offsetHeight));
-    if (fit < 0.72) h.classList.add('hero-flow');
-    else if (fit < 1) tx.style.setProperty('--fit', fit.toFixed(3));
-  }
-  fitHero();
-  window.addEventListener('resize', fitHero, { passive: true });
-  window.addEventListener('load', fitHero);
-  if (d.fonts && d.fonts.ready) d.fonts.ready.then(fitHero);
+  /* Home hero: --hp runs 0 → 1 while the hero scrolls away; the handwoven layer settles onto the mat beneath it (css/site.css).
+     Eased a little every frame so it glides between scroll events. With reduced motion it stays as drawn: floating. */
+  (function () {
+    var h = d.querySelector('.hero');
+    if (!h || reduce) return;
+    var cur = 0, raf = 0, last = 0;
+    function tick(now) {
+      raf = 0;
+      var dt = last ? Math.min(64, now - last) : 16; last = now;
+      var top = d.querySelector('.hero-top');
+      var t = Math.max(0, Math.min(1, window.pageYOffset / Math.max(1, (top ? top.offsetHeight : h.offsetHeight) * 0.62)));
+      cur += (t - cur) * (1 - Math.exp(-dt / 90));
+      if (Math.abs(t - cur) < 0.001) { cur = t; last = 0; } else raf = requestAnimationFrame(tick);
+      h.style.setProperty('--hp', cur.toFixed(4));
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    kick();
+  })();
 
   /* ---------------- Motif layer ----------------
      Rules (Design §6): only artwork moves; text never does. Motion is caused by scroll. CSS transforms/opacity only.
@@ -163,12 +165,7 @@
         var m = items[k], o = info.get(m), p;
         if (!hostsVisible.has(o.host)) continue;
         var r = o.host.getBoundingClientRect();
-        if (o.mode === 'hero') {                                           /* the mat unrolls as the pinned hero scrolls past */
-          var stick = o.host.querySelector('.hero-stick');
-          if (stick && getComputedStyle(stick).position === 'sticky') p = clamp(sy / Math.max(1, (r.height - vh) * 0.8));   /* unrolled by 80% of the pinned scroll, then held */
-          else if (getComputedStyle(o.host.querySelector('.hero-mat')).position === 'absolute') p = clamp(sy / Math.max(1, r.height * 0.6));   /* wide but short window: unroll over the first part of the hero */
-          else { var mr = m.getBoundingClientRect(); p = clamp((vh - mr.top) / (vh * 0.8)); }
-        } else if (o.mode === 'page') {                                    /* a page-top border: empty at the top, drawn left to right over the first 40% of a screen of scrolling */
+        if (o.mode === 'page') {                                    /* a page-top border: empty at the top, drawn left to right over the first 40% of a screen of scrolling */
           p = clamp(sy / Math.max(1, vh * 0.4));
         } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to mid-screen */
           var sr = m.getBoundingClientRect();

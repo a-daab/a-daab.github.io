@@ -467,6 +467,34 @@ def mat_sheet():
 
 
 # ---------------------------------------------------------------- water, leaves, bloom, rosette
+def mat_long():
+    """The whole towel/cover laid flat, in true proportion (about 1:3): stripes across the short way, plain binding on every
+    side, knotted fringe at both short ends. The home hero tilts this into perspective as the layer floating above a mat."""
+    W, H = 600, 1880
+    b = []
+    xo0, xo1 = 20, 580
+    bw = 15
+    xi0, xi1 = xo0 + bw, xo1 - bw
+    yo0, yo1 = 44, H - 44         # outer edge of the binding at each short end
+    yi0, yi1 = yo0 + bw, yo1 - bw
+    for xo, xi in ((xo0, xi0), (xo1, xi1)):
+        b.append(path([(xo, yo0), (xo + R.uniform(-1, 1), H / 2), (xo, yo1)], w=3.4, a=.5))
+        b.append(path([(xi, yi0), (xi + R.uniform(-1, 1), H / 2), (xi, yi1)], w=1.6, a=.4))
+        xm = (xo + xi) / 2
+        b.append(f'<path d="' + "".join(f"M{f(xm)} {y}v6" for y in range(yi0, yi1 - 6, 14)) + '" stroke-width="1"/>')
+    for yo, yi, sgn in ((yo0, yi0, -1), (yo1, yi1, 1)):
+        b.append(path([(xo0, yo), (300, yo + sgn * 2), (xo1, yo)], w=3.4, a=.5))
+        b.append(path([(xi0, yi), (300, yi + sgn), (xi1, yi)], w=1.6, a=.4))
+        b.append(f'<path d="' + "".join(f"M{x} {f((yo + yi) / 2)}h6" for x in range(int(xi0) + 6, int(xi1) - 6, 14)) + '" stroke-width="1"/>')
+        for k in range(18):                                # knotted fringe
+            cx = xo0 + 12 + k * (xo1 - xo0 - 24) / 17
+            for d in (-4, 0, 4):
+                b.append(path([(cx + d, yo), (cx + d * 1.6 + R.uniform(-1, 1), yo + sgn * 22), (cx + d * 2.2 + R.uniform(-2, 2), yo + sgn * 40)], w=1.5, a=.4))
+            b.append(f'<path d="M{f(cx - 5)} {yo + sgn * 8}q5 {sgn * 7} 10 0" stroke-width="2.2"/>' + dotpath([(cx, yo + sgn * 12)], w=4))
+    b.append(stripe_run(xi0 + 3, xi1 - 3, yi0 + 4, yi1 - 4))
+    write("mat-long", (W, H), "".join(b))
+
+
 def water():
     b = []
     for k in range(7):
@@ -1918,6 +1946,6 @@ def vehicle():
 
 
 if __name__ == "__main__":
-    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle):
+    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle, mat_long):
         fn()
     print("motifs written to", OUT)
