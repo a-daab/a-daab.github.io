@@ -316,6 +316,20 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 .sec--pp{padding-block:clamp(36px,5vw,64px)}
 
 .motif--static{position:relative;width:100%;opacity:.5;will-change:auto}
+/* ---------- Peacock: the tail fan opens as you scroll ---------- */
+.feather{transform-box:view-box;transform-origin:250px 370px;transform:rotate(calc(var(--k) * 13deg * (.2 + var(--p,1) * .8)))}
+.motif--xs{width:clamp(80px,9vw,130px)}
+
+/* ---------- Stitched section dividers: stitches and designs are added left to right as the divider scrolls in.
+   Always the opposite of the ground they sit on (white on orange, orange on white), at 75%, and drawn a little wider
+   than the screen so the pattern runs off both edges at any width. ---------- */
+.stitchdiv{position:absolute;left:0;right:0;bottom:clamp(14px,2.2vw,32px);z-index:1;pointer-events:none;color:var(--motif);overflow:hidden}
+.stitchdiv svg{display:block;width:108%;max-width:none;margin-left:-4%;height:auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;overflow:hidden}
+.stitchdiv svg{opacity:.75}   /* on the drawing, not the strip: a strip with its own background (hero, #why) stays opaque */
+.stitchdiv svg *{vector-effect:non-scaling-stroke}
+.sec{padding-bottom:clamp(120px,13vw,170px)}
+.sec--tight,.sec--pp{padding-bottom:clamp(110px,11vw,140px)}
+
 /* ---------- Home hero: the wordmark across the full width, over two planes tilted into perspective — the handwoven layer
    floating above a conventional mat. js/site.js sets --hp (0..1) as the hero scrolls away: the layer settles onto the mat.
    The introduction sits in a white panel whose slanted edge cuts across the bottom, behind the near end of the mat. ---------- */
@@ -356,7 +370,7 @@ details.how p{margin:.6em 0 0;max-width:58ch}
 .hero-intro .btn--ghost{background:transparent;color:var(--orange-deep);border-color:var(--orange)}
 .hero-intro .btn--ghost:hover{background:var(--orange-tint);color:var(--orange-deep);border-color:var(--orange-deep)}
 .hero-intro a:focus-visible{outline-color:var(--orange)}
-.hero > .stitchdiv{position:relative;background:#fff;color:var(--orange);--divbg:#fff}
+.hero > .stitchdiv{position:relative;bottom:auto;background:#fff;color:var(--orange);--divbg:#fff;padding-bottom:clamp(14px,2.2vw,32px)}
 
 @media (prefers-reduced-motion:no-preference){
   .hero-stage{animation:hero-in 1.3s cubic-bezier(.2,.7,.2,1) both}
@@ -614,6 +628,7 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .sec--banner .statement,.sec--banner .lede{margin-left:auto;margin-right:auto}
 .sec--banner .btn-row{justify-content:center}
 .sec--banner > .stitchdiv{bottom:9px;opacity:1}
+.sec--banner > .stitchdiv svg{opacity:1}
 .banner-title{font-weight:240;text-transform:uppercase;white-space:nowrap;text-shadow:0 2px 3px rgba(90,35,0,.22),0 6px 18px rgba(90,35,0,.18);font-size:clamp(1.75rem,min(5vw,calc(91vw / var(--n,12))),5.5rem)}
 @media (max-width:760px){.banner-title{white-space:normal;font-size:1.75rem}}
 
