@@ -1210,6 +1210,28 @@ def hands_cup():
     b = ['<g transform="translate(-30 -40) scale(1.5)">' + hand_up(176, 318, 206) + hand_up(290, 418, 238) + '</g>']
     write("hands-cup", (640, 780), "".join(b))
 
+# ---------------------------------------------------------------- two hands reaching for each other (home, "How it's made")
+def reach():
+    """Two different hands, one per file so the page can move them: the artisan's reaches down (bangles, a mehndi palm, a chain of
+    diamonds along the forearm); the consumer's reaches up (a plain hand from a buttoned cuff). Both are drawn on a 180 x 800
+    field with the middle fingertip 10 units from the near end and the forearm running off the far end."""
+    write("reach-down", (180, 800), '<g transform="translate(116 644) rotate(180)">' + hand_up(0, 0, 0, arm=660) + '</g>')
+    pts = [(-29, 96), (-35, 14), (-39, -38), (-40, -70), (-37, -98), (-29, -107), (-21, -98), (-19, -74),
+           (-20, -120), (-12, -133), (-4, -121), (-2, -80), (-2, -136), (7, -146), (16, -135), (17, -80),
+           (20, -116), (28, -127), (35, -116), (35, -68), (38, -40), (44, -30), (58, -40), (72, -60),
+           (81, -64), (84, -54), (72, -24), (52, 8), (36, 34), (29, 96)]
+    g = [path(pts, w=3.2, a=.4)]
+    for (x, y) in ((-29, -76), (-11, -90), (7, -98), (27, -88)):  # one crease per finger, and two long palm lines
+        g.append(line(x - 7, y, x + 7, y + 1, w=1.2))
+    g.append(path([(-30, -30), (-8, -40), (16, -34), (34, -44)], w=1.3, a=.4))
+    g.append(path([(-26, -8), (-4, -16), (10, 4), (12, 34)], w=1.3, a=.4))
+    # a shirt cuff with one button, then a plain sleeve with a long fold
+    g.append(f'<path d="M-40 96H40V136H-40Z" stroke-width="3"/>')
+    g.append(line(-40, 106, 40, 106, w=1.2)); g.append(circle(22, 121, 4.5, w=1.6))
+    g.append(path([(-36, 136), (-40, 360), (-37, 660)], w=3.2, a=.8)); g.append(path([(36, 136), (40, 360), (37, 660)], w=3.2, a=.8))
+    g.append(path([(-12, 150), (-16, 380), (-13, 660)], w=1.2, a=.6)); g.append(path([(-30, 150), (-22, 164), (-27, 182)], w=1.2, a=.3))
+    write("reach-up", (180, 800), f'<g transform="translate(64 156)">{"".join(g)}</g>')
+
 
 # ---------------------------------------------------------------- spiral clouds and spiral rain
 def spiral_cloud(cx, cy, s=1.0):
@@ -1946,6 +1968,6 @@ def vehicle():
 
 
 if __name__ == "__main__":
-    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle, mat_long):
+    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle, mat_long, reach):
         fn()
     print("motifs written to", OUT)

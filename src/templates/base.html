@@ -20,7 +20,7 @@
 <meta name="theme-color" content="#CC5500">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/mulish-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/site.css?v={{ year }}-7">
+<link rel="stylesheet" href="/assets/css/site.css?v={{ year }}-8">
 {% block head %}{% endblock %}
 </head>
 <body class="motifs-pending page-{{ (page_path or 'home')|replace('/', '-') }}">
@@ -79,7 +79,7 @@
 
 <script type="application/json" id="i18n">{{ js_strings|tojson }}</script>
 <script>window.YM={api:{{ site.api_base|tojson }},turnstile:{{ site.turnstile_site_key|tojson }},lang:{{ lang|tojson }},defaultBatch:{{ site.default_batch|tojson }},shareUrl:{{ site.petition_share_url|tojson }}};</script>
-<script src="/assets/js/site.js?v={{ year }}-6" defer></script>
+<script src="/assets/js/site.js?v={{ year }}-7" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
