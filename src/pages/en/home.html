@@ -5,23 +5,28 @@
 {% set description = "YOGAMATY™ is a premium hemp and reclaimed-sari yoga mat towel/cover, handwoven by independent women artisans in Nepal — the first pilot of TransparaTrade™, a supply chain documented step by step." %}
 {% block main %}
 
-{# ───────── 1. Hero — the product unrolls down the right half as you scroll, settling onto the outline of a conventional mat ───────── #}
-<section class="sec sec--orange hero-tall" id="top" data-divider="1">
-  <div class="hero-stick">
-    <div class="hero-mat" aria-hidden="true">
-      {{ motif('mat-roll', 'static', 'content', '', cls='hero-roll', inline=True) }}
-      <div class="hero-clip">
-        {{ motif('mat-sheet', 'static', 'content', '', cls='hero-sheet', inline=True, progress='hero') }}
+{# ───────── 1. Hero — the wordmark over two planes in perspective: the handwoven layer floating above a conventional mat, settling onto it as you scroll. The introduction sits in a white panel that cuts across the bottom. ───────── #}
+<section class="sec sec--orange hero" id="top" data-divider="1">
+  <div class="hero-top">
+    <div class="hero-stage" aria-hidden="true">
+      <div class="hero-iso">
+        <div class="hero-plane hero-plane--mat"><span class="hero-plane-label">Your yoga mat</span></div>
+        <div class="hero-plane hero-plane--shadow"></div>
+        <div class="hero-plane hero-plane--cloth">{{ art('mat-long') }}</div>
       </div>
     </div>
-    <div class="hero-text">
-      <span class="eyebrow">{{ t('home.hero_eyebrow') }}</span>
-      <h1 class="display hero-title"><span class="ln">The conscious layer</span> <span class="ln">between you and</span> <span class="ln">your yoga mat</span></h1>
+    <h1 class="hero-h1">
+      <span class="hero-word">YOGAMATY<span class="hero-tm">™</span></span>
+      <span class="hero-tag">The conscious layer <span class="ln">between you and</span> <span class="ln">your yoga mat</span></span>
+    </h1>
+  </div>
+  <div class="hero-intro">
+    <div class="hero-intro-in">
       <p class="lede">YOGAMATY™ is not simply another yoga product. It is a traditionally handwoven yoga mat towel/cover designed to connect conscious consumers directly with the women artisans whose traditional knowledge, labor, and craftsmanship create the product.</p>
       <div class="btn-row">
-        <a class="btn btn--lg" href="{{ url('shop') }}">{{ t('nav.shop_yogamaty') }}</a>
-        <a class="btn btn--ghost btn--lg" href="{{ url('supply-chain') }}">{{ t('home.open_explorer') }}</a>
-        <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
+        <a class="btn" href="{{ url('shop') }}">{{ t('nav.shop_yogamaty') }}</a>
+        <a class="btn btn--ghost" href="{{ url('supply-chain') }}">{{ t('home.open_explorer') }}</a>
+        <a class="btn btn--ghost" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
       </div>
     </div>
   </div>
