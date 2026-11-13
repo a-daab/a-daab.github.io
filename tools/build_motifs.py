@@ -871,8 +871,8 @@ def st(inner, x):
     return f'<g class="stitch" style="--i:{i}">{inner}</g>'
 
 
-def write_div(n, body):
-    write(f"stitch-{n}", (SW, 72), body)
+def write_div(n, body, h=72):
+    write(f"stitch-{n}", (SW, h), body)
 
 
 def dividers():
@@ -944,27 +944,27 @@ def dividers():
         b.append(st(g, x))
     write_div(4, "".join(b))
     # 5 Nepali stepped-diamond (dhaka-style) geometric border
-    def stepped(cx, cy, n, step):
+    def stepped(cx, cy, n, step, vstep):           # vstep < step flattens the diamond: full width, less height
         q = []
         for k in range(n):
-            q += [(cx + step * (k + 1), cy - step * (n - k)), (cx + step * (k + 1), cy - step * (n - k - 1))]
-        q = [(cx, cy - n * step)] + q
+            q += [(cx + step * (k + 1), cy - vstep * (n - k)), (cx + step * (k + 1), cy - vstep * (n - k - 1))]
+        q = [(cx, cy - n * vstep)] + q
         quad = q + [(cx + n * step, cy)]
         pts = quad + [(x, 2 * cy - y) for x, y in reversed(quad)] + [(2 * cx - x, 2 * cy - y) for x, y in quad] + [(2 * cx - x, y) for x, y in reversed(quad)]
         return "M" + "L".join(f"{f(x)} {f(y)}" for x, y in pts) + "Z"
     b = []
     for k in range(15):
         cx = 40 + k * 80
-        g = f'<path d="{stepped(cx, 36, 4, 7)}" stroke-width="2.4"/><path d="{stepped(cx, 36, 2, 7)}" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=4.5)
+        g = f'<path d="{stepped(cx, 32, 4, 7, 5)}" stroke-width="2.4"/><path d="{stepped(cx, 32, 2, 7, 5)}" stroke-width="1.6"/>' + dotpath([(cx, 32)], w=4.5)
         b.append(st(g, cx - 28))
         sx = cx + 40
-        sq = "".join(f'<rect x="{sx - 3}" y="{y - 3}" width="6" height="6" stroke-width="1.6"/>' for y in (18, 36, 54))
+        sq = "".join(f'<rect x="{sx - 3}" y="{y - 3}" width="6" height="6" stroke-width="1.6"/>' for y in (19, 32, 45))
         b.append(st(sq, sx))
-    for yy in (4, 68):
+    for yy in (3, 61):                             # the diamonds span 12..52: 9 units of air to each dashed line
         xx = 8
         while xx < SW - 20:
             b.append(st(f'<line x1="{xx}" y1="{yy}" x2="{xx + 8}" y2="{yy}" stroke-width="1.6"/>', xx)); xx += 18
-    write_div(5, "".join(b))
+    write_div(5, "".join(b), h=64)
     # 6 floral vine scroll
     b = []
     pts = [(x, 36 + 13 * math.sin(x / 62)) for x in range(0, SW + 1, 12)]
