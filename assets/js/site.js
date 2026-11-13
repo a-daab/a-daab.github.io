@@ -193,6 +193,37 @@
   }
   window.YM_motion = { refresh: function () { if (motion) motion.refresh(); } };
 
+  /* Collage parallax: every [data-plx] piece drifts by a fraction of its distance from the middle of the screen (--plx, px), eased
+     each frame; its section gets --sp, 0 → 1 as it arrives. Off with reduced motion and on narrow screens, where pieces stack. */
+  (function () {
+    var els = [].slice.call(d.querySelectorAll('[data-plx]'));
+    if (!els.length || reduce) return;
+    var st = els.map(function (e) { return { e: e, f: parseFloat(e.getAttribute('data-plx')) || 0, cur: 0, sec: e.closest('section') }; });
+    var secs = []; st.forEach(function (o) { if (o.sec && secs.indexOf(o.sec) < 0) secs.push(o.sec); });
+    var raf = 0, last = 0;
+    function tick(now) {
+      raf = 0;
+      var dt = last ? Math.min(64, now - last) : 16; last = now;
+      var ease = 1 - Math.exp(-dt / 90), vh = window.innerHeight, on = window.innerWidth > 820, more = false;
+      secs.forEach(function (s) { var r = s.getBoundingClientRect(); s.style.setProperty('--sp', Math.max(0, Math.min(1, (vh * 0.92 - r.top) / (vh * 0.7))).toFixed(3)); });
+      st.forEach(function (o) {
+        var sr = o.sec.getBoundingClientRect();
+        if (sr.bottom < -200 || sr.top > vh + 200) return;
+        var r = o.e.getBoundingClientRect();
+        var t = on ? (r.top - o.cur + r.height / 2 - vh / 2) * o.f : 0;
+        o.cur += (t - o.cur) * ease;
+        if (Math.abs(t - o.cur) < 0.2) o.cur = t; else more = true;
+        o.e.style.setProperty('--plx', o.cur.toFixed(1));
+      });
+      if (more) raf = requestAnimationFrame(tick); else last = 0;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    window.addEventListener('load', kick);
+    kick();
+  })();
+
   function afterFirstPaint() {
     var go = function () { requestAnimationFrame(function () { setTimeout(initMotifs, 0); }); };
     if (d.readyState === 'complete') go(); else window.addEventListener('load', go);
