@@ -32,22 +32,29 @@
   </div>
 </section>
 
-{# ───────── 2. The product ───────── #}
-<section class="sec sec--white" id="the-product" data-divider="5">
-  <div class="wrap grid grid--split" style="align-items:stretch">
-    <div>
-      <span class="eyebrow">{{ t('home.product_eyebrow') }}</span>
+{# ───────── 2. The product — a collage: the photograph of the piece on the loom at the centre, a strip of the weave print behind it,
+     the text on a white card and the finished cover as a small print, each drifting at its own pace as the page scrolls ───────── #}
+<section class="sec sec--white product" id="the-product" data-divider="5">
+  <div class="wrap product-stage">
+    <div class="product-print" aria-hidden="true" data-plx="-0.07"></div>
+    <div class="product-threads" aria-hidden="true" data-plx="0.05"></div>
+    <header class="product-head">
+      <span class="eyebrow">{{ t('home.product_eyebrow') }}<span class="product-weft" aria-hidden="true"></span></span>
       <h2 class="h1">Handwoven from natural hemp and reclaimed sari textiles.</h2>
-      <p class="lede-lg" style="margin-bottom:1em">YOGAMATY weaves together traditional Nepali arts knowledge, agricultural materials, textile recovery, and contemporary consumer demand to create the first transparent yoga mat cover.</p>
-      <p>Place YOGAMATY directly on top of your yoga mat for a washable textile layer between your body and the conventional mat underneath. The conventional mat continues to provide cushioning and support, while YOGAMATY enables you to maintain a practice of both physical and spiritual hygiene.</p>
-      <p><a href="{{ url('shop') }}#details">See the specifications →</a> &nbsp; <a href="{{ url('supply-chain') }}#electricity">{{ t('home.see_electricity') }}</a></p>
-      <figure class="media" style="margin-top:1rem;max-width:520px">
-        <img src="/assets/media/yogamaty-flat-overhead.webp" width="942" height="942" alt="YOGAMATY™ seen flat from overhead: a long handwoven towel/cover of multicolored reclaimed-sari stripes with a cream bound edge and knotted fringe at each short end" loading="lazy" decoding="async" style="display:block;width:100%;height:auto">
-      </figure>
+    </header>
+    <figure class="product-photo" data-plx="0.035">
+      <img src="/assets/media/yogamaty-on-the-loom-1800.webp" srcset="/assets/media/yogamaty-on-the-loom-900.webp 900w, /assets/media/yogamaty-on-the-loom-1800.webp 1800w" sizes="(max-width:820px) 100vw, 66vw" width="1800" height="1200" alt="A YOGAMATY™ on the loom: an artisan’s hands, with red bangles at the wrist, hold a hank of natural yarn over the pale warp threads; the woven part shows stripes of pink, green, blue and cream reclaimed cloth, with scissors and fabric scraps resting on it" loading="lazy" decoding="async">
+      <figcaption>On the loom: natural yarn and reclaimed cloth.</figcaption>
+    </figure>
+    <div class="product-card" data-plx="-0.03">
+      <p class="lede-lg">YOGAMATY weaves together traditional Nepali arts knowledge, agricultural materials, textile recovery, and contemporary consumer demand to create the first transparent yoga mat cover.</p>
+      <p>Place YOGAMATY directly on top of your yoga mat for a washable textile layer between your body and the conventional mat underneath. The conventional mat continues to provide cushioning and support. YOGAMATY enables you to extend the lifespan of your conventional mat while maintaining a practice of physical and spiritual hygiene.</p>
+      <p class="product-links"><a href="{{ url('shop') }}#details">See the specifications →</a> <a href="{{ url('supply-chain') }}#electricity">{{ t('home.see_electricity') }}</a></p>
     </div>
-    <div class="weave-col" aria-hidden="true">
-      {{ motif('weave', 'static', 'content', '', cls='weave-art motif--clip', inline=True) }}
-    </div>
+    <figure class="product-flat" data-plx="0.09">
+      <img src="/assets/media/yogamaty-flat-overhead.webp" width="942" height="942" alt="YOGAMATY™ seen flat from overhead: a long handwoven cover of multicolored reclaimed-sari stripes with a cream bound edge and knotted fringe at each short end" loading="lazy" decoding="async">
+      <figcaption>The finished piece</figcaption>
+    </figure>
   </div>
 </section>
 
