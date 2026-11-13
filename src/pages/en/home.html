@@ -37,7 +37,6 @@
 <section class="sec sec--white product" id="the-product" data-divider="5">
   <div class="wrap product-stage">
     <div class="product-print" aria-hidden="true" data-plx="-0.07"></div>
-    <div class="product-threads" aria-hidden="true" data-plx="0.05"></div>
     <header class="product-head">
       <span class="eyebrow">{{ t('home.product_eyebrow') }}<span class="product-weft" aria-hidden="true"></span></span>
       <h2 class="h1">Handwoven from natural hemp and reclaimed sari textiles.</h2>
@@ -58,28 +57,26 @@
   </div>
 </section>
 
-{# ───────── 3. The makers ───────── #}
-<section class="sec sec--orange" id="makers" data-divider="2">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('hands-cup', 'none', 'content', '', cls='hands-cup') }}
-  </div>
-  <div class="wrap wrap--narrow" style="max-width:860px;margin-left:0;margin-right:auto">
-    <span class="eyebrow">{{ t('home.makers_eyebrow') }}</span>
-    <p class="statement">One consumer. One artisan. One pre-purchase. One YOGAMATY. One transparent supply chain.</p>
-    <p class="statement">The artisans are not simply producing something for an outside brand. Their knowledge, skills, labor, and cultural heritage are central to the product itself.</p>
-    <p class="statement">Not cultural appropriation. Cultural participation.</p>
-    <div class="btn-row"><a class="btn" href="{{ url('our-story') }}">{{ t('home.meet_makers') }}</a><a class="btn btn--ghost" href="{{ url('how-it-works') }}">{{ t('home.see_how') }}</a></div>
-  </div>
-</section>
-
-{# ───────── 4. Conscious Consumer-Funded Production ───────── #}
-<section class="sec sec--white" id="ccfp" data-divider="6">
-  <div class="wrap wrap--narrow" style="margin-left:0;max-width:880px">
-    <span class="eyebrow">{{ t('home.how_eyebrow') }}</span>
-    <h2 class="h1">Conscious Consumer-Funded Production.</h2>
-    <p>The foundation of YOGAMATY is what we are calling Conscious Consumer-Funded Production. Instead of producing large quantities of products in advance and then attempting to sell them, the consumer begins the process by pre-purchasing a YOGAMATY. That purchase helps provide the working capital needed to initiate production. The intention is to connect one consumer with one individual artisan production opportunity.</p>
-    <p>The consumer is not making a donation. The consumer is not providing a loan. The consumer is purchasing a product. But the way that purchase is organized is intended to create a more direct, transparent, and equitable relationship between the consumer and the people whose labor produces it. Target delivery within 60 days of the original pre-purchase.</p>
-    <p><a class="btn btn--ghost" href="{{ url('how-it-works') }}">{{ t('home.see_how') }}</a></p>
+{# ───────── 3. How it's made (the makers + Conscious Consumer-Funded Production) ───────── #}
+<section class="sec sec--orange made" id="how-its-made" data-divider="2">
+  <div class="wrap made-stage">
+    <header class="made-head">
+      <span class="eyebrow">{{ t('home.made_eyebrow') }}</span>
+      <h2 class="h1">The consumer is the start of the process, not the end.</h2>
+    </header>
+    <div class="made-fig" aria-hidden="true" data-reach>
+      <div class="made-frame" data-plx="0.05"></div>
+      <div class="made-panel" data-plx="-0.03">
+        <span class="made-disc"></span>
+        <span class="made-hand made-hand--down">{{ art('reach-down') }}</span>
+        <span class="made-hand made-hand--up">{{ art('reach-up') }}</span>
+      </div>
+    </div>
+    <div class="made-card" data-plx="0.03">
+      <p class="lede-lg">YOGAMATY is created using a Conscious Consumer-Funded Production model. Instead of producing large quantities of products in advance and then attempting to sell them, the consumer begins the process by pre-purchasing a YOGAMATY. That purchase helps provide the working capital needed to initiate production.</p>
+      <p>This model creates a more direct, transparent, and equitable relationship between the consumer and the people whose labor, knowledge, skills, and cultural heritage are embedded in their product. This is an invitation to engage in cultural participation, not cultural appropriation.</p>
+      <p class="product-links"><a href="{{ url('how-it-works') }}">{{ t('home.see_how') }} →</a><a href="{{ url('our-story') }}">{{ t('home.meet_makers') }} →</a></p>
+    </div>
   </div>
 </section>
 

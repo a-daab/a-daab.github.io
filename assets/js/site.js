@@ -193,6 +193,35 @@
   }
   window.YM_motion = { refresh: function () { if (motion) motion.refresh(); } };
 
+  /* Reaching hands: each [data-reach] figure gets --reach, 0 as it enters at the bottom of the screen → 1 once it is nearly
+     centred, eased each frame. Without JS or with reduced motion the CSS default (1, hands together) stands. */
+  (function () {
+    var els = [].slice.call(d.querySelectorAll('[data-reach]'));
+    if (!els.length || reduce) return;
+    var st = els.map(function (e) { return { e: e, cur: 0 }; });
+    var raf = 0, last = 0;
+    function tick(now) {
+      raf = 0;
+      var dt = last ? Math.min(64, now - last) : 16; last = now;
+      var ease = 1 - Math.exp(-dt / 110), vh = window.innerHeight, more = false;
+      st.forEach(function (o) {
+        var r = o.e.getBoundingClientRect();
+        var from = vh * 0.92, to = Math.max(vh * 0.06, (vh - r.height) / 2 + vh * 0.1);
+        var t = Math.max(0, Math.min(1, (from - r.top) / (from - to)));
+        t = t * t * (3 - 2 * t);
+        o.cur += (t - o.cur) * ease;
+        if (Math.abs(t - o.cur) < 0.002) o.cur = t; else more = true;
+        o.e.style.setProperty('--reach', o.cur.toFixed(3));
+      });
+      if (more) raf = requestAnimationFrame(tick); else last = 0;
+    }
+    function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+    window.addEventListener('scroll', kick, { passive: true });
+    window.addEventListener('resize', kick, { passive: true });
+    window.addEventListener('load', kick);
+    kick();
+  })();
+
   /* Collage parallax: every [data-plx] piece drifts by a fraction of its distance from the middle of the screen (--plx, px), eased
      each frame; its section gets --sp, 0 → 1 as it arrives. Off with reduced motion and on narrow screens, where pieces stack. */
   (function () {
