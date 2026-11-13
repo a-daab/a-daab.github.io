@@ -167,9 +167,9 @@
         var r = o.host.getBoundingClientRect();
         if (o.mode === 'page') {                                    /* a page-top border: empty at the top, drawn left to right over the first 40% of a screen of scrolling */
           p = clamp(sy / Math.max(1, vh * 0.4));
-        } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to mid-screen */
+        } else if (o.mode === 'self') {                                    /* stitches: from entering the bottom of the screen to a third of the way up */
           var sr = m.getBoundingClientRect();
-          p = clamp((vh * 0.96 - sr.top) / (vh * 0.5));
+          p = clamp((vh * 0.96 - sr.top) / (vh * 0.34));
         } else if (o.mode === 'end') {                                      /* blooms as the section's end rises into view */
           p = clamp(1 - (r.bottom - vh * 0.55) / (vh * 0.6));
         } else p = clamp((vh - r.top) / (vh + r.height));                  /* 0 entering, 1 leaving */
