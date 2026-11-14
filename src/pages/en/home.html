@@ -102,14 +102,33 @@
 </section>
 
 {# ───────── 8. The ask ───────── #}
-<section class="sec sec--orange" id="ask" data-divider="10">
-  <div class="wrap wrap--narrow" style="margin-left:0;margin-right:auto;max-width:880px">
-    <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
-    <h2 class="display" style="font-size:clamp(2.2rem,1rem + 5vw,4.2rem);color:#fff">Join the “End Modern Slavery Now!” movement</h2>
-    <p class="statement">Sign the petition to demand mandatory supply-chain transparency labeling on all products. Through mandatory labeling laws, the End Modern Slavery Now! movement seeks to create a world where companies are held accountable, exploitation can no longer be hidden, and transparency is a basic expectation of global trade.</p>
-    <div class="btn-row">
-      <a class="btn btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
-      <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
+<section class="sec sec--orange ask" id="ask" data-divider="10">
+  <div class="wrap ask-stage">
+    <div class="ask-text">
+      <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
+      <h2 class="display ask-h">Join the “End Modern Slavery Now!” movement</h2>
+      <p class="ask-lede">Sign the petition to demand mandatory supply-chain transparency labeling on all products. Through mandatory labeling laws, the End Modern Slavery Now! movement seeks to create a world where companies are held accountable, exploitation can no longer be hidden, and transparency is a basic expectation of global trade.</p>
+      <div class="btn-row">
+        <a class="btn btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
+        <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
+      </div>
+    </div>
+    {# decorative: the label the movement asks for, as a hang tag on a thread, over a second tag in the deeper orange #}
+    <div class="ask-fig" aria-hidden="true">
+      <div class="ask-tag ask-tag--back" data-plx="0.07"><div class="ask-tag-in"></div></div>
+      <div class="ask-tag ask-tag--front" data-plx="-0.04">
+        <svg class="ask-thread" viewBox="0 0 200 520" preserveAspectRatio="none"><path d="M100 520C70 400 170 300 130 170S150 40 190 0"/><path d="M100 520C84 410 150 310 118 180S120 50 150 0"/></svg>
+        <div class="ask-tag-in">
+          <span class="ask-hole"></span>
+          <span class="ask-tag-eyebrow">Transparency label</span>
+          <span class="ask-q">Who made this?</span>
+          <span class="ask-q">Where was it made?</span>
+          <span class="ask-q">Under what conditions?</span>
+          <span class="ask-q">Who was paid, and how much?</span>
+          <span class="ask-sign"><i>✕</i><b></b></span>
+          <span class="ask-tag-foot">Sign here</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
