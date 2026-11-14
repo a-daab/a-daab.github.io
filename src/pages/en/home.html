@@ -113,22 +113,13 @@
         <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
       </div>
     </div>
-    {# decorative: the label the movement asks for, as a hang tag on a thread, over a second tag in the deeper orange #}
-    <div class="ask-fig" aria-hidden="true">
-      <div class="ask-tag ask-tag--back" data-plx="0.07"><div class="ask-tag-in"></div></div>
-      <div class="ask-tag ask-tag--front" data-plx="-0.04">
-        <svg class="ask-thread" viewBox="0 0 200 520" preserveAspectRatio="none"><path d="M100 520C70 400 170 300 130 170S150 40 190 0"/><path d="M100 520C84 410 150 310 118 180S120 50 150 0"/></svg>
-        <div class="ask-tag-in">
-          <span class="ask-hole"></span>
-          <span class="ask-tag-eyebrow">Transparency label</span>
-          <span class="ask-q">Who made this?</span>
-          <span class="ask-q">Where was it made?</span>
-          <span class="ask-q">Under what conditions?</span>
-          <span class="ask-q">Who was paid, and how much?</span>
-          <span class="ask-sign"><i>✕</i><b></b></span>
-          <span class="ask-tag-foot">Sign here</span>
-        </div>
-      </div>
+    {# decorative: a chain down a band of deeper orange; one link parts as the section scrolls in #}
+    <div class="ask-fig" aria-hidden="true" data-reach>
+      <div class="ask-band" data-plx="-0.05"></div>
+      <div class="ask-line" data-plx="0.05"></div>
+      <span class="ask-chain ask-chain--up">{{ art('chain-up') }}</span>
+      <span class="ask-chain ask-chain--down">{{ art('chain-down') }}</span>
+      <svg class="ask-burst" viewBox="-50 -50 100 100"><path d="M-46 0H-30M30 0H46M-33 -19L-22 -13M22 13L33 19M-33 19L-22 13M22 -13L33 -19"/></svg>
     </div>
   </div>
 </section>
