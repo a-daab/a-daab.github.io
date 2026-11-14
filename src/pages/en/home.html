@@ -47,7 +47,7 @@
     </figure>
     <div class="product-card" data-plx="-0.03">
       <p class="lede-lg">YOGAMATY weaves together traditional Nepali arts knowledge, agricultural materials, textile recovery, and contemporary consumer demand to create the first transparent yoga mat cover.</p>
-      <p>Place YOGAMATY directly on top of your yoga mat for a washable textile layer between your body and the conventional mat underneath. The conventional mat continues to provide cushioning and support. YOGAMATY enables you to maintain a practice of physical and spiritual hygiene.</p>
+      <p>Place YOGAMATY directly on top of your yoga mat for a washable textile layer between your body and the conventional mat underneath. The conventional mat continues to provide cushioning and support. YOGAMATY enables you to maintain both physical hygiene and spiritual alignment.</p>
       <p class="product-links"><a href="{{ url('supply-chain') }}">Unveil the full supply chain →</a></p>
     </div>
     <figure class="product-flat" data-plx="0.09">
@@ -80,59 +80,24 @@
   </div>
 </section>
 
-{# ───────── 5. The problem ───────── #}
-<section class="sec sec--white" id="why" data-divider="9">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('rain', 'none', 'content', '', cls='rain-art motif--clip', inline=True) }}
-    {{ motif('clouds', 'none', 'content', '', cls='cloud-band motif--clip', inline=True) }}
-  </div>
-  <div class="wrap grid grid--2">
-    <div class="why-left">
-      <span class="eyebrow">{{ t('home.why_eyebrow') }}</span>
-      <h2 class="h1">Why YOGAMATY?</h2>
-      <p>Yoga has become a global practice associated with mindfulness, well-being, physical discipline, and spiritual awareness. Yet many of the products used in modern yoga practice are manufactured through complex global supply chains that consumers know very little about.</p>
-      <p>A person may be deeply conscious of what they eat, how they live, and the values they bring to their yoga practice, while knowing almost nothing about the people who made the products they use. YOGAMATY is intended to bring greater consciousness to that relationship.</p>
-      <p>The product is designed for serious yoga practitioners who care not only about the quality of their practice but also about the integrity of the products they bring into that practice.</p>
-      <p><a class="btn btn--ghost" href="{{ url('end-modern-slavery-now') }}">{{ t('home.read_argument') }}</a></p>
-    </div>
-    <div>
-      <p class="quote" style="margin-top:2.4rem">The consciousness we bring to our practice should also extend to the people and materials behind the products we use.</p>
-    </div>
-  </div>
-</section>
-
-{# ───────── 6. The supply chain ───────── #}
-<section class="sec sec--orange" id="chain" data-divider="3">
+{# ───────── 4. The supply chain ───────── #}
+<section class="sec sec--white chain" id="chain" data-divider="3">
   <div class="wrap">
-    <span class="eyebrow">{{ t('home.chain_eyebrow') }}</span>
-    <h2 class="h1" style="max-width:20ch">Document the steps. Protect the person.</h2>
-    <p class="statement">YOGAMATY is particularly suitable as a TransparaTrade pilot because it combines two distinct material journeys. One material comes from agricultural production. The other comes from the recovery of existing textiles.</p>
+    <div class="chain-top">
+      <header class="chain-head">
+        <span class="eyebrow">{{ t('home.chain_eyebrow') }}</span>
+        <h2 class="h1">Document the steps. Protect the people.</h2>
+      </header>
+      <div class="chain-body">
+        <p class="lede-lg"><a href="https://cdn.walkfree.org/content/uploads/2023/05/17114737/Global-Slavery-Index-2023.pdf" rel="noopener">Over 28 million people</a> are trapped in forced labor worldwide. Their stories remain invisible, in products we purchase every day, because of opaque supply chains. YOGAMATY is the first TransparaTrade pilot product—the beginning of the end of hidden suffering.</p>
+        <p>From the two distinct material journeys—hemp and reclaimed sari fabric—to processing, weaving, shipping, and distribution, every step of the YOGAMATY supply chain is traced and visible to consumers.</p>
+      </div>
+    </div>
     {{ flow(url('supply-chain')) }}
-    <p class="statement" style="margin-top:2rem;max-width:44ch">The objective is to demonstrate how different types of supply chains can be documented through a common technical language.</p>
     <div class="btn-row">
-      <a class="btn" href="{{ url('supply-chain') }}">{{ t('home.open_explorer') }}</a>
-      <a class="btn btn--ghost" href="{{ url('transparatrade') }}">{{ t('home.what_is_tt') }}</a>
+      <a class="btn" href="{{ url('supply-chain') }}">{{ t('home.learn_more') }}</a>
+      <a class="btn btn--ghost" href="{{ url('become-a-technical-ally') }}">{{ t('home.join_dev') }}</a>
     </div>
-  </div>
-</section>
-
-{# ───────── 7. Three appeals, in order ───────── #}
-<section class="sec sec--white" id="reasons" data-divider="none">
-  <div class="motifs" aria-hidden="true">
-    {{ motif('lotus-bloom', 'none', 'content', '', cls='lotus-art motif--clip', inline=True, progress='end') }}
-  </div>
-  <div class="wrap">
-    <span class="eyebrow">{{ t('home.reasons_eyebrow') }}</span>
-    <h2 class="h1" style="max-width:18ch">Not simply conscious consumption. Conscious participation.</h2>
-    <div class="grid grid--3" style="margin-top:3rem">
-      <div class="appeal"><span class="num">1</span><h3>Where the money goes</h3>
-        <p>Conscious consumption determines where the money goes. The consumer’s purchase is intended to help initiate a production opportunity.</p></div>
-      <div class="appeal"><span class="num">2</span><h3>How the money is used</h3>
-        <p>Conscious capitalism determines how the money is used. The product is made through traditional craftsmanship.</p></div>
-      <div class="appeal"><span class="num">3</span><h3>Making it visible</h3>
-        <p>TransparaTrade seeks to make the value of each contribution and the fairness of the exchange visible. The supply-chain system seeks to document the events and economic exchanges involved.</p></div>
-    </div>
-    <p style="margin-top:2.4rem;max-width:62ch">The larger purpose is to demonstrate that purchasing can become a more conscious form of participation in the relationships behind global trade.</p>
   </div>
 </section>
 
