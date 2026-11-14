@@ -1051,7 +1051,7 @@ def dividers():
         cx = 60 + k * 120
         eye_g = (f'<path d="M{cx - 34} 36Q{cx} 10 {cx + 34} 36Q{cx} 62 {cx - 34} 36Z" stroke-width="2.6"/>'
                  f'<path d="M{cx - 24} 36Q{cx} 18 {cx + 24} 36Q{cx} 54 {cx - 24} 36Z" stroke-width="1.2"/>'
-                 f'<circle cx="{cx}" cy="36" r="11" stroke-width="2.2"/><circle cx="{cx}" cy="36" r="5" stroke-width="1.6"/>' + dotpath([(cx, 36)], w=3)
+                 f'<circle cx="{cx}" cy="36" r="6.6" stroke-width="2"/>' + dotpath([(cx, 36)], w=3.4)      # the iris sits wholly inside the inner lid
 )
         b.append(st(eye_g, cx - 34))
         mx = cx + 60
@@ -1209,6 +1209,33 @@ def hands_cup():
     # two cupped hands, scaled up, meeting at the lower left; the forearms run off the top right edge
     b = ['<g transform="translate(-30 -40) scale(1.5)">' + hand_up(176, 318, 206) + hand_up(290, 418, 238) + '</g>']
     write("hands-cup", (640, 780), "".join(b))
+
+# ---------------------------------------------------------------- a chain that parts at one link (home, "Take action")
+def chain():
+    """A hanging chain, cut in two files so the page can pull them apart: chain-up ends at the bottom in the upper half of a
+    parted link, chain-down starts at the top with the lower half. Links alternate face-on (a doubled outline) and edge-on (a
+    narrow bar, filled with --chainbg so it reads as passing through its neighbours)."""
+    cx, W, H = 60, 46, 84
+    def face(cy):
+        return (f'<rect x="{cx - W / 2}" y="{cy - H / 2}" width="{W}" height="{H}" rx="{W / 2}" stroke-width="3"/>'
+                f'<rect x="{cx - W / 2 + 9}" y="{cy - H / 2 + 9}" width="{W - 18}" height="{H - 18}" rx="{W / 2 - 9}" stroke-width="1.4"/>')
+    def edge(cy):
+        return (f'<rect x="{cx - 6.5}" y="{cy - H / 2}" width="13" height="{H}" rx="6.5" style="fill:var(--chainbg,none)" stroke-width="3"/>'
+                f'<line x1="{cx}" y1="{cy - H / 2 + 12}" x2="{cx}" y2="{cy + H / 2 - 12}" stroke-width="1.2"/>')
+    yb = 700                                                          # the parted link is centred on the bottom edge
+    r, ri = W / 2, W / 2 - 9
+    half = (f'<path d="M{cx - r} {yb - 2}V{yb - H / 2 + r}A{r} {r} 0 0 1 {cx + r} {yb - H / 2 + r}V{yb - 7}" stroke-width="3"/>'
+            f'<path d="M{cx - ri} {yb - 2}V{yb - H / 2 + r}A{ri} {ri} 0 0 1 {cx + ri} {yb - H / 2 + r}V{yb - 7}" stroke-width="1.4"/>'
+            f'<path d="M{cx - r} {yb - 2}H{cx - ri}M{cx + ri} {yb - 7}H{cx + r}" stroke-width="2"/>')
+    b, k, cy = [half], 1, yb - 62
+    faces, edges = [], []
+    while cy > -H:
+        (edges if k % 2 else faces).append(cy)
+        cy -= 62; k += 1
+    body = half + "".join(face(y) for y in faces) + "".join(edge(y) for y in edges)
+    write("chain-up", (120, 700), body)
+    write("chain-down", (120, 700), f'<g transform="rotate(180 60 350)">{body}</g>')
+
 
 # ---------------------------------------------------------------- two hands reaching for each other (home, "How it's made")
 def reach():
@@ -1968,6 +1995,6 @@ def vehicle():
 
 
 if __name__ == "__main__":
-    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle, mat_long, reach):
+    for fn in (weave, hands_cup, clouds_band, rain, lotus_bloom, sun_spiral, village, flow, fish, peacock, sun, lotus, cloud, mandala, dividers, hemp, ret, spin, hank, hands, spool, loom, sari, sewing, mat_roll, mat_sheet, water, leaves, bloom, rosette, border, favicon, key_marks, vehicle, mat_long, reach, chain):
         fn()
     print("motifs written to", OUT)

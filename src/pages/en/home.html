@@ -102,14 +102,24 @@
 </section>
 
 {# ───────── 8. The ask ───────── #}
-<section class="sec sec--orange" id="ask" data-divider="10">
-  <div class="wrap wrap--narrow" style="margin-left:0;margin-right:auto;max-width:880px">
-    <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
-    <h2 class="display" style="font-size:clamp(2.2rem,1rem + 5vw,4.2rem);color:#fff">Join the “End Modern Slavery Now!” movement</h2>
-    <p class="statement">Sign the petition to demand mandatory supply-chain transparency labeling on all products. Through mandatory labeling laws, the End Modern Slavery Now! movement seeks to create a world where companies are held accountable, exploitation can no longer be hidden, and transparency is a basic expectation of global trade.</p>
-    <div class="btn-row">
-      <a class="btn btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
-      <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
+<section class="sec sec--orange ask" id="ask" data-divider="10">
+  <div class="wrap ask-stage">
+    <div class="ask-text">
+      <span class="eyebrow">{{ t('home.ask_eyebrow') }}</span>
+      <h2 class="display ask-h">Join the “End Modern Slavery Now!” movement</h2>
+      <p class="ask-lede">Sign the petition to demand mandatory supply-chain transparency labeling on all products. Through mandatory labeling laws, the End Modern Slavery Now! movement seeks to create a world where companies are held accountable, exploitation can no longer be hidden, and transparency is a basic expectation of global trade.</p>
+      <div class="btn-row">
+        <a class="btn btn--lg" href="{{ url('end-modern-slavery-now') }}#sign">{{ t('actions.demand_btn') }}</a>
+        <a class="btn btn--ghost btn--lg" href="{{ url('become-a-technical-ally') }}">{{ t('nav.ally') }}</a>
+      </div>
+    </div>
+    {# decorative: a chain down a band of deeper orange; one link parts as the section scrolls in #}
+    <div class="ask-fig" aria-hidden="true" data-reach>
+      <div class="ask-band" data-plx="-0.05"></div>
+      <div class="ask-line" data-plx="0.05"></div>
+      <span class="ask-chain ask-chain--up">{{ art('chain-up') }}</span>
+      <span class="ask-chain ask-chain--down">{{ art('chain-down') }}</span>
+      <svg class="ask-burst" viewBox="-50 -50 100 100"><path d="M-46 0H-30M30 0H46M-33 -19L-22 -13M22 13L33 19M-33 19L-22 13M22 -13L33 -19"/></svg>
     </div>
   </div>
 </section>
