@@ -1042,11 +1042,8 @@ def dividers():
         x += PITCH
         k += 1
     write_div(9, "".join(b))
-    # 10 Nepali textile band with eye imagery between zigzag borders
+    # 10 a row of eyes with a diamond between each pair (no zigzag borders)
     b = []
-    for k in range(30):
-        x = 6 + k * 40
-        b.append(st(f'<path d="M{x} 14l10 -9l10 9l10 -9" stroke-width="1.8"/><path d="M{x} 58l10 9l10 -9l10 9" stroke-width="1.8"/>', x))
     for k in range(10):
         cx = 60 + k * 120
         eye_g = (f'<path d="M{cx - 34} 36Q{cx} 10 {cx + 34} 36Q{cx} 62 {cx - 34} 36Z" stroke-width="2.6"/>'
