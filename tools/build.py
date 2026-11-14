@@ -82,7 +82,7 @@ STITCH_ORDER = [1, 5, 2, 4, 3, 7, 6, 8]
 
 def stitch_divider(n, mode="self"):
     raw, _ = _svg(f"stitch-{n}")
-    return f'<div class="stitchdiv" aria-hidden="true" data-progress="{mode}">{raw}</div>'
+    return f'<div class="stitchdiv stitchdiv--{n}" aria-hidden="true" data-progress="{mode}">{raw}</div>'
 
 
 def add_symbols(html):

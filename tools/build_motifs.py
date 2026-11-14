@@ -1809,12 +1809,12 @@ def picto(i, cx, cy):
 
 def node(i, cx, cy, vertical=False):
     letter, name = NODES[i]
-    pic = (circle(cx, cy, 54, w=3) + circle(cx, cy, 46, w=1.3) + picto(i, cx, cy) +
-           dotpath([(cx + 62 * math.cos(k * math.pi / 8), cy + 62 * math.sin(k * math.pi / 8)) for k in range(16)], w=2.6))
+    pic = circle(cx, cy, 54, w=1.8) + circle(cx, cy, 47, w=.9) + picto(i, cx, cy)      # two fine rings round the pictogram
     if vertical:
-        label = f'<text x="{cx + 92}" y="{cy + 10}" class="fl-name">{name}</text>'
+        label = f'<text x="{cx + 92}" y="{cy - 12}" class="fl-num">0{i + 1}</text><text x="{cx + 92}" y="{cy + 18}" class="fl-name">{name}</text>'
     else:
-        label = f'<text x="{cx}" y="{cy + 112}" text-anchor="middle" class="fl-name">{name}</text>'
+        label = (f'<text x="{cx}" y="{cy + 96}" text-anchor="middle" class="fl-num">0{i + 1}</text>'
+                 f'<text x="{cx}" y="{cy + 122}" text-anchor="middle" class="fl-name">{name}</text>')
     hit = (f'<circle cx="{cx}" cy="{cy}" r="68" fill="transparent" stroke="none"/>' +
            (f'<rect x="{cx + 80}" y="{cy - 40}" width="270" height="84" fill="transparent" stroke="none"/>' if vertical else
             f'<rect x="{cx - 110}" y="{cy + 84}" width="220" height="40" fill="transparent" stroke="none"/>'))
@@ -1822,7 +1822,7 @@ def node(i, cx, cy, vertical=False):
             f'{hit}<g class="pic">{pic}</g>{label}</a>')
 
 
-def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-2.2, .3, 2.1), n=44, skew=1.0, wob=0.0, phase=0.0, freq=3.1):
+def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-1.3, 1.3), n=44, skew=1.0, wob=0.0, phase=0.0, freq=3.1, w=1.1):
     """A straight, taut thread made of three strands that lie almost on top of each other (they drift a little apart and together).
     The thread sags a little between its ends, along bow_dir; the same slack is used everywhere so the tension looks even."""
     L = math.hypot(p1[0] - p0[0], p1[1] - p0[1]) or 1
@@ -1839,7 +1839,7 @@ def thread_strands(p0, p1, sag, bow_dir=(0, 1), offs=(-2.2, .3, 2.1), n=44, skew
             bow = sag * (1 - (2 * tt - 1) ** 2) + wob * math.sin(math.pi * t) * math.sin(freq * math.pi * t + phase + k * .5)
             o = off * (1 + .35 * math.sin(t * math.pi * 2 + k * 1.7))
             q.append((p0[0] + (p1[0] - p0[0]) * t + nx * (bow + o), p0[1] + (p1[1] - p0[1]) * t + ny * (bow + o)))
-        out.append(f'<path d="{smooth2(q[::2] + [q[-1]])}" stroke-width="1.9"/>')
+        out.append(f'<path d="{smooth2(q[::2] + [q[-1]])}" stroke-width="{w}"/>')
     return "".join(out)
 
 
@@ -1852,13 +1852,13 @@ def needle_parts(eye, rot, length=130):
     th = math.radians(rot)
     ox, oy = eye[0] - 19 * math.cos(th), eye[1] - 19 * math.sin(th)
     L = length
-    body = (f"M0 -5.5L{L * .8:.1f} -3.4Q{L * .95:.1f} -1.2 {L} 0Q{L * .95:.1f} 1.2 {L * .8:.1f} 3.4L0 5.5Q-5 0 0 -5.5Z")
-    slot = "M10 0a9 2.3 0 1 0 18 0a9 2.3 0 1 0 -18 0z"
-    tail = "".join(f'<path d="M19 0Q{31 + d:.1f} {9 + d:.1f} {40 + d * 1.4:.1f} {30 + d:.1f}" stroke-width="1.9"/>' for d in (-1.8, 0.2, 2.0))
+    body = (f"M0 -3.6L{L * .8:.1f} -2.2Q{L * .95:.1f} -.8 {L} 0Q{L * .95:.1f} .8 {L * .8:.1f} 2.2L0 3.6Q-4 0 0 -3.6Z")
+    slot = "M11 0a8 1.5 0 1 0 16 0a8 1.5 0 1 0 -16 0z"
+    tail = "".join(f'<path d="M19 0Q{31 + d:.1f} {9 + d:.1f} {40 + d * 1.4:.1f} {30 + d:.1f}" stroke-width="1.1"/>' for d in (-1.2, 1.2))
     tr = f"translate({ox:.2f} {oy:.2f}) rotate({rot})"
     behind = f'<g transform="{tr}">{tail}</g>'
-    front = (f'<g transform="{tr}"><path d="{body}" style="fill:var(--orange)" stroke-width="2.4"/>'
-             f'<path d="{slot}" stroke-width="1.6"/><path d="M34 -1.6L{L * .78:.1f} -0.9" stroke-width="1"/></g>')
+    front = (f'<g transform="{tr}"><path d="{body}" style="fill:var(--orange)" stroke-width="1.4"/>'
+             f'<path d="{slot}" style="fill:var(--divbg,#fff)" stroke-width="1"/></g>')
     return behind, front
 
 
