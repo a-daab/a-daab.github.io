@@ -940,3 +940,5 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
   .page-shop .sec--head .grid--split > div:first-child > .media,.page-shop .preorder{animation:none}
   .page-shop *{transition:none!important}
 }
+/* Shop thumbnails: the lowered middle one made the row taller, which stretched the outer figures and left a white strip under the right image */
+.page-shop .sec--head .grid--3{align-items:start}
