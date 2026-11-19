@@ -942,3 +942,14 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 }
 /* Shop thumbnails: the lowered middle one made the row taller, which stretched the outer figures and left a white strip under the right image */
 .page-shop .sec--head .grid--3{align-items:start}
+
+/* Shop gallery: thumbnails are clickable and swap with the large image */
+.page-shop .sec--head .grid--3 .media{cursor:pointer}
+.page-shop .sec--head .grid--3 .media:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+@keyframes shop-swap{from{opacity:.25}to{opacity:1}}
+.page-shop .media.is-swapped img{animation:shop-swap .45s ease both}
+@media (prefers-reduced-motion:reduce){.page-shop .media.is-swapped img{animation:none}}
+
+/* Shop: pull the details section up closer to the product block */
+.page-shop .sec--head{padding-bottom:clamp(20px,3vw,44px)}
+.page-shop #details{padding-top:clamp(12px,2vw,28px)!important}
