@@ -44,7 +44,6 @@
       <div class="preorder">
         <div class="price">{% if site.price %}${{ site.price }}{% else %}{{ ph('ADD RETAIL PRICE') }}{% endif %} <span class="small" style="color:#444">USD</span></div>
         <p class="meta"><b>{{ t('shop.made_to_order') }}</b></p>
-        <p class="meta"><b>{{ t('shop.use_on_top') }}</b></p>
         <p class="vary">{{ t('shop.variation') }}</p>
 
         {% if sold_out() %}
