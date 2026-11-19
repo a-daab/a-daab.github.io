@@ -935,13 +935,36 @@ def dividers():
     g += f'<circle cx="{cx}" cy="{cy}" r="6.2" style="fill:{HOLLOW}" stroke-width="2.4"/><circle cx="{cx}" cy="{cy}" r="1.9" stroke-width="1.6"/>'
     b.append(st(g, 1150))
     write_div(3, "".join(b))
-    # 4 Mithila teeth: triangles with dots over a zig baseline
+    # 4 lotus and vine: a row of five-petal lotus blossoms in chain stitch, a diamond with leaf pairs between them,
+    #   a running-stitch rule below and a dotted rule above (inspired by Nepali hand-embroidered floral borders)
     b = []
-    for k in range(30):
-        x = 10 + k * 39.5
-        g = f'<path d="M{f(x)} 62L{f(x + 19)} 12L{f(x + 38)} 62Z" stroke-width="2.4"/><path d="M{f(x + 8)} 62L{f(x + 19)} 28L{f(x + 30)} 62" stroke-width="1.2"/>'
-        g += dotpath([(x + 19, 42), (x + 19, 52)], w=3)
-        b.append(st(g, x))
+    def petal(bx, by, ang, ln, wd):
+        a_ = math.radians(ang)
+        ux, uy = math.sin(a_), -math.cos(a_)              # direction the petal points
+        px, py = -uy, ux                                  # perpendicular
+        tx, ty = bx + ln * ux, by + ln * uy
+        mx, my = bx + 0.55 * ln * ux, by + 0.55 * ln * uy
+        c1 = (mx + wd * px, my + wd * py)
+        c2 = (mx - wd * px, my - wd * py)
+        return (f'<path d="M{f(bx)} {f(by)}Q{f(c1[0])} {f(c1[1])} {f(tx)} {f(ty)}Q{f(c2[0])} {f(c2[1])} {f(bx)} {f(by)}Z" stroke-width="2.2"/>')
+    x = 8
+    while x < SW - 24:                                    # running stitch rule
+        b.append(st(f'<line x1="{x}" y1="67" x2="{x + 14}" y2="67" stroke-width="2.4"/>', x)); x += 24
+    for k in range(15):
+        cx = 40 + k * 80
+        g = ""
+        for ang, ln, wd in ((-64, 24, 7), (64, 24, 7), (-32, 33, 8), (32, 33, 8), (0, 40, 9)):
+            g += petal(cx, 56, ang, ln, wd)
+        g += f'<path d="M{cx} 56L{cx} 30" stroke-width="1.2"/>'
+        g += f'<path d="M{cx - 11} 58Q{cx} 64 {cx + 11} 58" stroke-width="2.2"/>'
+        g += dotpath([(cx, 10)], w=3.4)
+        b.append(st(g, cx - 20))
+        mx = cx + 40                                       # between blossoms: diamond, dots and a pair of leaves
+        h = f'<path d="M{mx - 9} 38l9 -11l9 11l-9 11z" stroke-width="2.2"/>' + dotpath([(mx, 38)], w=3.2)
+        for sg in (-1, 1):
+            h += f'<path d="M{mx + sg * 14} 46Q{mx + sg * 20} 34 {mx + sg * 29} 33Q{mx + sg * 25} 44 {mx + sg * 14} 46Z" stroke-width="1.8"/>'
+        h += dotpath([(mx - 6, 8), (mx + 6, 8), (mx, 56)], w=3)
+        b.append(st(h, mx - 10))
     write_div(4, "".join(b))
     # 5 Nepali stepped-diamond (dhaka-style) geometric border
     def stepped(cx, cy, n, step, vstep):           # vstep < step flattens the diamond: full width, less height
