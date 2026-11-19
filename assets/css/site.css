@@ -871,4 +871,7 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 
 /* Home page: a little more breathing room above and below the zigzag border under the three actions */
 .page-home .actions-sec{padding-bottom:calc(clamp(110px,11vw,140px) + 32px)}
-.page-home .actions-sec > .stitchdiv{bottom:calc(clamp(14px,2.2vw,32px) + 16px)}
+/* The border sits so that, of the white space between the buttons and the Shop eyebrow (total unchanged), about 43% is above it and 57% below it.
+   offset from the section bottom = 0.57 * (section bottom padding - border height) - 0.43 * (Shop section top padding); border height = 6.48vw */
+.page-home .actions-sec > .stitchdiv{bottom:max(4px,calc(.57 * (clamp(110px,11vw,140px) + 32px - 6.48vw) - .43 * clamp(24px,3.5vw,48px)))}
+@media (max-width:820px){.page-home .actions-sec > .stitchdiv{bottom:max(4px,calc(.57 * (clamp(110px,11vw,140px) + 32px + 1.6rem - 6.48vw) - .43 * clamp(24px,3.5vw,48px)))}}   /* stacked layout: the last box has 1.6rem of its own bottom padding below its button */
