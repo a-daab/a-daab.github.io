@@ -948,8 +948,8 @@ def dividers():
         x = 8
         while x < SW - 24:
             b.append(st(f'<line x1="{x}" y1="{y}" x2="{x + 14}" y2="{y}" stroke-width="2.4"/>', x)); x += 24
-    for k in range(29):
-        cx = 30 + k * 41
+    for k in range(26):
+        cx = 30 + k * 46
         g = f'<path d="{stepped_diamond(cx, 36, 18, 6)}" stroke-width="2.2"/><path d="{stepped_diamond(cx, 36, 9, 3)}" stroke-width="1.8"/>'
         g += dotpath([(cx, 36)], w=3.4)
         b.append(st(g, cx - 18))
