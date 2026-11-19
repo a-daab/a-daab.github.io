@@ -935,7 +935,7 @@ def dividers():
     g += f'<circle cx="{cx}" cy="{cy}" r="6.2" style="fill:{HOLLOW}" stroke-width="2.4"/><circle cx="{cx}" cy="{cy}" r="1.9" stroke-width="1.6"/>'
     b.append(st(g, 1150))
     write_div(3, "".join(b))
-    # 4 dhaka stepped diamonds: a row of stepped (dhaka-topi style) diamonds with a cross stitch between each pair,
+    # 4 dhaka stepped diamonds: a row of stepped (dhaka-topi style) diamonds
     #   between two rules of running stitch
     b = []
     def stepped_diamond(cx, cy, r, st_):                  # outline of a diamond drawn as a three-step staircase (st_ = r / 3)
@@ -948,14 +948,11 @@ def dividers():
         x = 8
         while x < SW - 24:
             b.append(st(f'<line x1="{x}" y1="{y}" x2="{x + 14}" y2="{y}" stroke-width="2.4"/>', x)); x += 24
-    for k in range(23):
-        cx = 30 + k * 52
+    for k in range(29):
+        cx = 30 + k * 41
         g = f'<path d="{stepped_diamond(cx, 36, 18, 6)}" stroke-width="2.2"/><path d="{stepped_diamond(cx, 36, 9, 3)}" stroke-width="1.8"/>'
         g += dotpath([(cx, 36)], w=3.4)
         b.append(st(g, cx - 18))
-        mx = cx + 26                                       # cross stitch between the diamonds
-        h = f'<path d="M{mx - 5} 31L{mx + 5} 41M{mx + 5} 31L{mx - 5} 41" stroke-width="2.2"/>' + dotpath([(mx, 22), (mx, 50)], w=3)
-        b.append(st(h, mx - 5))
     write_div(4, "".join(b))
     # 5 Nepali stepped-diamond (dhaka-style) geometric border
     def stepped(cx, cy, n, step, vstep):           # vstep < step flattens the diamond: full width, less height
