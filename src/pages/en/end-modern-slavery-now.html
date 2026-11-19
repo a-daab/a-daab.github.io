@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import field, actions with context %}
+{% from "macros.html" import field with context %}
 {% set path = "end-modern-slavery-now" %}
 {% set title = "End Modern Slavery Now!" %}
 {% set description = "End Modern Slavery Now! calls for mandatory supply-chain transparency labeling laws. Read the argument, sign the petition, hand your device to the next person, and share it." %}
@@ -78,6 +78,5 @@
     </aside>
   </div>
 </section>
-{{ actions('white') }}
 {% endblock %}
 {% block scripts %}<script src="/assets/js/forms.js?v={{ year }}-2" defer></script>{% endblock %}
