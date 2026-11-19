@@ -956,3 +956,4 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 
 /* Shop: the studio call-to-action is now the last section; keep its top and bottom padding even */
 .page-shop #studios.sec{padding-top:clamp(56px,7vw,100px);padding-bottom:clamp(56px,7vw,100px)}
+@media (max-width:760px){.page-shop-wholesale .banner-title--xl{font-size:2rem}}
