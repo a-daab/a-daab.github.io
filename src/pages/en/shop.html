@@ -57,8 +57,6 @@
           <span class="btn btn-xl" aria-disabled="true" role="link">{{ t('shop.opens_at_launch') }}</span>
           <p class="small" style="margin-top:10px">{{ ph('ADD STRIPE PAYMENT LINK — set stripe_payment_link in src/site.json') }}</p>
         {% endif %}
-        {% set b = site.batch %}
-        <p class="batch-status" data-batch>Batch {% if b.label.startswith('[') %}{{ ph(b.label|trim('[]')) }}{% else %}{{ b.label }}{% endif %} — {% if b.taken is none %}{{ ph('x') }}{% else %}{{ b.taken }}{% endif %} of ~{{ b.capacity }} places taken{% if sold_out() %} · <strong>This batch is full.</strong>{% endif %}</p>
       </div>
 
       <div class="callout">
