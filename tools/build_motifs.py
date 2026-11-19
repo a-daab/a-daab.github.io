@@ -1071,6 +1071,25 @@ def dividers():
         mot = (f'<path d="M{mx} 22l9 14l-9 14l-9 -14z" stroke-width="2"/>' + dotpath([(mx, 36), (mx - 20, 36), (mx + 20, 36)], w=3))
         b.append(st(mot, mx))
     write_div(10, "".join(b))
+    # 11 eight-pointed stars: two interlaced squares (one turned 45 degrees) with a ring and dot at the heart, the motif of
+    #    Newar carved-window lattices and Nepali woven borders; a small diamond between each pair, running-stitch rules above and below
+    b = []
+    x = 8
+    while x < SW - 24:
+        for y in (5, 67):
+            b.append(st(f'<line x1="{x}" y1="{y}" x2="{x + 14}" y2="{y}" stroke-width="2.4"/>', x))
+        x += 24
+    for k in range(21):
+        cx = 30 + k * 56
+        a_ = 14
+        r_ = 20
+        g = (f'<path d="M{cx - a_} {36 - a_}h{2 * a_}v{2 * a_}h{-2 * a_}z" stroke-width="2.2"/>'
+             f'<path d="M{cx - r_} 36L{cx} {36 - r_}L{cx + r_} 36L{cx} {36 + r_}z" stroke-width="2.2"/>'
+             f'<circle cx="{cx}" cy="36" r="6" stroke-width="1.8"/>' + dotpath([(cx, 36)], w=3))
+        b.append(st(g, cx - 20))
+        mx = cx + 28
+        b.append(st(f'<path d="M{mx - 4} 36l4 -5l4 5l-4 5z" stroke-width="1.8"/>', mx - 4))
+    write_div(11, "".join(b))
 
 
 
