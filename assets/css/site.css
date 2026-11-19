@@ -769,7 +769,11 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .trace__form input:focus-visible{box-shadow:0 0 0 3px rgba(204,85,0,.28)}
 .trace__note{min-height:1.5em;margin:.9em 0 0;color:var(--orange-deep)}
 .sc-title{margin:0 0 clamp(28px,4vw,48px);text-align:center;font-weight:300;text-transform:uppercase;letter-spacing:.08em;font-size:clamp(1.3rem,1rem + 1.4vw,2rem);line-height:1.2;color:var(--orange)}
-.sc{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.sc{display:grid;grid-template-columns:100% 0fr;column-gap:0;align-items:start;transition:grid-template-columns .6s cubic-bezier(.4,0,.2,1),column-gap .6s cubic-bezier(.4,0,.2,1)}
+.sc.has-selection,.sc:not(.is-js){grid-template-columns:360px 1fr;column-gap:clamp(32px,5vw,72px)}
+.sc__graph{display:flex;justify-content:center;min-width:0}
+.sc__detail{min-width:0;overflow:hidden;opacity:0;visibility:hidden;border-left-color:transparent!important;transition:opacity .45s ease .25s,visibility 0s linear .7s}
+.sc.has-selection .sc__detail,.sc:not(.is-js) .sc__detail{opacity:1;visibility:visible;border-left-color:var(--orange)!important;transition:opacity .45s ease .25s,visibility 0s}
 .sc__graph{position:sticky;top:calc(var(--header-h) + 24px)}
 .sc-flow{list-style:none;margin:0;padding:0;width:100%;max-width:340px}
 .sc-row{display:flex;gap:20px}
@@ -786,7 +790,6 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .sc-join svg{display:block;width:100%;height:100%;overflow:visible}
 .sc-join path{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-dasharray:6 6;stroke-linecap:round;vector-effect:non-scaling-stroke}
 .sc__detail{min-height:320px;border-left:1.5px dashed var(--orange);padding-left:clamp(24px,4vw,56px)}
-.sc-empty{margin:0;color:#6b6b6b;font-size:1.1rem}
 .sc-panel[hidden]{display:none}
 .sc-panel h3{margin:.1em 0 .5em;text-transform:none;letter-spacing:.01em;font-weight:300;font-size:clamp(1.6rem,1.2rem + 1.4vw,2.3rem);line-height:1.15;color:var(--orange)}
 .sc-stages{list-style:none;margin:1.4em 0;padding:0;display:grid;gap:14px}
@@ -797,10 +800,13 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .sc-stage__tags{display:flex;flex-wrap:wrap;gap:6px;margin:0!important}
 .tag--on{background:var(--orange);color:#fff}
 @media (max-width:900px){
-  .sc{grid-template-columns:1fr}
-  .sc__graph{position:static;display:flex;justify-content:center}
+  .sc,.sc.has-selection,.sc:not(.is-js){grid-template-columns:1fr;column-gap:0;transition:none}
+  .sc__graph{position:static}
+  .sc__detail{display:none}
+  .sc.has-selection .sc__detail,.sc:not(.is-js) .sc__detail{display:block}
   .sc__detail{border-left:0;border-top:1.5px dashed var(--orange);padding:28px 0 0;min-height:0}
 }
+@media (prefers-reduced-motion:reduce){.sc,.sc__detail{transition:none!important}}
 @media (max-width:480px){.trace__form{flex-direction:column}.sc-row{gap:12px}}
 
 /* ---------- TransparaTrade: the aisle (vertigo effect) ---------- */
