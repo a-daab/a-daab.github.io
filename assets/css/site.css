@@ -906,7 +906,7 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 
 /* purchase card: lifted, double-ruled, with a stitched inner border and an orange cap */
 .page-shop .preorder{position:relative;max-width:540px;background:linear-gradient(180deg,#fff 0,var(--orange-tint) 100%);border:1px solid rgba(204,85,0,.35);border-top:4px solid var(--orange);
-  box-shadow:10px 10px 0 -1px #fff,10px 10px 0 0 rgba(204,85,0,.45),var(--lift);animation:shop-rise .8s .12s ease both}
+  box-shadow:var(--lift);animation:shop-rise .8s .12s ease both}
 .page-shop .preorder::before{content:"";position:absolute;inset:8px;border:1px dashed rgba(204,85,0,.4);pointer-events:none}
 .page-shop .preorder > *{position:relative}
 .page-shop .preorder .price{font-size:clamp(2.6rem,2rem + 1.6vw,3.4rem);font-weight:240;letter-spacing:.02em;padding-bottom:.45rem;margin-bottom:.2rem;border-bottom:1px solid rgba(204,85,0,.3)}
@@ -935,7 +935,6 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 .page-shop #appeals .grid--3 > div:hover{transform:translateY(-6px);background:rgba(255,255,255,.12);box-shadow:0 34px 46px -26px rgba(60,20,0,.8)}
 @media (max-width:820px){
   .page-shop .sec--head::before{inset:0;opacity:.07}
-  .page-shop .preorder{box-shadow:7px 7px 0 -1px #fff,7px 7px 0 0 rgba(204,85,0,.45),var(--lift)}
 }
 @media (prefers-reduced-motion:reduce){
   .page-shop .sec--head .grid--split > div:first-child > .media,.page-shop .preorder{animation:none}
