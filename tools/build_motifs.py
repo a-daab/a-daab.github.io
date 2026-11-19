@@ -992,12 +992,17 @@ def dividers():
         g += path(sp[::2], w=1.5, a=.2) + dotpath([(x + 48, y + 2 * up)], w=3)
         b.append(st(g, x))
     write_div(6, "".join(b))
-    # 7 fish-scale scallops
+    # 7 interlaced zigzags: two crossing zigzag threads (Himalayan-ridge / hill-weave pattern) enclosing a row of diamonds,
+    #   each with a dot, a stitched tick above and below every peak
     b = []
-    for row, y in enumerate((18, 36, 54)):
-        x = 6 + (row % 2) * 22
-        while x < SW - 30:
-            b.append(st(f'<path d="M{x} {y}q22 30 44 0" stroke-width="2"/>', x)); x += 44
+    x = 12
+    while x < SW - 40:
+        g = (f'<path d="M{x} 20L{x + 24} 52L{x + 48} 20" stroke-width="2.4"/>'
+             f'<path d="M{x} 52L{x + 24} 20L{x + 48} 52" stroke-width="2.4"/>')
+        g += dotpath([(x + 24, 36)], w=3.6)
+        g += f'<path d="M{x + 24} 5v7M{x + 24} 60v7" stroke-width="2.2"/>'
+        b.append(st(g, x))
+        x += 48
     write_div(7, "".join(b))
     # 8 feather / herringbone stitch down a centre line
     b = []
