@@ -1,11 +1,10 @@
-/* The Supply Chain: pick a stage on the left, read its breakdown on the right. The product-number box is a shell until the tracing system exists. */
+/* The Supply Chain: the graphic starts centred; picking a stage slides it left and shows that stage's breakdown on the right. The product-number box is a shell until the tracing system exists. */
 (function () {
   'use strict';
   var root = document.getElementById('sc');
   if (root) {
     var nodes = [].slice.call(root.querySelectorAll('.sc-node'));
     var panels = [].slice.call(root.querySelectorAll('.sc-panel'));
-    var empty = document.getElementById('panel-empty');
     root.classList.add('is-js');
     var stacked = window.matchMedia && matchMedia('(max-width: 900px)');
     function open(id, fromUser) {
@@ -15,7 +14,7 @@
         n.setAttribute('aria-expanded', on ? 'true' : 'false');
       });
       panels.forEach(function (p) { p.hidden = p.id !== 'panel-' + id; });
-      if (empty) empty.hidden = !!id;
+      root.classList.toggle('has-selection', !!id);
       if (fromUser && stacked && stacked.matches) {
         var el = document.getElementById('panel-' + id), r = el.getBoundingClientRect();
         if (r.top > window.innerHeight * 0.75 || r.top < 0) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
