@@ -949,3 +949,7 @@ form[data-form="petition"] .check{margin-bottom:3.8rem}
 @keyframes shop-swap{from{opacity:.25}to{opacity:1}}
 .page-shop .media.is-swapped img{animation:shop-swap .45s ease both}
 @media (prefers-reduced-motion:reduce){.page-shop .media.is-swapped img{animation:none}}
+
+/* Shop: pull the details section up closer to the product block */
+.page-shop .sec--head{padding-bottom:clamp(20px,3vw,44px)}
+.page-shop #details{padding-top:clamp(12px,2vw,28px)!important}
