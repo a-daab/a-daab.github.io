@@ -868,3 +868,7 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 /* Petition form: a little more air before the consent box, and more again before the submit button */
 form[data-form="petition"] .field[data-field="location"]{margin-bottom:2.8rem}
 form[data-form="petition"] .check{margin-bottom:3.8rem}
+
+/* Home page: a little more breathing room above and below the zigzag border under the three actions */
+.page-home .actions-sec{padding-bottom:calc(clamp(110px,11vw,140px) + 32px)}
+.page-home .actions-sec > .stitchdiv{bottom:calc(clamp(14px,2.2vw,32px) + 16px)}
