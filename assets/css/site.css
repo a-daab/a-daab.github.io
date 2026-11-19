@@ -730,6 +730,9 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 .sec--banner > .stitchdiv svg{opacity:1}
 .banner-title{font-weight:240;text-transform:uppercase;white-space:nowrap;text-shadow:0 2px 3px rgba(90,35,0,.22),0 6px 18px rgba(90,35,0,.18);font-size:clamp(1.75rem,min(5vw,calc(91vw / var(--n,12))),5.5rem)}
 @media (max-width:760px){.banner-title{white-space:normal;font-size:1.75rem}}
+.banner-title--xl{font-size:clamp(1.75rem,min(6vw,calc(91vw / var(--n,12))),6.5rem)}
+@media (max-width:760px){.banner-title--xl{font-size:2.4rem}}
+.sec--banner .statement.banner-sub{font-size:clamp(1.05rem,.9rem + .8vw,1.35rem)}
 
 /* ---------- How It Works: the web ---------- */
 .web-sec{padding-top:clamp(56px,7vw,96px)}
