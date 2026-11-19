@@ -867,4 +867,4 @@ table.plain tr:nth-child(even) td{background:var(--orange-tint)}
 
 /* Petition form: a little more air before the consent box, and more again before the submit button */
 form[data-form="petition"] .field[data-field="location"]{margin-bottom:2.8rem}
-form[data-form="petition"] .check{margin-bottom:2.6rem}
+form[data-form="petition"] .check{margin-bottom:3.8rem}
